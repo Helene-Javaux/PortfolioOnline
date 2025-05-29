@@ -1,3 +1,23 @@
 h1{
   margin: 80px;
+  margin-bottom: 15px;
+  margin-left: 110px;
+}
+
+img {
+    width: 400px;
+    height: auto;
+    box-shadow: 5px 5px 5px #242424;
+}
+
+.a-propos{
+  display: flex;
+  flex-direction: row;
+  width: 80%;
+  align-items: flex-start;
+  margin-left: 80px;
+}
+
+.a-propos div{
+  padding-left: 80px;
 }
