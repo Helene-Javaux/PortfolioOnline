@@ -5,10 +5,21 @@ section {
 
 h1{
   text-align: center;
+  padding-bottom: 40px;
+}
+/* .goBack {
+  padding: 40px 80px 40px 80px;
+} */
+.retour{
+  color:#242424;
+  font-size: 18px;
+  padding: 40px 80px;
+  
 }
 .portfolio-section-photos {
   background-color: #f4f4f4;
-  margin-bottom: 80px;
+  margin-bottom: 40px;
+  padding-top: 40px;
 }
 
 
@@ -84,7 +95,7 @@ h1{
 .grid-ferrarias,
 .grid-thalassophobie,
 .grid-ardp {
-  margin-bottom: 80px;
+  margin-bottom: 40px;
 }
 
 .lien-conteneur-photo {
@@ -106,6 +117,61 @@ h1{
   display: none;
 }
 
+.titre-mobile {
+  display: none;
+  text-align: center;
+  font-size: 1.1em;
+  margin-top: 10px;
+  color: #242424;
+}
+
 .lien-conteneur-photo:hover .photo-hover {
   display: flex;
+}
+
+@media screen and (max-width: 996px) {
+  .grid-liste-projet {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+
+  .grid-wild-care {
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 15px;
+  }
+
+  .grid-ferrarias{
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+  }
+
+  .grid-thalassophobie{
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: repeat(10, 300px);
+    gap: 15px;
+  }
+
+  .grid-ardp{
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+  }
+
+  .grid-liste-projet .photo-hover{
+    display: none !important;
+  }
+  .titre-mobile{
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 2em;
+    text-align: center;
+    text-decoration: underline;
+  }
 }

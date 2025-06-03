@@ -1,10 +1,11 @@
 h1{
-  margin: 80px;
-  margin-bottom: 15px;
-  margin-left: 110px;
+  margin: 80px auto 15px auto;
+  max-width: 90%;
+  /* margin-bottom: 15px;
+  margin-left: 110px; */
 }
 
-img {
+.a-propos img {
     width: 400px;
     height: auto;
     box-shadow: 5px 5px 5px #242424;
@@ -15,9 +16,19 @@ img {
   flex-direction: row;
   width: 80%;
   align-items: flex-start;
-  margin-left: 80px;
 }
 
 .a-propos div{
   padding-left: 80px;
+}
+
+@media screen and (max-width: 996px) {
+  .a-propos {
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  .a-propos img {
+    margin-bottom: 80px;
+  }
 }

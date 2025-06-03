@@ -6,16 +6,18 @@ body {
   font-family: 'Manrope', sans-serif;
   font-size: 1em;
   background-color: #f4f4f4;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+main {
+  flex: 1;
 }
 
 a {
   color: #f4f4f4;
   text-decoration: none;
-}
-
-em {
-  color: #a5b4fc;
-  font-style: normal;
 }
 
 h1 {
@@ -38,6 +40,9 @@ header,
 footer {
   background-color: #242424;
   padding: 20px 50px;
+}
+footer {
+  margin-top: 40px;
 }
 
 #black.cta {
@@ -96,11 +101,7 @@ nav {
   background-color: #242424;
 }
 
-/* nav,
-footer {
-  background-color: #242424;
-  width: 100%;
-} */
+
 nav a {
   margin-left: 30px;
 }
@@ -109,4 +110,34 @@ nav img,
 footer img {
   width: 100px;
   height: auto;
+}
+
+@media screen and (max-width: 996px) {
+  header nav {
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  header nav img {
+    margin-bottom: 20px;
+  }
+
+  header,
+  footer {
+    padding: 20px 20px;
+  }
+
+  h1 {
+    font-size: 2em;
+  }
+
+  section {
+    padding: 50px 20px 50px 20px;
+  }
+
+  nav a {
+    margin-left: 10px;
+    margin-right: 10px;
+  }
 }
