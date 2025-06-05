@@ -11,6 +11,7 @@ body {
   min-height: 100vh;
   overflow-x: hidden;
 }
+
 main {
   flex: 1;
 }
@@ -41,6 +42,7 @@ footer {
   background-color: #242424;
   padding: 20px 50px;
 }
+
 footer {
   margin-top: 40px;
 }
@@ -130,6 +132,22 @@ footer img {
     padding: 20px 20px;
   }
 
+
+  footer {
+    flex-direction: column;
+    gap: 20px;
+    text-align: center;
+    padding: 30px 10px;
+  }
+
+  footer a {
+    font-size: 1.1rem;
+  }
+
+  footer img {
+    width: 80px;
+  }
+
   h1 {
     font-size: 2em;
   }
@@ -138,8 +156,12 @@ footer img {
     padding: 50px 20px 50px 20px;
   }
 
+
   nav a {
     margin-left: 10px;
     margin-right: 10px;
+    padding: 10px 0;
+    
   }
+
 }
