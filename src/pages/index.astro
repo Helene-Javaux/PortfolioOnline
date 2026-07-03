@@ -1,0 +1,331 @@
+---
+import { Image, getImage } from 'astro:assets';
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { SITE } from '../config';
+import { photo, galleryPhotos } from '../lib/photos';
+import { url } from '../lib/url';
+
+// Photo d'accroche de la page d'accueil — remplacer le chemin pour en changer
+const heroPhoto = photo('projects/wild-care/wildcare-16.jpg');
+const portrait = photo('about/portrait.jpg');
+
+// Dernier projet mis en avant (le premier dans l'ordre défini)
+const projects = (await getCollection('projects')).sort(
+  (a, b) => a.data.order - b.data.order,
+);
+const featured = projects[0]!;
+const featuredPhotos = galleryPhotos('projects', featured.id).slice(0, 3);
+
+const ogImage = await getImage({ src: heroPhoto, width: 1200, format: 'jpeg' });
+
+const quickLinks = [
+  { href: url('/portfolio/'), label: 'Portfolio', text: 'Prestations et projets personnels' },
+  { href: url('/tarifs/'), label: 'Tarifs', text: 'Des prix clairs, sans surprise' },
+  { href: url('/shop/'), label: 'Shop', text: "Tirages d'art à commander" },
+  { href: url('/a-propos/'), label: 'À propos', text: 'La personne derrière les images' },
+];
+---
+
+<BaseLayout ogImage={ogImage.src}>
+  <!-- Hero -->
+  <section class="hero">
+    <Image
+      src={heroPhoto}
+      alt="Photographie de Hélène Javaux — close-up de plumes, série Wild Care"
+      widths={[800, 1400, 2000]}
+      sizes="100vw"
+      width={2000}
+      loading="eager"
+      fetchpriority="high"
+    />
+    <div class="hero__overlay">
+      <p class="hero__kicker">Photographe — {SITE.location}</p>
+      <h1>Hélène Javaux</h1>
+      <p class="hero__tagline">Des images vraies, sans artifices</p>
+    </div>
+  </section>
+
+  <!-- Accroche -->
+  <section class="container intro" data-reveal>
+    <p class="kicker kicker--center">Bienvenue</p>
+    <p class="intro__text">
+      Chaque photo est une émotion captée, un instant vrai. J'aime les moments
+      simples, les regards sincères, la lumière naturelle qui fait tout le
+      charme d'un souvenir.
+    </p>
+    <a href={url('/portfolio/')} class="btn">Découvrir mon travail</a>
+  </section>
+
+  <!-- Dernier projet -->
+  <section class="featured">
+    <div class="container">
+      <p class="kicker" data-reveal>Dernier projet</p>
+      <h2 data-reveal>{featured.data.title}{featured.data.year && ` — ${featured.data.year}`}</h2>
+      <div class="featured__grid">
+        {
+          featuredPhotos.map((p, i) => (
+            <a
+              href={url(`/portfolio/projets/${featured.id}/`)}
+              aria-label={`Voir le projet ${featured.data.title}`}
+              data-reveal
+              style={`--reveal-delay: ${i * 0.12}s`}
+            >
+              <Image
+                src={p}
+                alt={`${featured.data.title} — photo ${i + 1}`}
+                width={700}
+                widths={[400, 700]}
+                sizes="(max-width: 40rem) 100vw, 33vw"
+                loading="lazy"
+              />
+            </a>
+          ))
+        }
+      </div>
+      <a href={url(`/portfolio/projets/${featured.id}/`)} class="btn btn--ghost">Voir le projet</a>
+    </div>
+  </section>
+
+  <!-- À propos (teaser) -->
+  <section class="container about" data-reveal>
+    <div class="about__inner">
+      <Image
+        src={portrait}
+        alt="Portrait de Hélène Javaux"
+        width={520}
+        widths={[400, 520]}
+        sizes="(max-width: 48rem) 80vw, 520px"
+        loading="lazy"
+      />
+      <div>
+        <p class="kicker">Qui suis-je</p>
+        <h2>Hello, moi c'est Hélène</h2>
+        <p>
+          Diplômée de la HELB en 2024, amoureuse de la nature et des instants
+          qu'on ne rejoue pas. Mon but : que tu te sentes à l'aise et que le
+          résultat te ressemble — un moment en famille, un projet pro, ou juste
+          pour toi.
+        </p>
+        <a href={url('/a-propos/')} class="btn btn--ghost">Faire connaissance</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Accès rapide -->
+  <section class="container quick-links">
+    {
+      quickLinks.map((link, i) => (
+        <a href={link.href} class="quick-links__card" data-reveal style={`--reveal-delay: ${i * 0.08}s`}>
+          <h3>{link.label}</h3>
+          <p>{link.text}</p>
+          <span aria-hidden="true">→</span>
+        </a>
+      ))
+    }
+  </section>
+
+  <!-- Fin de scroll : appel à l'action clair -->
+  <section class="cta-band">
+    <div class="container" data-reveal>
+      <p class="kicker kicker--center kicker--on-dark">Et si on se lançait ?</p>
+      <h2>Ton projet mérite de vraies images.</h2>
+      <p>
+        Séance photo, événement, tirage ou idée encore floue : écris-moi,
+        je réponds personnellement à chaque message.
+      </p>
+      <a href={url('/contact/')} class="btn btn--light">Me contacter</a>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .hero {
+    position: relative;
+    height: min(88vh, 56rem);
+    overflow: hidden;
+  }
+
+  .hero img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    animation: hero-zoom 8s ease-out forwards;
+  }
+
+  @keyframes hero-zoom {
+    from {
+      transform: scale(1.06);
+    }
+    to {
+      transform: scale(1);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hero img {
+      animation: none;
+    }
+  }
+
+  .hero__overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    background: linear-gradient(rgba(24, 24, 24, 0.12), rgba(24, 24, 24, 0.45));
+    color: #fff;
+    padding: var(--gutter);
+  }
+
+  .hero__kicker {
+    font-size: 0.82rem;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    margin: 0 0 0.75rem;
+    color: rgba(255, 255, 255, 0.85);
+  }
+
+  .hero__overlay h1 {
+    color: #fff;
+    font-size: clamp(3rem, 9vw, 5.5rem);
+    margin-bottom: 0.2em;
+    text-shadow: 0 2px 24px rgba(0, 0, 0, 0.35);
+  }
+
+  .hero__tagline {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: clamp(1rem, 2.5vw, 1.3rem);
+    margin: 0;
+    text-shadow: 0 1px 12px rgba(0, 0, 0, 0.45);
+  }
+
+  .intro {
+    text-align: center;
+    padding-block: clamp(3.5rem, 9vw, 6rem);
+  }
+
+  .intro__text {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: clamp(1.3rem, 3vw, 1.8rem);
+    line-height: 1.45;
+    color: var(--color-ink);
+    max-width: 44rem;
+    margin: 0 auto 2rem;
+  }
+
+  .featured {
+    background: var(--color-paper-soft);
+    padding-block: clamp(3rem, 8vw, 5.5rem);
+  }
+
+  .featured h2 {
+    margin-bottom: 1.75rem;
+  }
+
+  .featured__grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+  }
+
+  /* Rythme : la photo centrale est légèrement descendue */
+  @media (min-width: 48rem) {
+    .featured__grid a:nth-child(2) {
+      transform: translateY(2rem);
+    }
+  }
+
+  .featured__grid img {
+    width: 100%;
+    aspect-ratio: 4 / 5;
+    object-fit: cover;
+    transition: opacity 0.25s ease;
+  }
+
+  .featured__grid a:hover img {
+    opacity: 0.88;
+  }
+
+  .about {
+    padding-block: clamp(3.5rem, 9vw, 6rem) 0;
+  }
+
+  .about__inner {
+    display: grid;
+    grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
+    gap: clamp(2rem, 5vw, 4rem);
+    align-items: center;
+  }
+
+  .about__inner img {
+    width: 100%;
+  }
+
+  .quick-links {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+    gap: 1.25rem;
+    padding-block: clamp(3.5rem, 9vw, 6rem) 0;
+  }
+
+  .quick-links__card {
+    position: relative;
+    display: block;
+    text-decoration: none;
+    border: 1px solid var(--color-line);
+    padding: 1.75rem;
+    transition: border-color 0.2s ease, transform 0.2s ease;
+  }
+
+  .quick-links__card:hover {
+    border-color: var(--color-ink);
+    transform: translateY(-3px);
+  }
+
+  .quick-links__card h3 {
+    margin-bottom: 0.35rem;
+  }
+
+  .quick-links__card p {
+    font-size: 0.9rem;
+    color: var(--color-muted);
+    margin: 0;
+  }
+
+  .quick-links__card span {
+    position: absolute;
+    top: 1.5rem;
+    right: 1.5rem;
+    color: var(--color-muted);
+    transition: transform 0.2s ease;
+  }
+
+  .quick-links__card:hover span {
+    transform: translateX(4px);
+  }
+
+  @media (max-width: 48rem) {
+    .featured__grid {
+      grid-template-columns: 1fr;
+    }
+
+    .featured__grid a:nth-child(n + 2) {
+      display: none;
+    }
+
+    .about__inner {
+      grid-template-columns: 1fr;
+    }
+
+    .about__inner img {
+      max-width: 24rem;
+    }
+  }
+</style>

@@ -1,0 +1,10 @@
+title: Le trompettiste
+reference: HJ-RP-05
+photo: projects/au-rythme-des-pas/ardp-05.jpg
+description: Tirage issu de la série Au rythme des pas (2022). # [PLACEHOLDER — description à affiner]
+order: 5
+formats:
+  - label: A4 (21 × 29,7 cm)
+    price: 45 € # [PLACEHOLDER — prix indicatif à confirmer]
+  - label: A3 (29,7 × 42 cm)
+    price: 70 €

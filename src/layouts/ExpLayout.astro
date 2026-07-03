@@ -1,0 +1,354 @@
+---
+/**
+ * Layout du site EXPÉRIMENTAL « La galerie » (/experimental/).
+ * Totalement indépendant du site principal : thème sombre immersif,
+ * typographie Fraunces + Manrope, accent bronze.
+ */
+import { SITE } from '../config';
+import { url } from '../lib/url';
+import '../styles/experimental.css';
+
+interface Props {
+  title?: string;
+  description?: string;
+  ogImage?: string;
+}
+
+const { title, description = SITE.description, ogImage } = Astro.props;
+
+const fullTitle = title
+  ? `${title} — ${SITE.name} · La galerie`
+  : `${SITE.name} — Photographe · La galerie`;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+const ogImageUrl = ogImage ? new URL(ogImage, Astro.site) : undefined;
+
+const links = [
+  { href: url('/experimental/prestations/'), label: 'Prestations' },
+  { href: url('/experimental/series/'), label: 'La galerie' },
+  { href: url('/experimental/boutique/'), label: 'Boutique' },
+  { href: url('/experimental/a-propos/'), label: 'À propos' },
+  { href: url('/experimental/contact/'), label: 'Contact' },
+];
+
+const current = Astro.url.pathname;
+---
+
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <!-- Site expérimental : ne pas indexer tant qu'il n'est pas retenu -->
+    <meta name="robots" content="noindex, nofollow" />
+    <link rel="icon" href={`${import.meta.env.BASE_URL.replace(/\/$/, '')}/favicon.ico`} />
+    <meta name="generator" content={Astro.generator} />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={fullTitle} />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    {ogImageUrl && <meta property="og:image" content={ogImageUrl} />}
+
+    <!-- Typographies : Fraunces (titres, italiques) + Manrope (texte) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Manrope:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+
+    <script is:inline>
+      document.documentElement.classList.add('js');
+    </script>
+  </head>
+  <body>
+    <header class="exp-header">
+      <div class="container exp-header__inner">
+        <a href={url('/experimental/')} class="exp-header__brand">
+          Hélène<span> Javaux</span>
+        </a>
+
+        <button
+          class="exp-nav-toggle"
+          type="button"
+          aria-expanded="false"
+          aria-controls="exp-nav"
+          aria-label="Ouvrir le menu"
+        >
+          <span></span><span></span>
+        </button>
+
+        <nav id="exp-nav" class="exp-nav" aria-label="Navigation principale">
+          {
+            links.map((link) => (
+              <a href={link.href} aria-current={current.startsWith(link.href) ? 'page' : undefined}>
+                {link.label}
+              </a>
+            ))
+          }
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <slot />
+    </main>
+
+    <footer class="exp-footer">
+      <div class="container exp-footer__inner">
+        <div>
+          <p class="exp-footer__brand">Hélène Javaux</p>
+          <p class="exp-footer__tag">Photographe — {SITE.location}</p>
+        </div>
+        <nav class="exp-footer__nav" aria-label="Pied de page">
+          {links.map((link) => <a href={link.href}>{link.label}</a>)}
+        </nav>
+        <div class="exp-footer__contact">
+          <a href={SITE.instagram} target="_blank" rel="noopener">{SITE.instagramHandle}</a>
+          <a href={`mailto:${SITE.email}`}>{SITE.email}</a>
+          <a href={SITE.phoneHref}>{SITE.phone}</a>
+        </div>
+      </div>
+      <div class="container exp-footer__legal">
+        <p>© {new Date().getFullYear()} Hélène Javaux — toutes les photographies sont protégées par le droit d'auteur.</p>
+        <div>
+          <a href={url('/conditions-generales-de-vente/')}>CGV</a>
+          <a href={url('/')}>Site principal</a>
+        </div>
+      </div>
+    </footer>
+
+    <script>
+      // Menu mobile
+      const toggle = document.querySelector<HTMLButtonElement>('.exp-nav-toggle');
+      const nav = document.getElementById('exp-nav');
+      toggle?.addEventListener('click', () => {
+        const open = nav?.classList.toggle('is-open') ?? false;
+        toggle.setAttribute('aria-expanded', String(open));
+      });
+
+      // Apparition progressive des blocs marqués data-reveal
+      const revealables = document.querySelectorAll('[data-reveal]');
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        revealables.forEach((el) => el.classList.add('is-revealed'));
+      } else {
+        const observer = new IntersectionObserver(
+          (entries) => {
+            for (const entry of entries) {
+              if (entry.isIntersecting) {
+                entry.target.classList.add('is-revealed');
+                observer.unobserve(entry.target);
+              }
+            }
+          },
+          { threshold: 0.08, rootMargin: '0px 0px -50px' },
+        );
+        revealables.forEach((el) => observer.observe(el));
+      }
+
+      // Header : devient opaque après le premier écran
+      const header = document.querySelector('.exp-header');
+      const onScroll = () => header?.classList.toggle('is-solid', window.scrollY > 40);
+      onScroll();
+      window.addEventListener('scroll', onScroll, { passive: true });
+    </script>
+
+    <style>
+      .exp-header {
+        position: fixed;
+        inset-inline: 0;
+        top: 0;
+        z-index: 60;
+        transition: background 0.35s ease, border-color 0.35s ease;
+        border-bottom: 1px solid transparent;
+      }
+
+      .exp-header.is-solid {
+        background: rgba(14, 14, 13, 0.92);
+        backdrop-filter: blur(10px);
+        border-bottom-color: var(--exp-line);
+      }
+
+      .exp-header__inner {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+        padding-block: 1.1rem;
+      }
+
+      .exp-header__brand {
+        font-family: var(--font-display);
+        font-size: 1.35rem;
+        font-weight: 500;
+        text-decoration: none;
+        letter-spacing: 0.01em;
+      }
+
+      .exp-header__brand span {
+        font-style: italic;
+        color: var(--exp-accent);
+      }
+
+      .exp-nav {
+        display: flex;
+        gap: clamp(1.1rem, 2.5vw, 2.2rem);
+      }
+
+      .exp-nav a {
+        text-decoration: none;
+        font-size: 0.76rem;
+        font-weight: 600;
+        letter-spacing: 0.22em;
+        text-transform: uppercase;
+        color: var(--exp-text);
+        padding-block: 0.3rem;
+        border-bottom: 1px solid transparent;
+        transition: color 0.2s ease, border-color 0.2s ease;
+      }
+
+      .exp-nav a:hover,
+      .exp-nav a[aria-current='page'] {
+        color: var(--exp-accent);
+        border-bottom-color: var(--exp-accent);
+      }
+
+      .exp-nav-toggle {
+        display: none;
+        flex-direction: column;
+        justify-content: center;
+        gap: 7px;
+        width: 44px;
+        height: 44px;
+        padding: 10px;
+        background: none;
+        border: none;
+        cursor: pointer;
+      }
+
+      .exp-nav-toggle span {
+        display: block;
+        height: 1.5px;
+        background: var(--exp-text);
+        transition: transform 0.25s ease;
+      }
+
+      @media (max-width: 52rem) {
+        .exp-nav-toggle {
+          display: flex;
+        }
+
+        .exp-nav {
+          display: none;
+          position: absolute;
+          inset-inline: 0;
+          top: 100%;
+          flex-direction: column;
+          gap: 0;
+          background: rgba(14, 14, 13, 0.98);
+          border-bottom: 1px solid var(--exp-line);
+        }
+
+        .exp-nav.is-open {
+          display: flex;
+        }
+
+        .exp-nav a {
+          padding: 1rem var(--gutter);
+          border-bottom: 1px solid var(--exp-line);
+        }
+
+        .exp-nav-toggle[aria-expanded='true'] span:nth-child(1) {
+          transform: translateY(4.25px) rotate(45deg);
+        }
+
+        .exp-nav-toggle[aria-expanded='true'] span:nth-child(2) {
+          transform: translateY(-4.25px) rotate(-45deg);
+        }
+      }
+
+      .exp-footer {
+        margin-top: clamp(4rem, 10vw, 7rem);
+        border-top: 1px solid var(--exp-line);
+        background: var(--exp-surface);
+      }
+
+      .exp-footer__inner {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        gap: 2rem;
+        padding-block: 3rem 2rem;
+      }
+
+      .exp-footer__brand {
+        font-family: var(--font-display);
+        font-size: 1.4rem;
+        margin: 0;
+      }
+
+      .exp-footer__tag {
+        margin: 0.35rem 0 0;
+        font-size: 0.75rem;
+        letter-spacing: 0.22em;
+        text-transform: uppercase;
+        color: var(--exp-muted);
+      }
+
+      .exp-footer__nav,
+      .exp-footer__contact {
+        display: flex;
+        flex-direction: column;
+        gap: 0.6rem;
+      }
+
+      .exp-footer__nav a,
+      .exp-footer__contact a {
+        text-decoration: none;
+        font-size: 0.82rem;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--exp-muted);
+        transition: color 0.2s ease;
+      }
+
+      .exp-footer__nav a:hover,
+      .exp-footer__contact a:hover {
+        color: var(--exp-accent);
+      }
+
+      .exp-footer__legal {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        gap: 0.5rem 2rem;
+        padding-block: 1.25rem;
+        border-top: 1px solid var(--exp-line);
+      }
+
+      .exp-footer__legal p {
+        margin: 0;
+        font-size: 0.76rem;
+        color: var(--exp-muted);
+      }
+
+      .exp-footer__legal div {
+        display: flex;
+        gap: 1.5rem;
+      }
+
+      .exp-footer__legal a {
+        font-size: 0.76rem;
+        color: var(--exp-muted);
+      }
+
+      .exp-footer__legal a:hover {
+        color: var(--exp-accent);
+      }
+    </style>
+  </body>
+</html>

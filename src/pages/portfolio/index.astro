@@ -1,0 +1,116 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import GalleryCard from '../../components/GalleryCard.astro';
+import { galleryCover } from '../../lib/photos';
+import { url } from '../../lib/url';
+
+const services = (await getCollection('services')).sort(
+  (a, b) => a.data.order - b.data.order,
+);
+const projects = (await getCollection('projects')).sort(
+  (a, b) => a.data.order - b.data.order,
+);
+---
+
+<BaseLayout
+  title="Portfolio"
+  description="Portfolio de Hélène Javaux : prestations photo (portrait, sport, packshot, événementiel) et projets documentaires et artistiques."
+>
+  <header class="container page-header">
+    <p class="kicker">Portfolio</p>
+    <h1>Des histoires vraies, en images</h1>
+    <p>
+      D'un côté, les prestations que je réalise pour mes clients. De l'autre,
+      mes projets personnels et documentaires, menés au long cours. Deux
+      facettes d'un même regard.
+    </p>
+  </header>
+
+  <section class="container portfolio-section" aria-labelledby="titre-services">
+    <p class="kicker">Ce que je fais pour toi</p>
+    <h2 id="titre-services">Services</h2>
+    <p class="portfolio-section__intro">
+      Un aperçu de mes prestations, par type. Ton projet ne rentre dans aucune
+      case ? <a href={url('/contact/')}>Écris-moi</a>, on invente la bonne formule.
+    </p>
+    <div class="portfolio-grid">
+      {
+        services.map((service, i) => (
+          <div data-reveal style={`--reveal-delay: ${(i % 4) * 0.1}s`}>
+            <GalleryCard
+              href={url(`/portfolio/services/${service.id}/`)}
+              title={service.data.title}
+              cover={galleryCover('services', service.id, service.data.cover)}
+            />
+          </div>
+        ))
+      }
+    </div>
+  </section>
+
+  <section class="container portfolio-section" aria-labelledby="titre-projets">
+    <p class="kicker">Mon regard personnel</p>
+    <h2 id="titre-projets">Projets</h2>
+    <p class="portfolio-section__intro">
+      Travaux artistiques et documentaires — le laboratoire où se forge ma
+      façon de photographier.
+    </p>
+    <div class="portfolio-grid">
+      {
+        projects.map((project, i) => (
+          <div data-reveal style={`--reveal-delay: ${(i % 4) * 0.1}s`}>
+            <GalleryCard
+              href={url(`/portfolio/projets/${project.id}/`)}
+              title={project.data.title}
+              subtitle={project.data.year?.toString()}
+              cover={galleryCover('projects', project.id, project.data.cover)}
+            />
+          </div>
+        ))
+      }
+    </div>
+  </section>
+
+  <section class="cta-band">
+    <div class="container" data-reveal>
+      <p class="kicker kicker--center kicker--on-dark">On travaille ensemble ?</p>
+      <h2>Une de ces images t'a donné une idée ?</h2>
+      <p>Parle-m'en — chaque projet commence par une simple conversation.</p>
+      <a href={url('/contact/')} class="btn btn--light">Me contacter</a>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .portfolio-section {
+    margin-bottom: clamp(3rem, 8vw, 5.5rem);
+  }
+
+  .portfolio-section h2 {
+    margin-bottom: 0.2em;
+  }
+
+  .portfolio-section__intro {
+    color: var(--color-muted);
+    max-width: 40rem;
+    margin-bottom: 2.25rem;
+  }
+
+  .portfolio-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(17rem, 1fr));
+    gap: 1.75rem;
+  }
+
+  /* Rythme éditorial : une carte sur deux est légèrement décalée */
+  @media (min-width: 48rem) {
+    .portfolio-grid > :nth-child(2n) {
+      transform: translateY(2.25rem);
+    }
+
+    .portfolio-section {
+      margin-bottom: clamp(4.5rem, 10vw, 7rem);
+    }
+  }
+</style>

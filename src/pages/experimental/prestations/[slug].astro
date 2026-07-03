@@ -1,0 +1,299 @@
+---
+import { getCollection } from 'astro:content';
+import ExpLayout from '../../../layouts/ExpLayout.astro';
+import PhotoGrid from '../../../components/PhotoGrid.astro';
+import Lightbox from '../../../components/Lightbox.astro';
+import { galleryPhotos } from '../../../lib/photos';
+import { url } from '../../../lib/url';
+
+export async function getStaticPaths() {
+  const services = await getCollection('services');
+  return services.map((service) => ({
+    params: { slug: service.id },
+    props: { service },
+  }));
+}
+
+const { service } = Astro.props;
+const photos = galleryPhotos('services', service.id);
+
+// Carte tarifaire associée (même slug que la galerie de service)
+const tarif = (await getCollection('tarifs')).find((t) => t.id === service.id);
+
+// Série de la galerie dont le regard est proche (déclarée dans le YAML)
+const related = service.data.relatedProject
+  ? (await getCollection('projects')).find((p) => p.id === service.data.relatedProject)
+  : undefined;
+
+// Autres prestations pour poursuivre la visite
+const others = (await getCollection('services'))
+  .filter((s) => s.id !== service.id)
+  .sort((a, b) => a.data.order - b.data.order);
+
+// [PLACEHOLDER — vraies citations clients à confirmer, une par prestation]
+const quotes: Record<string, { quote: string; author: string }> = {
+  portrait: {
+    quote:
+      "Hélène a mis tout le monde à l'aise en quelques minutes. On a oublié l'appareil photo, et les images sont exactement nous.",
+    author: 'Marie & Thomas, séance famille',
+  },
+  sport: {
+    quote:
+      "Des photos de match d'une intensité incroyable, livrées vite et super bien retouchées. On a re-signé pour toute la saison.",
+    author: 'Club de basket de Schaerbeek',
+  },
+  packshot: {
+    quote:
+      'Elle a compris notre univers dès le premier appel. Les packshots ont transformé notre boutique en ligne.',
+    author: 'Atelier Lumen',
+  },
+  evenementiel: {
+    quote:
+      "Une présence qu'on ne remarque pas, et au final toutes les images qu'on aurait eu peur de rater.",
+    author: 'Fête des 60 ans de mon père',
+  },
+};
+const quote = quotes[service.id];
+---
+
+<ExpLayout
+  title={`${service.data.title} — Prestation`}
+  description={`Prestation ${service.data.title.toLowerCase()} par Hélène Javaux, photographe à Bruxelles${tarif ? ` — à partir de ${tarif.data.halfDay}` : ''}. Exemples, tarifs et devis gratuit sous 24 h.`}
+>
+  <header class="container xpage-head">
+    <p class="exp-label">Prestation</p>
+    <h1>{service.data.title}</h1>
+    {service.data.description && <p class="xpage-head__intro">{service.data.description}</p>}
+    <hr class="exp-rule" />
+  </header>
+
+  <div class="container xservice">
+    <div class="xservice__gallery">
+      <PhotoGrid photos={photos} altPrefix={service.data.title} />
+
+      {
+        related && (
+          <p class="xservice__related">
+            Pour sentir mon approche, voir aussi la série
+            <a href={url(`/experimental/series/${related.id}/`)}>
+              {related.data.title}
+              {related.data.year && ` (${related.data.year})`}
+            </a>
+            dans la galerie.
+          </p>
+        )
+      }
+    </div>
+
+    <aside class="xservice__panel">
+      {
+        tarif && (
+          <div class="xservice__pricing">
+            <p class="exp-label">Tarifs</p>
+            {tarif.data.subtitle && <p class="xservice__sub">{tarif.data.subtitle}</p>}
+
+            <dl class="xservice__prices">
+              <div>
+                <dt>Demi-journée</dt>
+                <dd>{tarif.data.halfDay}</dd>
+              </div>
+              <div>
+                <dt>Journée</dt>
+                <dd>{tarif.data.fullDay}</dd>
+              </div>
+            </dl>
+
+            <ul class="xservice__includes">
+              {tarif.data.includes.map((item) => (
+                <li>{item}</li>
+              ))}
+            </ul>
+
+            {tarif.data.note && <p class="xservice__note">{tarif.data.note}</p>}
+
+            <a href={url('/experimental/contact/')} class="xbtn xservice__cta">
+              Demander un devis
+            </a>
+            <p class="xservice__reassure">Gratuit, sans engagement — réponse sous 24 h.</p>
+          </div>
+        )
+      }
+
+      {
+        quote && (
+          <blockquote class="xservice__quote">
+            « {quote.quote} »
+            <footer>— {quote.author}</footer>
+          </blockquote>
+        )
+      }
+    </aside>
+  </div>
+
+  <section class="container xservice-others" data-reveal>
+    <p class="exp-label">Autres prestations</p>
+    <div class="xservice-others__list">
+      {
+        others.map((other) => (
+          <a href={url(`/experimental/prestations/${other.id}/`)} class="exp-arrow-link">
+            {other.data.title} <span aria-hidden="true">→</span>
+          </a>
+        ))
+      }
+    </div>
+  </section>
+
+  <Lightbox />
+</ExpLayout>
+
+<style>
+  .xpage-head {
+    padding-block: clamp(7rem, 16vw, 10rem) 0;
+  }
+
+  .xpage-head__intro {
+    color: var(--exp-muted);
+    max-width: 44rem;
+  }
+
+  .xservice {
+    display: grid;
+    grid-template-columns: minmax(0, 13fr) minmax(0, 6fr);
+    gap: clamp(2rem, 4.5vw, 4rem);
+    align-items: start;
+  }
+
+  .xservice__related {
+    margin-top: 2rem;
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: 1.05rem;
+    color: var(--exp-muted);
+  }
+
+  .xservice__related a {
+    color: var(--exp-accent);
+  }
+
+  .xservice__panel {
+    position: sticky;
+    top: 6rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .xservice__pricing {
+    border: 1px solid var(--exp-line);
+    background: var(--exp-surface);
+    padding: 1.75rem;
+  }
+
+  .xservice__sub {
+    font-size: 0.85rem;
+    color: var(--exp-muted);
+    margin-bottom: 1rem;
+  }
+
+  .xservice__prices {
+    display: flex;
+    gap: 2rem;
+    margin: 0 0 1.25rem;
+    padding-block: 1rem;
+    border-block: 1px solid var(--exp-line);
+  }
+
+  .xservice__prices dt {
+    font-size: 0.7rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--exp-muted);
+  }
+
+  .xservice__prices dd {
+    margin: 0.15rem 0 0;
+    font-family: var(--font-display);
+    font-size: 1.6rem;
+    color: var(--exp-accent);
+  }
+
+  .xservice__includes {
+    list-style: none;
+    margin: 0 0 1.25rem;
+    padding: 0;
+  }
+
+  .xservice__includes li {
+    position: relative;
+    padding-left: 1.5rem;
+    margin-bottom: 0.45rem;
+    font-size: 0.9rem;
+  }
+
+  .xservice__includes li::before {
+    content: '—';
+    position: absolute;
+    left: 0;
+    color: var(--exp-accent);
+  }
+
+  .xservice__note {
+    font-style: italic;
+    font-size: 0.82rem;
+    color: var(--exp-muted);
+    margin-bottom: 1.25rem;
+  }
+
+  .xservice__cta {
+    display: block;
+    width: 100%;
+    text-align: center;
+  }
+
+  .xservice__reassure {
+    margin: 0.85rem 0 0;
+    font-size: 0.8rem;
+    color: var(--exp-muted);
+    text-align: center;
+  }
+
+  .xservice__quote {
+    margin: 0;
+    padding: 1.5rem;
+    border: 1px solid var(--exp-line);
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: 1rem;
+    line-height: 1.55;
+  }
+
+  .xservice__quote footer {
+    margin-top: 0.85rem;
+    font-family: var(--font-body);
+    font-style: normal;
+    font-size: 0.78rem;
+    color: var(--exp-muted);
+  }
+
+  .xservice-others {
+    margin-top: clamp(3.5rem, 8vw, 5.5rem);
+    padding-top: 2.5rem;
+    border-top: 1px solid var(--exp-line);
+  }
+
+  .xservice-others__list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.25rem 2.5rem;
+  }
+
+  @media (max-width: 56rem) {
+    .xservice {
+      grid-template-columns: 1fr;
+    }
+
+    .xservice__panel {
+      position: static;
+    }
+  }
+</style>

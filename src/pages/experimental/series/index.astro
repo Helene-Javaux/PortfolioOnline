@@ -1,0 +1,130 @@
+---
+import { Image } from 'astro:assets';
+import { getCollection } from 'astro:content';
+import ExpLayout from '../../../layouts/ExpLayout.astro';
+import { galleryCover } from '../../../lib/photos';
+import { url } from '../../../lib/url';
+
+const projects = (await getCollection('projects')).sort(
+  (a, b) => a.data.order - b.data.order,
+);
+---
+
+<ExpLayout
+  title="Les séries"
+  description="Les séries photographiques de Hélène Javaux : Wild Care, Ferrarias, Thalassophobie, Au rythme des pas."
+>
+  <header class="container xpage-head">
+    <p class="exp-label">La galerie</p>
+    <h1>Les <em>séries</em></h1>
+    <p class="xpage-head__intro">
+      Chaque série est une salle : entrez, prenez votre temps. Les images
+      disponibles en tirage sont signalées dans la boutique.
+    </p>
+    <hr class="exp-rule" />
+  </header>
+
+  <section class="container xindex">
+    {
+      projects.map((project, i) => (
+        <a
+          href={url(`/experimental/series/${project.id}/`)}
+          class="xindex__item"
+          data-reveal
+          style={`--reveal-delay: ${(i % 2) * 0.12}s`}
+        >
+          <div class="xindex__media">
+            <Image
+              src={galleryCover('projects', project.id, project.data.cover)}
+              alt={project.data.title}
+              width={900}
+              widths={[500, 900]}
+              sizes="(max-width: 48rem) 100vw, 50vw"
+              loading="lazy"
+            />
+          </div>
+          <div class="xindex__caption">
+            <span class="xindex__num">{String(i + 1).padStart(2, '0')}</span>
+            <h2>{project.data.title}</h2>
+            {project.data.year && <span class="xindex__year">{project.data.year}</span>}
+          </div>
+        </a>
+      ))
+    }
+  </section>
+</ExpLayout>
+
+<style>
+  .xpage-head {
+    padding-block: clamp(7rem, 16vw, 10rem) 0;
+  }
+
+  .xpage-head__intro {
+    color: var(--exp-muted);
+    max-width: 38rem;
+  }
+
+  .xindex {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(19rem, 1fr));
+    gap: clamp(1.75rem, 4vw, 3rem);
+    margin-top: 1rem;
+  }
+
+  /* Rythme : une vignette sur deux descend */
+  @media (min-width: 48rem) {
+    .xindex > :nth-child(2n) {
+      transform: translateY(3rem);
+    }
+
+    .xindex {
+      padding-bottom: 3rem;
+    }
+  }
+
+  .xindex__item {
+    text-decoration: none;
+  }
+
+  .xindex__media {
+    overflow: hidden;
+  }
+
+  .xindex__media img {
+    width: 100%;
+    height: auto;
+    transition: transform 0.7s ease, opacity 0.4s ease;
+  }
+
+  .xindex__item:hover .xindex__media img {
+    transform: scale(1.03);
+    opacity: 0.9;
+  }
+
+  .xindex__caption {
+    display: flex;
+    align-items: baseline;
+    gap: 0.85rem;
+    padding-block: 1rem;
+  }
+
+  .xindex__num {
+    font-family: var(--font-display);
+    font-style: italic;
+    color: var(--exp-accent);
+    font-size: 0.95rem;
+  }
+
+  .xindex__caption h2 {
+    font-size: 1.5rem;
+    margin: 0;
+  }
+
+  .xindex__year {
+    margin-left: auto;
+    font-size: 0.72rem;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: var(--exp-muted);
+  }
+</style>

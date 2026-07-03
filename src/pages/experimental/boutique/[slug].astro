@@ -1,0 +1,352 @@
+---
+import { Image } from 'astro:assets';
+import { getCollection } from 'astro:content';
+import ExpLayout from '../../../layouts/ExpLayout.astro';
+import { photo } from '../../../lib/photos';
+import { url } from '../../../lib/url';
+// ⚠️ Clé Web3Forms dédiée aux tirages — à configurer dans src/config.ts
+import { WEB3FORMS_PRINTS_KEY } from '../../../config';
+
+export async function getStaticPaths() {
+  const prints = await getCollection('prints');
+  return prints
+    .filter((print) => print.data.available)
+    .map((print) => ({ params: { slug: print.id }, props: { print } }));
+}
+
+const { print } = Astro.props;
+const image = photo(print.data.photo);
+
+// Série d'origine (lien retour vers la salle correspondante)
+const seriesSlug = print.data.photo.split('/')[1];
+const series = (await getCollection('projects')).find((p) => p.id === seriesSlug);
+
+// Autres tirages pour la suite de la visite
+const others = (await getCollection('prints'))
+  .filter((p) => p.data.available && p.id !== print.id)
+  .sort((a, b) => a.data.order - b.data.order)
+  .slice(0, 3);
+---
+
+<ExpLayout
+  title={`Tirage « ${print.data.title} »`}
+  description={`Tirage d'art « ${print.data.title} » (réf. ${print.data.reference}) de Hélène Javaux — dès ${print.data.formats[0]!.price}, signé et imprimé à la demande.`}
+>
+  <article class="container xprint">
+    <div class="xprint__media">
+      <div class="xprint__frame">
+        <Image
+          src={image}
+          alt={`Tirage « ${print.data.title} »`}
+          width={1100}
+          widths={[600, 900, 1100]}
+          sizes="(max-width: 56rem) 92vw, 55vw"
+          loading="eager"
+          fetchpriority="high"
+        />
+      </div>
+      {
+        series && (
+          <p class="xprint__series">
+            Issu de la série
+            <a href={url(`/experimental/series/${series.id}/`)}>
+              {series.data.title}
+              {series.data.year && ` (${series.data.year})`}
+            </a>
+          </p>
+        )
+      }
+    </div>
+
+    <div class="xprint__panel">
+      <p class="exp-label">Tirage d'art — réf. {print.data.reference}</p>
+      <h1>{print.data.title}</h1>
+      {print.data.description && <p class="xprint__desc">{print.data.description}</p>}
+
+      <ul class="xprint__assurances">
+        <li>Impression fine art à la demande, signée au dos</li>
+        <li>Remise en main propre à Bruxelles ou envoi soigné</li>
+        <li>Paiement simple par virement — aucune plateforme</li>
+        <li>Réponse personnelle sous 24 h</li>
+      </ul>
+
+      <!-- Formulaire de demande : la référence est déjà renseignée -->
+      <form id="print-order" class="xprint__form" novalidate>
+        <input type="hidden" name="access_key" value={WEB3FORMS_PRINTS_KEY} />
+        <input type="hidden" name="subject" value={`Demande de tirage « ${print.data.title} » (${print.data.reference})`} />
+        <input type="hidden" name="from_name" value="Boutique helenejavaux.be (expérimental)" />
+        <input type="hidden" name="reference_tirage" value={`${print.data.title} — ${print.data.reference}`} />
+        <input type="checkbox" name="botcheck" class="visually-hidden" tabindex="-1" autocomplete="off" />
+
+        <fieldset class="xprint__formats">
+          <legend>Choisir un format</legend>
+          {
+            print.data.formats.map((format, i) => (
+              <label class="xprint__format">
+                <input
+                  type="radio"
+                  name="format_souhaite"
+                  value={`${format.label} — ${format.price}`}
+                  required
+                  checked={i === 0}
+                />
+                <span class="xprint__format-label">{format.label}</span>
+                <span class="xprint__format-price">{format.price}</span>
+              </label>
+            ))
+          }
+        </fieldset>
+
+        <div class="field">
+          <label for="po-name">Nom</label>
+          <input id="po-name" type="text" name="name" required autocomplete="name" />
+        </div>
+
+        <div class="field">
+          <label for="po-email">E-mail</label>
+          <input id="po-email" type="email" name="email" required autocomplete="email" />
+        </div>
+
+        <div class="field">
+          <label for="po-message">Un mot, une question ? (optionnel)</label>
+          <textarea id="po-message" name="message" rows="3"></textarea>
+        </div>
+
+        <button class="xbtn xprint__submit" type="submit">Demander ce tirage</button>
+        <p class="form-status" role="status" aria-live="polite"></p>
+        <p class="xprint__reassure">
+          Aucune obligation : votre demande ouvre simplement la conversation.
+        </p>
+      </form>
+    </div>
+  </article>
+
+  {
+    others.length > 0 && (
+      <section class="container xprint-others" data-reveal>
+        <p class="exp-label">Continuer la visite</p>
+        <h2>
+          D'autres <em>tirages</em>
+        </h2>
+        <div class="xprint-others__grid">
+          {others.map((other) => (
+            <a href={url(`/experimental/boutique/${other.id}/`)} class="xprint-others__card">
+              <Image
+                src={photo(other.data.photo)}
+                alt={`Tirage « ${other.data.title} »`}
+                width={560}
+                widths={[400, 560]}
+                sizes="(max-width: 40rem) 90vw, 30vw"
+                loading="lazy"
+              />
+              <div class="xprint-others__caption">
+                <span>{other.data.title}</span>
+                <span class="xprint-others__price">dès {other.data.formats[0]!.price}</span>
+              </div>
+            </a>
+          ))}
+        </div>
+      </section>
+    )
+  }
+</ExpLayout>
+
+<script>
+  import { bindWeb3Form } from '../../../lib/web3form';
+
+  bindWeb3Form(document.getElementById('print-order') as HTMLFormElement);
+</script>
+
+<style>
+  .xprint {
+    display: grid;
+    grid-template-columns: minmax(0, 11fr) minmax(0, 8fr);
+    gap: clamp(2rem, 5vw, 4.5rem);
+    align-items: start;
+    padding-top: clamp(6.5rem, 14vw, 9rem);
+  }
+
+  .xprint__media {
+    position: sticky;
+    top: 6rem;
+  }
+
+  .xprint__frame {
+    background: var(--exp-surface);
+    border: 1px solid var(--exp-line);
+    padding: clamp(1.25rem, 3vw, 2.25rem);
+  }
+
+  .xprint__frame img {
+    width: 100%;
+  }
+
+  .xprint__series {
+    margin-top: 1rem;
+    font-size: 0.9rem;
+    color: var(--exp-muted);
+  }
+
+  .xprint__series a {
+    color: var(--exp-accent);
+  }
+
+  .xprint__panel h1 {
+    font-size: clamp(2.2rem, 4.5vw, 3.2rem);
+  }
+
+  .xprint__desc {
+    color: var(--exp-muted);
+  }
+
+  .xprint__assurances {
+    list-style: none;
+    margin: 1.75rem 0 2.25rem;
+    padding: 0;
+    border-block: 1px solid var(--exp-line);
+  }
+
+  .xprint__assurances li {
+    position: relative;
+    padding: 0.55rem 0 0.55rem 1.6rem;
+    font-size: 0.92rem;
+    color: var(--exp-text);
+  }
+
+  .xprint__assurances li + li {
+    border-top: 1px solid var(--exp-line);
+  }
+
+  .xprint__assurances li::before {
+    content: '—';
+    position: absolute;
+    left: 0;
+    color: var(--exp-accent);
+  }
+
+  .xprint__formats {
+    border: none;
+    margin: 0 0 1.5rem;
+    padding: 0;
+  }
+
+  .xprint__formats legend {
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--exp-muted);
+    margin-bottom: 0.6rem;
+    padding: 0;
+  }
+
+  .xprint__format {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    padding: 0.8rem 1rem;
+    border: 1px solid var(--exp-line);
+    cursor: pointer;
+    transition: border-color 0.2s ease, background 0.2s ease;
+  }
+
+  .xprint__format + .xprint__format {
+    margin-top: 0.5rem;
+  }
+
+  .xprint__format:hover {
+    border-color: var(--exp-muted);
+  }
+
+  .xprint__format:has(input:checked) {
+    border-color: var(--exp-accent);
+    background: var(--exp-accent-soft);
+  }
+
+  .xprint__format input {
+    accent-color: var(--exp-accent);
+  }
+
+  .xprint__format-label {
+    font-size: 0.95rem;
+  }
+
+  .xprint__format-price {
+    margin-left: auto;
+    font-family: var(--font-display);
+    font-size: 1.05rem;
+    color: var(--exp-accent);
+    white-space: nowrap;
+  }
+
+  .xprint__submit {
+    width: 100%;
+    text-align: center;
+  }
+
+  .xprint__reassure {
+    margin-top: 0.9rem;
+    font-size: 0.82rem;
+    color: var(--exp-muted);
+    text-align: center;
+  }
+
+  .xprint-others {
+    margin-top: clamp(4rem, 10vw, 7rem);
+    padding-top: clamp(2.5rem, 6vw, 4rem);
+    border-top: 1px solid var(--exp-line);
+  }
+
+  .xprint-others h2 em {
+    color: var(--exp-accent);
+  }
+
+  .xprint-others__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(13rem, 20rem));
+    gap: 1.75rem;
+    margin-top: 2rem;
+  }
+
+  .xprint-others__card {
+    text-decoration: none;
+  }
+
+  .xprint-others__card img {
+    width: 100%;
+    transition: opacity 0.3s ease;
+  }
+
+  .xprint-others__card:hover img {
+    opacity: 0.88;
+  }
+
+  .xprint-others__caption {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 1rem;
+    padding-block: 0.8rem;
+    font-family: var(--font-display);
+    font-size: 1.05rem;
+  }
+
+  .xprint-others__price {
+    font-family: var(--font-body);
+    font-size: 0.78rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--exp-accent);
+    white-space: nowrap;
+  }
+
+  @media (max-width: 56rem) {
+    .xprint {
+      grid-template-columns: 1fr;
+    }
+
+    .xprint__media {
+      position: static;
+    }
+  }
+</style>

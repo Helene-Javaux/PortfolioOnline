@@ -1,0 +1,151 @@
+---
+import { Image } from 'astro:assets';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { photo } from '../lib/photos';
+import { url } from '../lib/url';
+
+const portrait = photo('about/portrait.jpg');
+---
+
+<BaseLayout
+  title="À propos"
+  description="Hélène Javaux, photographe diplômée de la HELB en 2024, basée à Bruxelles. Portraits, reportages et projets documentaires — des images vraies, sans artifices."
+>
+  <header class="container page-header">
+    <p class="kicker">À propos</p>
+    <h1>Derrière l'objectif, il y a Hélène</h1>
+  </header>
+
+  <section class="container about-layout">
+    <div class="about-portrait" data-reveal>
+      <Image
+        src={portrait}
+        alt="Portrait de Hélène Javaux"
+        width={640}
+        widths={[420, 640]}
+        sizes="(max-width: 48rem) 90vw, 640px"
+        loading="eager"
+      />
+    </div>
+
+    <div class="about-text" data-reveal style="--reveal-delay: 0.15s">
+      <p class="about-lead">
+        Hello ! Moi, c'est Hélène. Passionnée de photo, j'ai décidé d'en faire
+        mon métier.
+      </p>
+      <p>
+        Après quelques années à explorer, tester, me tromper et apprendre, j'ai
+        obtenu mon diplôme à la HELB (anciennement Inraci) en 2024. Une étape
+        importante — mais pour moi, la vraie école, c'est le terrain, les
+        rencontres, les émotions à capter.
+      </p>
+      <p>
+        Ce que j'aime par-dessus tout ? L'authenticité. Les instants vrais, les
+        sourires spontanés, les regards qui en disent long. Pas besoin d'en
+        faire trop : la beauté est souvent dans les détails simples, dans la
+        lumière naturelle, dans un geste tendre.
+      </p>
+      <p>
+        Je suis aussi une grande amoureuse de la nature — c'est souvent là que
+        je me ressource et que je trouve l'inspiration. Si on peut shooter
+        dehors, je dis oui direct.
+      </p>
+      <p>
+        Mon but, c'est que tu te sentes à l'aise, que tes envies soient
+        entendues, et surtout que le résultat te ressemble. Un moment en
+        famille, un projet pro ou juste pour toi : je suis là pour
+        t'accompagner, sans chichis.
+      </p>
+    </div>
+  </section>
+
+  <section class="container about-facts" data-reveal>
+    <dl>
+      <div>
+        <dt>Formation</dt>
+        <dd>HELB — anciennement Inraci, diplômée en 2024</dd>
+      </div>
+      <div>
+        <dt>Basée à</dt>
+        <dd>Bruxelles, mobile partout en Belgique</dd>
+      </div>
+      <div>
+        <dt>Terrains de jeu</dt>
+        <dd>Portrait, sport, packshot, événementiel, projets documentaires</dd>
+      </div>
+      <div>
+        <dt>Ma marque</dt>
+        <dd>La lumière naturelle et les instants qu'on ne rejoue pas</dd>
+      </div>
+    </dl>
+  </section>
+
+  <section class="cta-band">
+    <div class="container" data-reveal>
+      <p class="kicker kicker--center kicker--on-dark">Et maintenant ?</p>
+      <h2>Si mes images résonnent en toi, on va bien s'entendre.</h2>
+      <p>Raconte-moi ton projet — je réponds personnellement à chaque message.</p>
+      <a href={url('/contact/')} class="btn btn--light">Me contacter</a>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .about-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
+    gap: clamp(2rem, 5vw, 4.5rem);
+    align-items: start;
+  }
+
+  .about-portrait img {
+    width: 100%;
+  }
+
+  .about-lead {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(1.25rem, 2.5vw, 1.6rem);
+    line-height: 1.4;
+    color: var(--color-ink);
+    margin-bottom: 1.5rem;
+  }
+
+  .about-facts {
+    margin-top: clamp(3rem, 7vw, 5rem);
+  }
+
+  .about-facts dl {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
+    gap: 1.5rem;
+    margin: 0;
+    padding-top: 2rem;
+    border-top: 1px solid var(--color-line);
+  }
+
+  .about-facts dt {
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--color-muted);
+    margin-bottom: 0.35rem;
+  }
+
+  .about-facts dd {
+    margin: 0;
+    color: var(--color-ink);
+    font-size: 0.98rem;
+  }
+
+  @media (max-width: 48rem) {
+    .about-layout {
+      grid-template-columns: 1fr;
+    }
+
+    .about-portrait {
+      max-width: 26rem;
+    }
+  }
+</style>

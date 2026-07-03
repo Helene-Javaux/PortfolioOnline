@@ -1,0 +1,21 @@
+---
+import { getCollection } from 'astro:content';
+import GalleryPage from '../../../components/GalleryPage.astro';
+
+export async function getStaticPaths() {
+  const services = await getCollection('services');
+  return services.map((service) => ({
+    params: { slug: service.id },
+    props: { service },
+  }));
+}
+
+const { service } = Astro.props;
+---
+
+<GalleryPage
+  category="services"
+  slug={service.id}
+  title={service.data.title}
+  description={service.data.description}
+/>

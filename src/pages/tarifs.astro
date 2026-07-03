@@ -1,0 +1,101 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PriceCard from '../components/PriceCard.astro';
+import Testimonials from '../components/Testimonials.astro';
+import { url } from '../lib/url';
+
+const tarifs = (await getCollection('tarifs')).sort(
+  (a, b) => a.data.order - b.data.order,
+);
+---
+
+<BaseLayout
+  title="Tarifs"
+  description="Tarifs des prestations photo de Hélène Javaux : portrait, sport, packshot, événementiel. Prix à la journée et demi-journée, en toute transparence."
+>
+  <header class="container page-header">
+    <p class="kicker">Tarifs</p>
+    <h1>Des prix clairs, sans surprise</h1>
+    <p>
+      Chaque projet est unique : ces tarifs donnent un ordre de grandeur, et un
+      devis précis est toujours établi ensemble avant la prestation. Pas de
+      frais cachés, promis.
+    </p>
+  </header>
+
+  <section class="container">
+    <div class="tarifs-grid">
+      {
+        tarifs.map((tarif, i) => (
+          <div data-reveal style={`--reveal-delay: ${(i % 4) * 0.1}s`}>
+            <PriceCard
+              title={tarif.data.title}
+              subtitle={tarif.data.subtitle}
+              halfDay={tarif.data.halfDay}
+              fullDay={tarif.data.fullDay}
+              includes={tarif.data.includes}
+              note={tarif.data.note}
+            />
+          </div>
+        ))
+      }
+    </div>
+  </section>
+
+  <section class="container tarifs-extra" data-reveal>
+    <p class="kicker">Les détails qui comptent</p>
+    <h2>Frais de déplacement</h2>
+    <p>
+      Déplacements <strong>gratuits dans un rayon de 30 km autour de
+      Bruxelles</strong>. Au-delà, un forfait de
+      <strong>0,45 €/km</strong> est appliqué (aller-retour).
+      <!-- [PLACEHOLDER — valeurs indicatives à confirmer] -->
+    </p>
+
+    <h2>Bon à savoir</h2>
+    <ul>
+      <li>Toutes les photos livrées sont retouchées et remises en haute définition via une galerie en ligne privée.</li>
+      <li>Un acompte de 30 % confirme la réservation de la date.</li>
+      <li>Les images restent la propriété intellectuelle de la photographe ; une licence d'utilisation adaptée à ton usage est incluse.</li>
+      <li>Besoin d'une prestation sur mesure (mariage, reportage longue durée…) ? <a href={url('/contact/')}>Parlons-en</a>.</li>
+    </ul>
+  </section>
+
+  <Testimonials />
+
+  <section class="cta-band">
+    <div class="container" data-reveal>
+      <p class="kicker kicker--center kicker--on-dark">Prochaine étape</p>
+      <h2>Un devis en 24 h, sans engagement</h2>
+      <p>Décris-moi ton projet en quelques lignes, je reviens vers toi rapidement avec une proposition.</p>
+      <a href={url('/contact/')} class="btn btn--light">Demander un devis</a>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .tarifs-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(17rem, 1fr));
+    gap: 1.5rem;
+  }
+
+  .tarifs-extra {
+    max-width: 46rem;
+    margin-top: clamp(3rem, 8vw, 5rem);
+  }
+
+  .tarifs-extra h2 {
+    margin-top: 2rem;
+    font-size: 1.4rem;
+  }
+
+  .tarifs-extra ul {
+    padding-left: 1.25rem;
+  }
+
+  .tarifs-extra li {
+    margin-bottom: 0.5rem;
+  }
+</style>

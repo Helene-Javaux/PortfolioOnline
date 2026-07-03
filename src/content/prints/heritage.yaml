@@ -1,0 +1,12 @@
+title: Héritage
+reference: HJ-FE-08
+photo: projects/ferrarias/ferrarias-08.jpg
+description: Tirage issu de la série Ferrarias (2023). # [PLACEHOLDER — description à affiner]
+order: 6
+formats:
+  - label: A4 (21 × 29,7 cm)
+    price: 45 € # [PLACEHOLDER — prix indicatif à confirmer]
+  - label: A3 (29,7 × 42 cm)
+    price: 70 €
+  - label: A2 (42 × 59,4 cm)
+    price: 110 €

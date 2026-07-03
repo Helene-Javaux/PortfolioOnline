@@ -1,0 +1,13 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { url } from '../lib/url';
+---
+
+<BaseLayout title="Page introuvable">
+  <section class="container page-header">
+    <p class="kicker">Erreur 404</p>
+    <h1>Cette page s'est perdue en chemin</h1>
+    <p>Elle n'existe pas (ou plus) — mais le reste du site t'attend.</p>
+    <p><a href={url('/')} class="btn">Retour à l'accueil</a></p>
+  </section>
+</BaseLayout>

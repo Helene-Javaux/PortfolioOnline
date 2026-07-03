@@ -1,0 +1,89 @@
+---
+/**
+ * Témoignages clients — [PLACEHOLDER : remplacer par de vraies citations
+ * avec l'accord des clients concernés].
+ */
+const testimonials = [
+  {
+    quote:
+      "Hélène a mis tout le monde à l'aise en quelques minutes. On a oublié l'appareil photo, et les images sont exactement nous.",
+    author: 'Marie & Thomas',
+    context: 'Séance famille',
+  },
+  {
+    quote:
+      "Des photos de match d'une intensité incroyable, livrées vite et super bien retouchées. On a re-signé pour toute la saison.",
+    author: 'Club de basket de Schaerbeek',
+    context: 'Reportage sportif',
+  },
+  {
+    quote:
+      'Elle a compris notre univers dès le premier appel. Les packshots ont transformé notre boutique en ligne.',
+    author: 'Atelier Lumen',
+    context: 'Packshot produits',
+  },
+];
+---
+
+<section class="testimonials" aria-label="Témoignages de clients">
+  <div class="container">
+    <p class="kicker">Ils m'ont fait confiance</p>
+    <div class="testimonials__grid">
+      {
+        testimonials.map((t, i) => (
+          <figure data-reveal style={`--reveal-delay: ${i * 0.12}s`}>
+            <blockquote>
+              <p>« {t.quote} »</p>
+            </blockquote>
+            <figcaption>
+              <strong>{t.author}</strong> — {t.context}
+            </figcaption>
+          </figure>
+        ))
+      }
+    </div>
+  </div>
+</section>
+
+<style>
+  .testimonials {
+    background: var(--color-paper-soft);
+    padding-block: clamp(3rem, 8vw, 5rem);
+    margin-top: clamp(3rem, 8vw, 5rem);
+  }
+
+  .testimonials__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+    gap: 2rem;
+  }
+
+  .testimonials figure {
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .testimonials blockquote {
+    margin: 0;
+    flex: 1;
+  }
+
+  .testimonials blockquote p {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 1.05rem;
+    line-height: 1.5;
+    color: var(--color-ink);
+  }
+
+  .testimonials figcaption {
+    font-size: 0.85rem;
+    color: var(--color-muted);
+  }
+
+  .testimonials figcaption strong {
+    color: var(--color-ink);
+    font-weight: 600;
+  }
+</style>

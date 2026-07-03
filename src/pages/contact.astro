@@ -1,0 +1,93 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ContactForm from '../components/ContactForm.astro';
+import Testimonials from '../components/Testimonials.astro';
+import { SITE } from '../config';
+---
+
+<BaseLayout
+  title="Contact"
+  description="Contactez Hélène Javaux, photographe à Bruxelles : portrait, sport, packshot, événementiel, projets artistiques et tirages."
+>
+  <header class="container page-header">
+    <p class="kicker">Contact</p>
+    <h1>Parlons de ton projet</h1>
+    <p>
+      Une envie, une question, une idée encore floue ? Écris-moi — je réponds
+      personnellement à chaque message, en général sous 24 h.
+    </p>
+  </header>
+
+  <section class="container contact-layout">
+    <div class="contact-info" data-reveal>
+      <h2>Coordonnées</h2>
+      <ul>
+        <li>
+          <span class="contact-info__label">E-mail</span>
+          <a href={`mailto:${SITE.email}`}>{SITE.email}</a>
+        </li>
+        <li>
+          <span class="contact-info__label">Téléphone</span>
+          <a href={SITE.phoneHref}>{SITE.phone}</a>
+        </li>
+        <li>
+          <span class="contact-info__label">Instagram</span>
+          <a href={SITE.instagram} target="_blank" rel="noopener">{SITE.instagramHandle}</a>
+        </li>
+        <li>
+          <span class="contact-info__label">Basée à</span>
+          {SITE.location}
+        </li>
+      </ul>
+    </div>
+
+    <div class="contact-form-wrap" data-reveal style="--reveal-delay: 0.12s">
+      <ContactForm />
+    </div>
+  </section>
+
+  <Testimonials />
+</BaseLayout>
+
+<style>
+  .contact-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.6fr);
+    gap: clamp(2rem, 6vw, 5rem);
+    align-items: start;
+  }
+
+  .contact-info h2 {
+    font-size: 1.4rem;
+  }
+
+  .contact-info ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .contact-info li {
+    margin-bottom: 1.25rem;
+  }
+
+  .contact-info__label {
+    display: block;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-muted);
+    margin-bottom: 0.15rem;
+  }
+
+  .contact-info a {
+    color: var(--color-ink);
+  }
+
+  @media (max-width: 48rem) {
+    .contact-layout {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

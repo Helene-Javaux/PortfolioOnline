@@ -1,0 +1,88 @@
+---
+/**
+ * Corps commun des pages de galerie (projet ou service) :
+ * titre, texte d'intention, photo d'ouverture + grille, lightbox,
+ * et invitation au contact en fin de page.
+ */
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PhotoGrid from './PhotoGrid.astro';
+import Lightbox from './Lightbox.astro';
+import { galleryPhotos } from '../lib/photos';
+import { url } from '../lib/url';
+
+interface Props {
+  category: 'projects' | 'services';
+  slug: string;
+  title: string;
+  year?: number;
+  description?: string;
+}
+
+const { category, slug, title, year, description } = Astro.props;
+const photos = galleryPhotos(category, slug);
+
+const isProject = category === 'projects';
+const kicker = isProject
+  ? `Projet${year ? ` — ${year}` : ''}`
+  : 'Service';
+const cta = isProject
+  ? {
+      title: "Ce projet t'inspire ? Discutons du tien.",
+      text: "J'aime les idées qui sortent des sentiers battus — raconte-moi la tienne.",
+    }
+  : {
+      title: "Envie d'images comme celles-ci ?",
+      text: 'Dis-moi ce que tu imagines, je te réponds avec une proposition concrète.',
+    };
+---
+
+<BaseLayout title={title} description={description ?? `${title} — galerie photo de Hélène Javaux.`}>
+  <header class="container page-header gallery-header">
+    <p class="kicker">{kicker}</p>
+    <h1>{title}</h1>
+    {description && <p class="gallery-header__description">{description}</p>}
+  </header>
+
+  <div class="container">
+    <PhotoGrid photos={photos} altPrefix={title} />
+
+    <p class="gallery-back">
+      <a href={url('/portfolio/')}>← Retour au portfolio</a>
+    </p>
+  </div>
+
+  <section class="cta-band">
+    <div class="container" data-reveal>
+      <p class="kicker kicker--center kicker--on-dark">On en parle ?</p>
+      <h2>{cta.title}</h2>
+      <p>{cta.text}</p>
+      <a href={url('/contact/')} class="btn btn--light">Me contacter</a>
+    </div>
+  </section>
+
+  <Lightbox />
+</BaseLayout>
+
+<style>
+  .gallery-header__description {
+    margin-top: 1.25rem;
+    max-width: 46rem;
+    color: var(--color-body);
+  }
+
+  .gallery-back {
+    margin-top: 2.5rem;
+  }
+
+  .gallery-back a {
+    text-decoration: none;
+    font-size: 0.85rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-muted);
+  }
+
+  .gallery-back a:hover {
+    color: var(--color-ink);
+  }
+</style>

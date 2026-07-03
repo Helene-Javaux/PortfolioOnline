@@ -1,0 +1,320 @@
+/* ------------------------------------------------------------------
+   Styles globaux — palette héritée de l'ancien site (#242424 / #f4f4f4),
+   typographie sans-serif contrastée : Syne (titres) + Manrope (texte).
+   Signature visuelle : le « kicker » (petit libellé précédé d'un trait)
+   qui introduit chaque titre de page et de section.
+   ------------------------------------------------------------------ */
+
+:root {
+  --color-ink: #242424;
+  --color-body: #3c3c3c;
+  --color-muted: #6f6f6f;
+  --color-line: #e2e2e2;
+  --color-paper: #ffffff;
+  --color-paper-soft: #f4f4f4;
+
+  /* Bandes sombres (header, footer, CTA) */
+  --color-dark: #242424;
+  --color-dark-soft: #2e2e2e;
+  --color-on-dark: #f4f4f4;
+  --color-on-dark-muted: #a8a8a8;
+
+  --font-display: 'Syne', system-ui, sans-serif;
+  --font-body: 'Manrope', system-ui, sans-serif;
+
+  --content-width: 72rem;
+  --gutter: clamp(1.25rem, 4vw, 3rem);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: 1rem;
+  line-height: 1.7;
+  color: var(--color-body);
+  background: var(--color-paper);
+  -webkit-font-smoothing: antialiased;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  color: var(--color-ink);
+  line-height: 1.08;
+  letter-spacing: -0.015em;
+  margin: 0 0 0.6em;
+}
+
+h1 {
+  font-size: clamp(2.4rem, 6vw, 4rem);
+  font-weight: 800;
+}
+
+h2 {
+  font-size: clamp(1.7rem, 4vw, 2.5rem);
+}
+
+h3 {
+  font-size: 1.2rem;
+}
+
+p {
+  margin: 0 0 1em;
+}
+
+a {
+  color: inherit;
+}
+
+/* Conteneur principal */
+.container {
+  max-width: var(--content-width);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+/* ------------------------------------------------------------------
+   Signature : le kicker — petit libellé en capitales précédé d'un trait,
+   utilisé avant chaque titre de page et de section.
+   ------------------------------------------------------------------ */
+.kicker {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  margin: 0 0 1.1rem;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+}
+
+.kicker::before {
+  content: '';
+  width: 2.25rem;
+  height: 2px;
+  background: currentColor;
+  flex: none;
+}
+
+.kicker--center {
+  justify-content: center;
+}
+
+.kicker--center::after {
+  content: '';
+  width: 2.25rem;
+  height: 2px;
+  background: currentColor;
+  flex: none;
+}
+
+/* Sur fond sombre */
+.on-dark .kicker,
+.kicker--on-dark {
+  color: var(--color-on-dark-muted);
+}
+
+/* En-tête de page standard */
+.page-header {
+  padding-block: clamp(3rem, 8vw, 5.5rem) clamp(2rem, 5vw, 3.5rem);
+}
+
+.page-header p {
+  max-width: 44rem;
+  color: var(--color-muted);
+}
+
+/* Boutons */
+.btn {
+  display: inline-block;
+  padding: 0.85rem 2.1rem;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.82rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  text-decoration: none;
+  cursor: pointer;
+  border: 1px solid var(--color-ink);
+  background: var(--color-ink);
+  color: var(--color-paper-soft);
+  transition:
+    background 0.2s ease,
+    color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.btn:hover,
+.btn:focus-visible {
+  background: transparent;
+  color: var(--color-ink);
+  transform: translateY(-2px);
+}
+
+.btn--ghost {
+  background: transparent;
+  color: var(--color-ink);
+}
+
+.btn--ghost:hover,
+.btn--ghost:focus-visible {
+  background: var(--color-ink);
+  color: var(--color-paper-soft);
+}
+
+/* Bouton sur fond sombre */
+.btn--light {
+  background: var(--color-paper-soft);
+  border-color: var(--color-paper-soft);
+  color: var(--color-ink);
+}
+
+.btn--light:hover,
+.btn--light:focus-visible {
+  background: transparent;
+  color: var(--color-paper-soft);
+}
+
+/* ------------------------------------------------------------------
+   Bande CTA sombre réutilisable (fin de page)
+   ------------------------------------------------------------------ */
+.cta-band {
+  background: var(--color-dark);
+  color: var(--color-on-dark);
+  text-align: center;
+  padding-block: clamp(3.5rem, 9vw, 6rem);
+  margin-top: clamp(3.5rem, 9vw, 6rem);
+}
+
+.cta-band h2 {
+  color: var(--color-on-dark);
+  max-width: 36rem;
+  margin-inline: auto;
+}
+
+.cta-band p {
+  color: var(--color-on-dark-muted);
+  max-width: 34rem;
+  margin: 0 auto 2rem;
+}
+
+/* ------------------------------------------------------------------
+   Apparition au scroll (activée seulement si JS est présent)
+   ------------------------------------------------------------------ */
+html.js [data-reveal] {
+  opacity: 0;
+  transform: translateY(20px);
+  transition:
+    opacity 0.7s ease,
+    transform 0.7s ease;
+  transition-delay: var(--reveal-delay, 0s);
+}
+
+html.js [data-reveal].is-revealed {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html.js [data-reveal] {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+/* Formulaires */
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  margin-bottom: 1.25rem;
+}
+
+.field label {
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-ink);
+}
+
+.field input,
+.field select,
+.field textarea {
+  font: inherit;
+  color: var(--color-ink);
+  padding: 0.7rem 0.9rem;
+  border: 1px solid var(--color-line);
+  border-radius: 0;
+  background: var(--color-paper);
+}
+
+.field input:focus,
+.field select:focus,
+.field textarea:focus {
+  outline: 2px solid var(--color-ink);
+  outline-offset: -1px;
+}
+
+.form-status {
+  margin-top: 1rem;
+  padding: 0.9rem 1rem;
+  font-size: 0.95rem;
+  display: none;
+}
+
+.form-status[data-state='success'] {
+  display: block;
+  background: #f0f5f0;
+  color: #2c5530;
+  border: 1px solid #cfe0cf;
+}
+
+.form-status[data-state='error'] {
+  display: block;
+  background: #faf0f0;
+  color: #7a2e2e;
+  border: 1px solid #e8cfcf;
+}
+
+/* Accessibilité */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-ink);
+  outline-offset: 2px;
+}
