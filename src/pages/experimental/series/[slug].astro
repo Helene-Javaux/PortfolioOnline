@@ -18,7 +18,7 @@ export async function getStaticPaths() {
 const { project } = Astro.props;
 const photos = galleryPhotos('projects', project.id);
 
-// Tirages disponibles issus de cette série (cross-sell boutique)
+// Tirages disponibles issus de cette sÃ©rie (cross-sell boutique)
 const seriesPrints = (await getCollection('prints'))
   .filter((p) => p.data.available && p.data.photo.startsWith(`projects/${project.id}/`))
   .sort((a, b) => a.data.order - b.data.order);
@@ -26,23 +26,23 @@ const seriesPrints = (await getCollection('prints'))
 
 <ExpLayout
   title={project.data.title}
-  description={project.data.description ?? `${project.data.title} — série photographique de Hélène Javaux.`}
+  description={project.data.description ?? `${project.data.title} â€” sÃ©rie photographique de HÃ©lÃ¨ne Javaux.`}
 >
   <header class="container xpage-head">
-    <p class="exp-label">Série{project.data.year && ` — ${project.data.year}`}</p>
+    <p class="exp-label">SÃ©rie{project.data.year && ` â€” ${project.data.year}`}</p>
     <h1>{project.data.title}</h1>
     {project.data.description && <p class="xpage-head__intro">{project.data.description}</p>}
     <hr class="exp-rule" />
   </header>
 
   <div class="container">
-    <PhotoGrid photos={photos} altPrefix={project.data.title} />
+    <PhotoGrid photos={photos} altPrefix={project.data.title} preserveOriginalRatio />
   </div>
 
   {
     seriesPrints.length > 0 && (
       <section class="container xseries-prints" data-reveal>
-        <p class="exp-label">De cette série, chez vous</p>
+        <p class="exp-label">De cette sÃ©rie, chez vous</p>
         <h2>
           Tirages <em>disponibles</em>
         </h2>
@@ -51,7 +51,7 @@ const seriesPrints = (await getCollection('prints'))
             <a href={url(`/experimental/boutique/${print.id}/`)} class="xseries-prints__card">
               <Image
                 src={photo(print.data.photo)}
-                alt={`Tirage « ${print.data.title} »`}
+                alt={`Tirage Â« ${print.data.title} Â»`}
                 width={640}
                 widths={[400, 640]}
                 sizes="(max-width: 40rem) 90vw, 30vw"
@@ -59,7 +59,7 @@ const seriesPrints = (await getCollection('prints'))
               />
               <div class="xseries-prints__caption">
                 <span>{print.data.title}</span>
-                <span class="xseries-prints__price">dès {print.data.formats[0]!.price}</span>
+                <span class="xseries-prints__price">dÃ¨s {print.data.formats[0]!.price}</span>
               </div>
             </a>
           ))}
@@ -71,13 +71,13 @@ const seriesPrints = (await getCollection('prints'))
   <section class="xgallery-cta" data-reveal>
     <div class="container">
       <p class="exp-label exp-label--center">La suite ?</p>
-      <h2>Cette série vous a <em>parlé</em> ?</h2>
+      <h2>Cette sÃ©rie vous a <em>parlÃ©</em> ?</h2>
       <p>
-        Racontez-moi ce qu'elle a réveillé — ou imaginons ensemble le projet
+        Racontez-moi ce qu'elle a rÃ©veillÃ© â€” ou imaginons ensemble le projet
         qui vous ressemble.
       </p>
       <div class="xgallery-cta__actions">
-        <a href={url('/experimental/contact/')} class="xbtn">Écrire à Hélène</a>
+        <a href={url('/experimental/contact/')} class="xbtn">Ã‰crire Ã  HÃ©lÃ¨ne</a>
         <a href={url('/experimental/series/')} class="xbtn xbtn--ghost">Salle suivante</a>
       </div>
     </div>
@@ -93,7 +93,7 @@ const seriesPrints = (await getCollection('prints'))
 
   .xpage-head__intro {
     color: var(--exp-muted);
-    max-width: 44rem;
+    max-width: 54rem;
   }
 
   .xseries-prints {

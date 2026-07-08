@@ -1,72 +1,48 @@
----
+﻿---
 import { Image, getImage } from 'astro:assets';
 import type { ImageMetadata } from 'astro';
 
 /**
- * Grille de photos d'une galerie : la première photo s'affiche en grand
- * (image d'ouverture), les suivantes en grille libre qui respecte les
- * proportions. Chaque photo ouvre la lightbox (composant <Lightbox />
- * à inclure une fois sur la page).
+ * Grille de photos d'une galerie.
+ * Par defaut, toutes les vignettes gardent la meme empreinte visuelle.
+ * En mode preserveOriginalRatio, chaque image garde son ratio d'origine.
  */
 interface Props {
   photos: ImageMetadata[];
-  /** Préfixe du texte alternatif, ex: "Wild Care" → "Wild Care — photo 3" */
+  /** Prefixe du texte alternatif, ex: "Wild Care" -> "Wild Care - photo 3" */
   altPrefix: string;
+  preserveOriginalRatio?: boolean;
 }
 
-const { photos, altPrefix } = Astro.props;
+const { photos, altPrefix, preserveOriginalRatio = false } = Astro.props;
 
-// Version grand format (lightbox) générée pour chaque photo
+// Version grand format (lightbox) generee pour chaque photo
 const fullSizes = await Promise.all(
   photos.map((p) =>
     getImage({ src: p, width: 1800, format: 'webp', quality: 80 }),
   ),
 );
-
-const [lead, ...rest] = photos;
 ---
 
-{
-  lead && (
-    <a
-      href={fullSizes[0]!.src}
-      class="photo-lead"
-      data-lightbox
-      data-full={fullSizes[0]!.src}
-      aria-label={`Agrandir : ${altPrefix} — photo 1 sur ${photos.length}`}
-      data-reveal
-    >
-      <Image
-        src={lead}
-        alt={`${altPrefix} — photo 1`}
-        width={1600}
-        widths={[720, 1200, 1600]}
-        sizes="(max-width: 76rem) 100vw, 1152px"
-        loading="eager"
-      />
-    </a>
-  )
-}
-
-<div class="photo-grid">
+<div class:list={['photo-grid', { 'photo-grid--original-ratio': preserveOriginalRatio }]}>
   {
-    rest.map((photoSrc, i) => (
+    photos.map((photoSrc, i) => (
       <a
-        href={fullSizes[i + 1]!.src}
+        href={fullSizes[i]!.src}
         class="photo-grid__item"
         data-lightbox
-        data-full={fullSizes[i + 1]!.src}
-        aria-label={`Agrandir : ${altPrefix} — photo ${i + 2} sur ${photos.length}`}
+        data-full={fullSizes[i]!.src}
+        aria-label={`Agrandir : ${altPrefix} - photo ${i + 1} sur ${photos.length}`}
         data-reveal
         style={`--reveal-delay: ${(i % 3) * 0.08}s`}
       >
         <Image
           src={photoSrc}
-          alt={`${altPrefix} — photo ${i + 2}`}
+          alt={`${altPrefix} - photo ${i + 1}`}
           width={720}
           widths={[400, 720, 1000]}
           sizes="(max-width: 40rem) 100vw, (max-width: 64rem) 50vw, 33vw"
-          loading="lazy"
+          loading={i === 0 ? 'eager' : 'lazy'}
         />
       </a>
     ))
@@ -74,39 +50,48 @@ const [lead, ...rest] = photos;
 </div>
 
 <style>
-  .photo-lead {
-    display: block;
-    margin-bottom: 1.5rem;
-  }
-
-  .photo-lead img {
-    width: 100%;
-    height: auto;
-    transition: opacity 0.25s ease;
-  }
-
-  /* Grille "masonry" : les photos gardent leurs proportions */
   .photo-grid {
-    columns: 3 18rem;
-    column-gap: 1.5rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+    gap: 1.5rem;
   }
 
   .photo-grid__item {
     display: block;
-    margin-bottom: 1.5rem;
-    break-inside: avoid;
+    aspect-ratio: 4 / 5;
+    overflow: hidden;
+    background: var(--color-surface, #f3f0eb);
   }
 
   .photo-grid__item img {
     width: 100%;
-    height: auto;
-    transition: opacity 0.25s ease;
+    height: 100%;
+    object-fit: cover;
+    transition:
+      opacity 0.25s ease,
+      transform 0.35s ease;
   }
 
-  .photo-lead:hover img,
-  .photo-lead:focus-visible img,
+  .photo-grid--original-ratio {
+    align-items: center;
+  }
+
+  .photo-grid--original-ratio .photo-grid__item {
+    aspect-ratio: auto;
+    overflow: visible;
+    background: transparent;
+  }
+
+  .photo-grid--original-ratio .photo-grid__item img {
+    height: auto;
+    object-fit: contain;
+  }
+
   .photo-grid__item:hover img,
   .photo-grid__item:focus-visible img {
     opacity: 0.88;
+    transform: scale(1.02);
   }
 </style>
+
+

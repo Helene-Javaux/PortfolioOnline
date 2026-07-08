@@ -69,9 +69,15 @@ const prints = (await getCollection('prints'))
     padding-block: clamp(7rem, 16vw, 10rem) 0;
   }
 
+
+
   .xpage-head__intro {
     color: var(--exp-muted);
     max-width: 42rem;
+  }
+
+  .xpage-head h1 em {
+    color: var(--exp-accent);
   }
 
   .xcatalog {
@@ -83,17 +89,11 @@ const prints = (await getCollection('prints'))
   .xcatalog__card {
     text-decoration: none;
   }
-
-  /* Effet « tirage encadré » : passe-partout sombre autour de l'image */
   .xcatalog__frame {
-    background: var(--exp-surface);
-    border: 1px solid var(--exp-line);
-    padding: clamp(1rem, 2.5vw, 1.75rem);
-    transition: border-color 0.3s ease, transform 0.3s ease;
+    transition: transform 0.3s ease;
   }
 
   .xcatalog__card:hover .xcatalog__frame {
-    border-color: var(--exp-accent);
     transform: translateY(-4px);
   }
 

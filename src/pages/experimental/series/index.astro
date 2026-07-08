@@ -59,9 +59,15 @@ const projects = (await getCollection('projects')).sort(
     padding-block: clamp(7rem, 16vw, 10rem) 0;
   }
 
+
+
   .xpage-head__intro {
     color: var(--exp-muted);
     max-width: 38rem;
+  }
+
+  .xpage-head h1 em {
+    color: var(--exp-accent);
   }
 
   .xindex {
@@ -71,16 +77,6 @@ const projects = (await getCollection('projects')).sort(
     margin-top: 1rem;
   }
 
-  /* Rythme : une vignette sur deux descend */
-  @media (min-width: 48rem) {
-    .xindex > :nth-child(2n) {
-      transform: translateY(3rem);
-    }
-
-    .xindex {
-      padding-bottom: 3rem;
-    }
-  }
 
   .xindex__item {
     text-decoration: none;

@@ -16,7 +16,7 @@
 
   /* Mêmes noms de variables que le site principal pour pouvoir
      réutiliser les composants (Lightbox, PhotoGrid, formulaires). */
-  --font-display: 'Fraunces', Georgia, serif;
+  --font-display: 'Sora', 'Manrope', system-ui, sans-serif;
   --font-body: 'Manrope', system-ui, sans-serif;
 
   --color-line: var(--exp-line);

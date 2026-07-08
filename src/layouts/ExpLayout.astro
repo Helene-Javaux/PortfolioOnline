@@ -6,6 +6,8 @@
  */
 import { SITE } from '../config';
 import { url } from '../lib/url';
+import logo from '../assets/logo.svg';
+import faviconExp from '../assets/favicon-exp.svg';
 import '../styles/experimental.css';
 
 interface Props {
@@ -43,7 +45,7 @@ const current = Astro.url.pathname;
     <link rel="canonical" href={canonical} />
     <!-- Site expérimental : ne pas indexer tant qu'il n'est pas retenu -->
     <meta name="robots" content="noindex, nofollow" />
-    <link rel="icon" href={`${import.meta.env.BASE_URL.replace(/\/$/, '')}/favicon.ico`} />
+    <link rel="icon" type="image/svg+xml" href={faviconExp.src} />
     <meta name="generator" content={Astro.generator} />
 
     <meta property="og:type" content="website" />
@@ -57,7 +59,7 @@ const current = Astro.url.pathname;
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Manrope:wght@400;500;600&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=Manrope:wght@400;500;600&display=swap"
       rel="stylesheet"
     />
 
@@ -69,6 +71,7 @@ const current = Astro.url.pathname;
     <header class="exp-header">
       <div class="container exp-header__inner">
         <a href={url('/experimental/')} class="exp-header__brand">
+          <img src={logo.src} alt="" class="exp-header__logo" aria-hidden="true" />
           Hélène<span> Javaux</span>
         </a>
 
@@ -117,7 +120,6 @@ const current = Astro.url.pathname;
         <p>© {new Date().getFullYear()} Hélène Javaux — toutes les photographies sont protégées par le droit d'auteur.</p>
         <div>
           <a href={url('/conditions-generales-de-vente/')}>CGV</a>
-          <a href={url('/')}>Site principal</a>
         </div>
       </div>
     </footer>
@@ -182,6 +184,9 @@ const current = Astro.url.pathname;
       }
 
       .exp-header__brand {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.7rem;
         font-family: var(--font-display);
         font-size: 1.35rem;
         font-weight: 500;
@@ -189,8 +194,16 @@ const current = Astro.url.pathname;
         letter-spacing: 0.01em;
       }
 
+      .exp-header__logo {
+        width: 1.5rem;
+        height: 1.5rem;
+        flex: 0 0 auto;
+        filter: brightness(0) saturate(100%) invert(71%) sepia(20%) saturate(714%)
+          hue-rotate(356deg) brightness(91%) contrast(88%);
+      }
+
       .exp-header__brand span {
-        font-style: italic;
+        font-style: normal;
         color: var(--exp-accent);
       }
 
@@ -352,3 +365,5 @@ const current = Astro.url.pathname;
     </style>
   </body>
 </html>
+
+

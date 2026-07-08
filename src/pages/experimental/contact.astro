@@ -38,13 +38,7 @@ import { SITE, WEB3FORMS_CONTACT_KEY } from '../../config';
           <dd>{SITE.location}</dd>
         </div>
       </dl>
-
-      <blockquote class="xcontact__quote">
-        <!-- [PLACEHOLDER — vraie citation client à confirmer] -->
-        « Hélène a mis tout le monde à l'aise en quelques minutes. Les images
-        sont exactement nous. »
-        <footer>— Marie & Thomas, séance famille</footer>
-      </blockquote>
+      <!-- Commentaires clients masqués temporairement -->
     </aside>
 
     <form id="exp-contact" class="xcontact__form" novalidate data-reveal style="--reveal-delay: 0.12s">
@@ -104,6 +98,10 @@ import { SITE, WEB3FORMS_CONTACT_KEY } from '../../config';
   .xpage-head__intro {
     color: var(--exp-muted);
     max-width: 40rem;
+  }
+
+  .xpage-head h1 em {
+    color: var(--exp-accent);
   }
 
   .xcontact {

@@ -30,30 +30,6 @@ const others = (await getCollection('services'))
   .filter((s) => s.id !== service.id)
   .sort((a, b) => a.data.order - b.data.order);
 
-// [PLACEHOLDER — vraies citations clients à confirmer, une par prestation]
-const quotes: Record<string, { quote: string; author: string }> = {
-  portrait: {
-    quote:
-      "Hélène a mis tout le monde à l'aise en quelques minutes. On a oublié l'appareil photo, et les images sont exactement nous.",
-    author: 'Marie & Thomas, séance famille',
-  },
-  sport: {
-    quote:
-      "Des photos de match d'une intensité incroyable, livrées vite et super bien retouchées. On a re-signé pour toute la saison.",
-    author: 'Club de basket de Schaerbeek',
-  },
-  packshot: {
-    quote:
-      'Elle a compris notre univers dès le premier appel. Les packshots ont transformé notre boutique en ligne.',
-    author: 'Atelier Lumen',
-  },
-  evenementiel: {
-    quote:
-      "Une présence qu'on ne remarque pas, et au final toutes les images qu'on aurait eu peur de rater.",
-    author: 'Fête des 60 ans de mon père',
-  },
-};
-const quote = quotes[service.id];
 ---
 
 <ExpLayout
@@ -116,15 +92,6 @@ const quote = quotes[service.id];
             </a>
             <p class="xservice__reassure">Gratuit, sans engagement — réponse sous 24 h.</p>
           </div>
-        )
-      }
-
-      {
-        quote && (
-          <blockquote class="xservice__quote">
-            « {quote.quote} »
-            <footer>— {quote.author}</footer>
-          </blockquote>
         )
       }
     </aside>
@@ -255,24 +222,6 @@ const quote = quotes[service.id];
     font-size: 0.8rem;
     color: var(--exp-muted);
     text-align: center;
-  }
-
-  .xservice__quote {
-    margin: 0;
-    padding: 1.5rem;
-    border: 1px solid var(--exp-line);
-    font-family: var(--font-display);
-    font-style: italic;
-    font-size: 1rem;
-    line-height: 1.55;
-  }
-
-  .xservice__quote footer {
-    margin-top: 0.85rem;
-    font-family: var(--font-body);
-    font-style: normal;
-    font-size: 0.78rem;
-    color: var(--exp-muted);
   }
 
   .xservice-others {

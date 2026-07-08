@@ -1,4 +1,4 @@
----
+﻿---
 import { Image, getImage } from 'astro:assets';
 import { getCollection } from 'astro:content';
 import ExpLayout from '../../layouts/ExpLayout.astro';
@@ -9,7 +9,7 @@ import { url } from '../../lib/url';
 const slides = [
   { src: photo('projects/wild-care/wildcare-16.jpg'), alt: 'Close-up de plumes — série Wild Care' },
   { src: photo('projects/thalassophobie/thalassophobie-05.jpg'), alt: 'Eau turquoise — série Thalassophobie' },
-  { src: photo('projects/au-rythme-des-pas/ardp-05.jpg'), alt: 'Portrait de trompettiste — série Au rythme des pas' },
+  { src: photo('projects/au-rythme-des-pas/ardp-09.jpg'), alt: 'Partitions — série Au rythme des pas' },
   { src: photo('projects/ferrarias/ferrarias-08.jpg'), alt: 'Vestige minier — série Ferrarias' },
 ];
 
@@ -216,7 +216,7 @@ const ogImage = await getImage({ src: slides[0]!.src, width: 1200, format: 'jpeg
     </div>
     <div class="xabout__text">
       <p class="exp-label">La photographe</p>
-      <h2>Derrière l'objectif, <em>Hélène</em></h2>
+      <h2>Derrière l'objectif, <em class="xabout__highlight">Hélène</em></h2>
       <p>
         Diplômée de la HELB en 2024, amoureuse de la nature et des instants
         qu'on ne rejoue pas. Ce que je cherche dans chaque image :
@@ -605,6 +605,10 @@ const ogImage = await getImage({ src: slides[0]!.src, width: 1200, format: 'jpeg
     margin-bottom: 1.75rem;
   }
 
+  .xabout__highlight {
+    color: var(--exp-accent);
+  }
+
   /* ---- CTA final ---- */
   .xfinal {
     margin-top: clamp(4.5rem, 11vw, 8rem);
@@ -649,3 +653,5 @@ const ogImage = await getImage({ src: slides[0]!.src, width: 1200, format: 'jpeg
     }
   }
 </style>
+
+
