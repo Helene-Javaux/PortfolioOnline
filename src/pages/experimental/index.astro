@@ -46,6 +46,7 @@ const ogImage = await getImage({ src: slides[0]!.src, width: 1200, format: 'jpeg
           widths={[800, 1400, 2000]}
           sizes="100vw"
           width={2000}
+          quality={90}
           loading={i === 0 ? 'eager' : 'lazy'}
           fetchpriority={i === 0 ? 'high' : undefined}
         />
