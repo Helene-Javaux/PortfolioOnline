@@ -1,16 +1,16 @@
 ---
 import { Image } from 'astro:assets';
 import { getCollection } from 'astro:content';
-import ExpLayout from '../../../layouts/ExpLayout.astro';
-import { galleryCover } from '../../../lib/photos';
-import { url } from '../../../lib/url';
+import Layout from '../../layouts/Layout.astro';
+import { galleryCover } from '../../lib/photos';
+import { url } from '../../lib/url';
 
 const projects = (await getCollection('projects')).sort(
   (a, b) => a.data.order - b.data.order,
 );
 ---
 
-<ExpLayout
+<Layout
   title="Les séries"
   description="Les séries photographiques de Hélène Javaux : Wild Care, Ferrarias, Thalassophobie, Au rythme des pas."
 >
@@ -28,7 +28,7 @@ const projects = (await getCollection('projects')).sort(
     {
       projects.map((project, i) => (
         <a
-          href={url(`/experimental/series/${project.id}/`)}
+          href={url(`/series/${project.id}/`)}
           class="xindex__item"
           data-reveal
           style={`--reveal-delay: ${(i % 2) * 0.12}s`}
@@ -52,7 +52,7 @@ const projects = (await getCollection('projects')).sort(
       ))
     }
   </section>
-</ExpLayout>
+</Layout>
 
 <style>
   .xpage-head {

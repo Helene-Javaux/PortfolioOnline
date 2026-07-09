@@ -1,11 +1,11 @@
 ---
 import { Image } from 'astro:assets';
 import { getCollection } from 'astro:content';
-import ExpLayout from '../../../layouts/ExpLayout.astro';
-import PhotoGrid from '../../../components/PhotoGrid.astro';
-import Lightbox from '../../../components/Lightbox.astro';
-import { galleryPhotos, photo } from '../../../lib/photos';
-import { url } from '../../../lib/url';
+import Layout from '../../layouts/Layout.astro';
+import PhotoGrid from '../../components/PhotoGrid.astro';
+import Lightbox from '../../components/Lightbox.astro';
+import { galleryPhotos, photo } from '../../lib/photos';
+import { url } from '../../lib/url';
 
 export async function getStaticPaths() {
   const projects = await getCollection('projects');
@@ -24,7 +24,7 @@ const seriesPrints = (await getCollection('prints'))
   .sort((a, b) => a.data.order - b.data.order);
 ---
 
-<ExpLayout
+<Layout
   title={project.data.title}
   description={project.data.description ?? `${project.data.title} â€” sÃ©rie photographique de HÃ©lÃ¨ne Javaux.`}
 >
@@ -48,7 +48,7 @@ const seriesPrints = (await getCollection('prints'))
         </h2>
         <div class="xseries-prints__grid">
           {seriesPrints.map((print) => (
-            <a href={url(`/experimental/boutique/${print.id}/`)} class="xseries-prints__card">
+            <a href={url(`/boutique/${print.id}/`)} class="xseries-prints__card">
               <Image
                 src={photo(print.data.photo)}
                 alt={`Tirage Â« ${print.data.title} Â»`}
@@ -77,14 +77,14 @@ const seriesPrints = (await getCollection('prints'))
         qui vous ressemble.
       </p>
       <div class="xgallery-cta__actions">
-        <a href={url('/experimental/contact/')} class="xbtn">Ã‰crire Ã  HÃ©lÃ¨ne</a>
-        <a href={url('/experimental/series/')} class="xbtn xbtn--ghost">Salle suivante</a>
+        <a href={url('/contact/')} class="xbtn">Ã‰crire Ã  HÃ©lÃ¨ne</a>
+        <a href={url('/series/')} class="xbtn xbtn--ghost">Salle suivante</a>
       </div>
     </div>
   </section>
 
   <Lightbox />
-</ExpLayout>
+</Layout>
 
 <style>
   .xpage-head {

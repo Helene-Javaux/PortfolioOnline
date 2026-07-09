@@ -17,20 +17,31 @@ npm run preview    # prévisualisation du build
 
 ## Structure
 
+Le site — nom de code « La galerie » : expérience sombre et immersive
+(Fraunces + accent bronze), pensée pour maximiser la prise de contact et la
+vente de tirages.
+
 ```
 src/
 ├── assets/photos/          ← LES PHOTOS (voir « Ajouter du contenu »)
-│   ├── projects/<slug>/    photos d'un projet
-│   ├── services/<slug>/    photos d'une galerie de service
-│   └── about/              portrait de la page d'accueil
+│   ├── projects/<slug>/    photos d'un projet (galerie « séries »)
+│   ├── services/<slug>/    photos d'une galerie de prestation
+│   ├── home/               visuels dédiés à la home (hors galeries)
+│   └── about/              portrait de la page à propos
 ├── content/                ← LES MÉTADONNÉES (fichiers YAML)
 │   ├── projects/<slug>.yaml
 │   ├── services/<slug>.yaml
-│   ├── prints/<nom>.yaml   tirages du shop
-│   └── tarifs/<nom>.yaml   cartes de la page tarifs
-├── components/             composants réutilisables (galerie, lightbox, formulaires…)
-├── layouts/BaseLayout.astro
+│   ├── prints/<nom>.yaml   tirages de la boutique
+│   └── tarifs/<nom>.yaml   cartes tarifaires (page prestations)
+├── components/             composants réutilisables (PhotoGrid, Lightbox…)
+├── layouts/Layout.astro    layout unique du site
 ├── pages/                  les pages du site (1 fichier = 1 URL)
+│   ├── index.astro
+│   ├── a-propos.astro
+│   ├── contact.astro
+│   ├── series/             galerie des séries personnelles (`/series/<slug>/`)
+│   ├── prestations/        landing page par prestation (`/prestations/<slug>/`)
+│   └── boutique/           page dédiée par tirage (`/boutique/<slug>/`)
 ├── lib/                    helpers (découverte des photos, envoi Web3Forms)
 └── config.ts               ⚠️ coordonnées + CLÉS WEB3FORMS
 ```
@@ -70,7 +81,7 @@ d'erreur explicite au lieu d'envoyer.
      Court texte d'intention affiché en tête de galerie.
    ```
 
-C'est tout — la page `/portfolio/projets/mon-projet/` est générée au prochain build.
+C'est tout — la page `/series/mon-projet/` est générée au prochain build.
 
 ### Ajouter une photo à une galerie existante
 
@@ -98,7 +109,8 @@ formats:
 ### Modifier les tarifs
 
 Éditer les fichiers `src/content/tarifs/*.yaml` (une carte par prestation).
-Les frais de déplacement se modifient dans [`src/pages/tarifs.astro`](src/pages/tarifs.astro).
+Les frais de déplacement se modifient dans
+[`src/pages/prestations/index.astro`](src/pages/prestations/index.astro).
 
 ### Coordonnées, réseaux sociaux
 
@@ -111,9 +123,6 @@ Tout est centralisé dans [`src/config.ts`](src/config.ts).
   (fichiers nommés `placeholder-*.jpg`, descriptions marquées `[PLACEHOLDER]`).
 - Les **prix** (tarifs et tirages) sont indicatifs, marqués `[PLACEHOLDER]`
   dans les YAML.
-- Les **témoignages** ([`src/components/Testimonials.astro`](src/components/Testimonials.astro),
-  affichés sur Tarifs et Contact) sont fictifs — à remplacer par de vraies
-  citations avec l'accord des clients.
 - Les **conditions générales de vente**
   ([`src/pages/conditions-generales-de-vente.astro`](src/pages/conditions-generales-de-vente.astro))
   sont un document type à faire valider juridiquement.
@@ -121,40 +130,21 @@ Tout est centralisé dans [`src/config.ts`](src/config.ts).
 
 ## Identité visuelle
 
-- Palette héritée de l'ancien site : encre `#242424`, papier `#ffffff`,
-  gris doux `#f4f4f4` — header, footer et bandes CTA en sombre.
-- Typographies : **Syne** (titres) + **Manrope** (texte courant), via Google Fonts.
-- Signature récurrente : le « kicker » (petit libellé en capitales précédé
-  d'un trait) qui introduit chaque titre — classe CSS `.kicker` dans
+- Thème sombre et immersif : encre `#0e0e0d`, texte `#ecebe7`, accent bronze
+  `#c2a065` réservé aux appels à l'action — variables CSS dans
   [`src/styles/global.css`](src/styles/global.css).
+- Typographies : **Sora** (titres) + **Manrope** (texte courant), via Google Fonts.
+- Signature récurrente : le « label » (petit libellé bronze en capitales très
+  espacées) qui introduit chaque section — classe CSS `.exp-label`.
+- Pages notables : accueil plein écran avec diaporama en fondu et manifeste ;
+  une page dédiée par tirage (`/boutique/<slug>/`) avec formulaire de commande
+  inline et référence pré-remplie ; une landing page par prestation
+  (`/prestations/<slug>/`) qui fusionne galerie d'exemples, tarifs et devis. Le
+  champ optionnel `relatedProject` d'un YAML de service
+  (`src/content/services/`) fait le pont vers la série cousine dans la galerie.
 - Animations : apparition au scroll via `data-reveal` (IntersectionObserver
   dans le layout), fondu entre photos dans la lightbox, micro-interactions au
   survol. Tout respecte `prefers-reduced-motion`.
-
-## Site expérimental « La galerie » (`/experimental/`)
-
-Une seconde version du site, **complètement indépendante en design**, vit sous
-[`/experimental/`](src/pages/experimental/) pour expérimentation : expérience
-sombre et immersive « galerie d'exposition » (Fraunces + accent bronze), pensée
-pour maximiser la prise de contact et la vente de tirages :
-
-- accueil plein écran avec diaporama en fondu, manifeste, « salles » (séries) ;
-- **une page dédiée par tirage** (`/experimental/boutique/<slug>/`) avec
-  formulaire de commande inline et référence pré-remplie ;
-- **une landing page par prestation** (`/experimental/prestations/<slug>/`) :
-  galerie d'exemples + tarifs + témoignage + devis sur une seule page. Le champ
-  optionnel `relatedProject` d'un YAML de service (`src/content/services/`)
-  fait le pont vers la série cousine de la galerie ;
-- tirages de la série proposés en fin de chaque galerie (cross-sell) ;
-- prestations & tarifs fusionnés sur une page, CTA de contact partout.
-
-Il partage les mêmes contenus (collections YAML), les mêmes photos et les mêmes
-clés Web3Forms que le site principal — layout
-[`src/layouts/ExpLayout.astro`](src/layouts/ExpLayout.astro), styles
-[`src/styles/experimental.css`](src/styles/experimental.css). Il est balisé
-`noindex` tant qu'il n'est pas retenu. Pour le supprimer : effacer
-`src/pages/experimental/`, `src/layouts/ExpLayout.astro` et
-`src/styles/experimental.css`.
 
 ## Déploiement (GitHub Pages)
 

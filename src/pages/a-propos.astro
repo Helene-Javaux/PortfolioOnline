@@ -1,35 +1,36 @@
 ---
 import { Image } from 'astro:assets';
-import BaseLayout from '../layouts/BaseLayout.astro';
+import Layout from '../layouts/Layout.astro';
 import { photo } from '../lib/photos';
 import { url } from '../lib/url';
 
 const portrait = photo('about/portrait.jpg');
 ---
 
-<BaseLayout
+<Layout
   title="À propos"
-  description="Hélène Javaux, photographe diplômée de la HELB en 2024, basée à Bruxelles. Portraits, reportages et projets documentaires — des images vraies, sans artifices."
+  description="Hélène Javaux, photographe diplômée de la HELB en 2024, basée à Bruxelles. Des images vraies, sans artifices."
 >
-  <header class="container page-header">
-    <p class="kicker">À propos</p>
-    <h1>Derrière l'objectif, il y a Hélène</h1>
+  <header class="container xpage-head">
+    <p class="exp-label">À propos</p>
+    <h1>La main qui tient <em>l'appareil</em></h1>
+    <hr class="exp-rule" />
   </header>
 
-  <section class="container about-layout">
-    <div class="about-portrait" data-reveal>
+  <section class="container xbio">
+    <div class="xbio__media" data-reveal>
       <Image
         src={portrait}
         alt="Portrait de Hélène Javaux"
         width={640}
         widths={[420, 640]}
-        sizes="(max-width: 48rem) 90vw, 640px"
+        sizes="(max-width: 52rem) 90vw, 560px"
         loading="eager"
       />
     </div>
 
-    <div class="about-text" data-reveal style="--reveal-delay: 0.15s">
-      <p class="about-lead">
+    <div class="xbio__text" data-reveal style="--reveal-delay: 0.15s">
+      <p class="xbio__lead">
         Hello ! Moi, c'est Hélène. Passionnée de photo, j'ai décidé d'en faire
         mon métier.
       </p>
@@ -40,10 +41,10 @@ const portrait = photo('about/portrait.jpg');
         rencontres, les émotions à capter.
       </p>
       <p>
-        Ce que j'aime par-dessus tout ? L'authenticité. Les instants vrais, les
-        sourires spontanés, les regards qui en disent long. Pas besoin d'en
-        faire trop : la beauté est souvent dans les détails simples, dans la
-        lumière naturelle, dans un geste tendre.
+        Ce que j'aime par-dessus tout ? <em>L'authenticité.</em> Les instants
+        vrais, les sourires spontanés, les regards qui en disent long. Pas
+        besoin d'en faire trop : la beauté est souvent dans les détails
+        simples, dans la lumière naturelle, dans un geste tendre.
       </p>
       <p>
         Je suis aussi une grande amoureuse de la nature — c'est souvent là que
@@ -51,101 +52,93 @@ const portrait = photo('about/portrait.jpg');
         dehors, je dis oui direct.
       </p>
       <p>
-        Mon but, c'est que tu te sentes à l'aise, que tes envies soient
-        entendues, et surtout que le résultat te ressemble. Un moment en
-        famille, un projet pro ou juste pour toi : je suis là pour
-        t'accompagner, sans chichis.
+        Mon but : que vous vous sentiez à l'aise, que vos envies soient
+        entendues, et que le résultat vous ressemble.
       </p>
     </div>
   </section>
 
-  <section class="container about-facts" data-reveal>
-    <dl>
-      <div>
-        <dt>Formation</dt>
-        <dd>HELB — anciennement Inraci, diplômée en 2024</dd>
+  <section class="xbio-cta" data-reveal>
+    <div class="container">
+      <p class="exp-label exp-label--center">On se rencontre ?</p>
+      <h2>Si mes images résonnent en vous, <em>on va bien s'entendre.</em></h2>
+      <div class="xbio-cta__actions">
+        <a href={url('/contact/')} class="xbtn">Écrire à Hélène</a>
+        <a href={url('/series/')} class="xbtn xbtn--ghost">Voir les séries</a>
       </div>
-      <div>
-        <dt>Basée à</dt>
-        <dd>Bruxelles, mobile partout en Belgique</dd>
-      </div>
-      <div>
-        <dt>Terrains de jeu</dt>
-        <dd>Portrait, sport, packshot, événementiel, projets documentaires</dd>
-      </div>
-      <div>
-        <dt>Ma marque</dt>
-        <dd>La lumière naturelle et les instants qu'on ne rejoue pas</dd>
-      </div>
-    </dl>
-  </section>
-
-  <section class="cta-band">
-    <div class="container" data-reveal>
-      <p class="kicker kicker--center kicker--on-dark">Et maintenant ?</p>
-      <h2>Si mes images résonnent en toi, on va bien s'entendre.</h2>
-      <p>Raconte-moi ton projet — je réponds personnellement à chaque message.</p>
-      <a href={url('/contact/')} class="btn btn--light">Me contacter</a>
     </div>
   </section>
-</BaseLayout>
+</Layout>
 
 <style>
-  .about-layout {
+  .xpage-head {
+    padding-block: clamp(7rem, 16vw, 10rem) 0;
+  }
+
+  .xpage-head h1 em {
+    color: var(--exp-accent);
+  }
+
+  .xbio {
     display: grid;
     grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
-    gap: clamp(2rem, 5vw, 4.5rem);
+    gap: clamp(2rem, 6vw, 5rem);
     align-items: start;
   }
 
-  .about-portrait img {
+  .xbio__media img {
     width: 100%;
+    filter: grayscale(18%);
   }
 
-  .about-lead {
+  .xbio__lead {
     font-family: var(--font-display);
-    font-weight: 700;
-    font-size: clamp(1.25rem, 2.5vw, 1.6rem);
+    font-size: clamp(1.35rem, 2.6vw, 1.8rem);
     line-height: 1.4;
-    color: var(--color-ink);
     margin-bottom: 1.5rem;
   }
 
-  .about-facts {
-    margin-top: clamp(3rem, 7vw, 5rem);
+  .xbio__text p:not(.xbio__lead) {
+    color: var(--exp-muted);
   }
 
-  .about-facts dl {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
-    gap: 1.5rem;
-    margin: 0;
-    padding-top: 2rem;
-    border-top: 1px solid var(--color-line);
+  .xbio__text em {
+    color: var(--exp-accent);
   }
 
-  .about-facts dt {
-    font-size: 0.75rem;
-    font-weight: 600;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    color: var(--color-muted);
-    margin-bottom: 0.35rem;
+  .xbio-cta {
+    margin-top: clamp(4rem, 10vw, 7rem);
+    padding-block: clamp(4rem, 9vw, 6rem);
+    text-align: center;
+    background:
+      radial-gradient(60% 120% at 50% 0%, var(--exp-accent-soft) 0%, transparent 65%),
+      var(--exp-surface);
+    border-top: 1px solid var(--exp-line);
   }
 
-  .about-facts dd {
-    margin: 0;
-    color: var(--color-ink);
-    font-size: 0.98rem;
+  .xbio-cta h2 {
+    max-width: 40rem;
+    margin: 0 auto 2rem;
   }
 
-  @media (max-width: 48rem) {
-    .about-layout {
+  .xbio-cta h2 em {
+    color: var(--exp-accent);
+  }
+
+  .xbio-cta__actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1rem;
+  }
+
+  @media (max-width: 52rem) {
+    .xbio {
       grid-template-columns: 1fr;
     }
 
-    .about-portrait {
-      max-width: 26rem;
+    .xbio__media {
+      max-width: 24rem;
     }
   }
 </style>

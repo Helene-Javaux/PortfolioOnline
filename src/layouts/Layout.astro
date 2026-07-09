@@ -1,14 +1,13 @@
 ---
 /**
- * Layout du site EXPÉRIMENTAL « La galerie » (/experimental/).
- * Totalement indépendant du site principal : thème sombre immersif,
- * typographie Fraunces + Manrope, accent bronze.
+ * Layout principal « La galerie ».
+ * Thème sombre immersif, typographie Fraunces + Manrope, accent bronze.
  */
 import { SITE } from '../config';
 import { url } from '../lib/url';
 import logo from '../assets/logo.svg';
 import faviconExp from '../assets/favicon-exp.svg';
-import '../styles/experimental.css';
+import '../styles/global.css';
 
 interface Props {
   title?: string;
@@ -25,11 +24,11 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
 const ogImageUrl = ogImage ? new URL(ogImage, Astro.site) : undefined;
 
 const links = [
-  { href: url('/experimental/prestations/'), label: 'Prestations' },
-  { href: url('/experimental/series/'), label: 'La galerie' },
-  { href: url('/experimental/boutique/'), label: 'Boutique' },
-  { href: url('/experimental/a-propos/'), label: 'À propos' },
-  { href: url('/experimental/contact/'), label: 'Contact' },
+  { href: url('/prestations/'), label: 'Prestations' },
+  { href: url('/series/'), label: 'La galerie' },
+  { href: url('/boutique/'), label: 'Boutique' },
+  { href: url('/a-propos/'), label: 'À propos' },
+  { href: url('/contact/'), label: 'Contact' },
 ];
 
 const current = Astro.url.pathname;
@@ -43,8 +42,6 @@ const current = Astro.url.pathname;
     <title>{fullTitle}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
-    <!-- Site expérimental : ne pas indexer tant qu'il n'est pas retenu -->
-    <meta name="robots" content="noindex, nofollow" />
     <link rel="icon" type="image/svg+xml" href={faviconExp.src} />
     <meta name="generator" content={Astro.generator} />
 
@@ -70,7 +67,7 @@ const current = Astro.url.pathname;
   <body>
     <header class="exp-header">
       <div class="container exp-header__inner">
-        <a href={url('/experimental/')} class="exp-header__brand">
+        <a href={url('/')} class="exp-header__brand">
           <img src={logo.src} alt="" class="exp-header__logo" aria-hidden="true" />
           Hélène<span> Javaux</span>
         </a>

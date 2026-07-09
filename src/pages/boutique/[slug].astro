@@ -1,11 +1,11 @@
 ---
 import { Image } from 'astro:assets';
 import { getCollection } from 'astro:content';
-import ExpLayout from '../../../layouts/ExpLayout.astro';
-import { photo } from '../../../lib/photos';
-import { url } from '../../../lib/url';
+import Layout from '../../layouts/Layout.astro';
+import { photo } from '../../lib/photos';
+import { url } from '../../lib/url';
 // ⚠️ Clé Web3Forms dédiée aux tirages — à configurer dans src/config.ts
-import { WEB3FORMS_PRINTS_KEY } from '../../../config';
+import { WEB3FORMS_PRINTS_KEY } from '../../config';
 
 export async function getStaticPaths() {
   const prints = await getCollection('prints');
@@ -28,7 +28,7 @@ const others = (await getCollection('prints'))
   .slice(0, 3);
 ---
 
-<ExpLayout
+<Layout
   title={`Tirage « ${print.data.title} »`}
   description={`Tirage d'art « ${print.data.title} » (réf. ${print.data.reference}) de Hélène Javaux — dès ${print.data.formats[0]!.price}, signé et imprimé à la demande.`}
 >
@@ -49,7 +49,7 @@ const others = (await getCollection('prints'))
         series && (
           <p class="xprint__series">
             Issu de la série
-            <a href={url(`/experimental/series/${series.id}/`)}>
+            <a href={url(`/series/${series.id}/`)}>
               {series.data.title}
               {series.data.year && ` (${series.data.year})`}
             </a>
@@ -130,7 +130,7 @@ const others = (await getCollection('prints'))
         </h2>
         <div class="xprint-others__grid">
           {others.map((other) => (
-            <a href={url(`/experimental/boutique/${other.id}/`)} class="xprint-others__card">
+            <a href={url(`/boutique/${other.id}/`)} class="xprint-others__card">
               <Image
                 src={photo(other.data.photo)}
                 alt={`Tirage « ${other.data.title} »`}
@@ -149,10 +149,10 @@ const others = (await getCollection('prints'))
       </section>
     )
   }
-</ExpLayout>
+</Layout>
 
 <script>
-  import { bindWeb3Form } from '../../../lib/web3form';
+  import { bindWeb3Form } from '../../lib/web3form';
 
   bindWeb3Form(document.getElementById('print-order') as HTMLFormElement);
 </script>

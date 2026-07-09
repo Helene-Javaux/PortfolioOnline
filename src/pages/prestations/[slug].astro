@@ -1,10 +1,10 @@
 ---
 import { getCollection } from 'astro:content';
-import ExpLayout from '../../../layouts/ExpLayout.astro';
-import PhotoGrid from '../../../components/PhotoGrid.astro';
-import Lightbox from '../../../components/Lightbox.astro';
-import { galleryPhotos } from '../../../lib/photos';
-import { url } from '../../../lib/url';
+import Layout from '../../layouts/Layout.astro';
+import PhotoGrid from '../../components/PhotoGrid.astro';
+import Lightbox from '../../components/Lightbox.astro';
+import { galleryPhotos } from '../../lib/photos';
+import { url } from '../../lib/url';
 
 export async function getStaticPaths() {
   const services = await getCollection('services');
@@ -32,7 +32,7 @@ const others = (await getCollection('services'))
 
 ---
 
-<ExpLayout
+<Layout
   title={`${service.data.title} — Prestation`}
   description={`Prestation ${service.data.title.toLowerCase()} par Hélène Javaux, photographe à Bruxelles${tarif ? ` — à partir de ${tarif.data.halfDay}` : ''}. Exemples, tarifs et devis gratuit sous 24 h.`}
 >
@@ -51,7 +51,7 @@ const others = (await getCollection('services'))
         related && (
           <p class="xservice__related">
             Pour sentir mon approche, voir aussi la série
-            <a href={url(`/experimental/series/${related.id}/`)}>
+            <a href={url(`/series/${related.id}/`)}>
               {related.data.title}
               {related.data.year && ` (${related.data.year})`}
             </a>
@@ -87,7 +87,7 @@ const others = (await getCollection('services'))
 
             {tarif.data.note && <p class="xservice__note">{tarif.data.note}</p>}
 
-            <a href={url('/experimental/contact/')} class="xbtn xservice__cta">
+            <a href={url('/contact/')} class="xbtn xservice__cta">
               Demander un devis
             </a>
             <p class="xservice__reassure">Gratuit, sans engagement — réponse sous 24 h.</p>
@@ -102,7 +102,7 @@ const others = (await getCollection('services'))
     <div class="xservice-others__list">
       {
         others.map((other) => (
-          <a href={url(`/experimental/prestations/${other.id}/`)} class="exp-arrow-link">
+          <a href={url(`/prestations/${other.id}/`)} class="exp-arrow-link">
             {other.data.title} <span aria-hidden="true">→</span>
           </a>
         ))
@@ -111,7 +111,7 @@ const others = (await getCollection('services'))
   </section>
 
   <Lightbox />
-</ExpLayout>
+</Layout>
 
 <style>
   .xpage-head {
