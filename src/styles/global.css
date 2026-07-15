@@ -1,29 +1,32 @@
-/* ------------------------------------------------------------------
-   Styles globaux — palette héritée de l'ancien site (#242424 / #f4f4f4),
-   typographie sans-serif contrastée : Syne (titres) + Manrope (texte).
-   Signature visuelle : le « kicker » (petit libellé précédé d'un trait)
-   qui introduit chaque titre de page et de section.
-   ------------------------------------------------------------------ */
+/* ==================================================================
+   SITE EXPÉRIMENTAL — « La galerie »
+   Expérience sombre et immersive : les photos sont traitées comme des
+   tirages éclairés dans une salle d'exposition. Un seul accent (bronze)
+   réservé aux appels à l'action.
+   ================================================================== */
 
 :root {
-  --color-ink: #242424;
-  --color-body: #3c3c3c;
-  --color-muted: #6f6f6f;
-  --color-line: #e2e2e2;
-  --color-paper: #ffffff;
-  --color-paper-soft: #f4f4f4;
+  --exp-bg: #0e0e0d;
+  --exp-surface: #151513;
+  --exp-text: #ecebe7;
+  --exp-muted: #9b9891;
+  --exp-line: #2b2a27;
+  --exp-accent: #c2a065;
+  --exp-accent-soft: rgba(194, 160, 101, 0.14);
 
-  /* Bandes sombres (header, footer, CTA) */
-  --color-dark: #242424;
-  --color-dark-soft: #2e2e2e;
-  --color-on-dark: #f4f4f4;
-  --color-on-dark-muted: #a8a8a8;
-
-  --font-display: 'Syne', system-ui, sans-serif;
+  /* Mêmes noms de variables que le site principal pour pouvoir
+     réutiliser les composants (Lightbox, PhotoGrid, formulaires). */
+  --font-display: 'Sora', 'Manrope', system-ui, sans-serif;
   --font-body: 'Manrope', system-ui, sans-serif;
 
-  --content-width: 72rem;
-  --gutter: clamp(1.25rem, 4vw, 3rem);
+  --color-line: var(--exp-line);
+  --color-ink: var(--exp-text);
+  --color-paper: var(--exp-surface);
+  --color-paper-soft: var(--exp-surface);
+  --color-muted: var(--exp-muted);
+
+  --content-width: 78rem;
+  --gutter: clamp(1.25rem, 4vw, 3.5rem);
 }
 
 *,
@@ -34,15 +37,16 @@
 
 html {
   scroll-behavior: smooth;
+  background: var(--exp-bg);
 }
 
 body {
   margin: 0;
   font-family: var(--font-body);
   font-size: 1rem;
-  line-height: 1.7;
-  color: var(--color-body);
-  background: var(--color-paper);
+  line-height: 1.75;
+  color: var(--exp-text);
+  background: var(--exp-bg);
   -webkit-font-smoothing: antialiased;
 }
 
@@ -56,24 +60,29 @@ h1,
 h2,
 h3 {
   font-family: var(--font-display);
-  font-weight: 700;
-  color: var(--color-ink);
-  line-height: 1.08;
-  letter-spacing: -0.015em;
+  font-weight: 500;
+  color: var(--exp-text);
+  line-height: 1.05;
+  letter-spacing: -0.01em;
   margin: 0 0 0.6em;
 }
 
 h1 {
-  font-size: clamp(2.4rem, 6vw, 4rem);
-  font-weight: 800;
+  font-size: clamp(2.75rem, 7vw, 5rem);
 }
 
 h2 {
-  font-size: clamp(1.7rem, 4vw, 2.5rem);
+  font-size: clamp(1.9rem, 4.5vw, 3rem);
 }
 
 h3 {
-  font-size: 1.2rem;
+  font-size: 1.35rem;
+}
+
+em,
+.exp-italic {
+  font-style: italic;
+  font-family: var(--font-display);
 }
 
 p {
@@ -84,7 +93,6 @@ a {
   color: inherit;
 }
 
-/* Conteneur principal */
 .container {
   max-width: var(--content-width);
   margin-inline: auto;
@@ -92,129 +100,94 @@ a {
 }
 
 /* ------------------------------------------------------------------
-   Signature : le kicker — petit libellé en capitales précédé d'un trait,
-   utilisé avant chaque titre de page et de section.
+   Libellé de section : petites capitales bronze, très espacées
    ------------------------------------------------------------------ */
-.kicker {
-  display: flex;
-  align-items: center;
-  gap: 0.85rem;
-  margin: 0 0 1.1rem;
-  font-size: 0.78rem;
+.exp-label {
+  display: block;
+  margin: 0 0 1.25rem;
+  font-size: 0.72rem;
   font-weight: 600;
-  letter-spacing: 0.22em;
+  letter-spacing: 0.34em;
   text-transform: uppercase;
-  color: var(--color-muted);
+  color: var(--exp-accent);
 }
 
-.kicker::before {
-  content: '';
-  width: 2.25rem;
-  height: 2px;
-  background: currentColor;
-  flex: none;
-}
-
-.kicker--center {
-  justify-content: center;
-}
-
-.kicker--center::after {
-  content: '';
-  width: 2.25rem;
-  height: 2px;
-  background: currentColor;
-  flex: none;
-}
-
-/* Sur fond sombre */
-.on-dark .kicker,
-.kicker--on-dark {
-  color: var(--color-on-dark-muted);
-}
-
-/* En-tête de page standard */
-.page-header {
-  padding-block: clamp(3rem, 8vw, 5.5rem) clamp(2rem, 5vw, 3.5rem);
-}
-
-.page-header p {
-  max-width: 44rem;
-  color: var(--color-muted);
-}
-
-/* Boutons */
-.btn {
-  display: inline-block;
-  padding: 0.85rem 2.1rem;
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: 0.82rem;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  text-decoration: none;
-  cursor: pointer;
-  border: 1px solid var(--color-ink);
-  background: var(--color-ink);
-  color: var(--color-paper-soft);
-  transition:
-    background 0.2s ease,
-    color 0.2s ease,
-    transform 0.2s ease;
-}
-
-.btn:hover,
-.btn:focus-visible {
-  background: transparent;
-  color: var(--color-ink);
-  transform: translateY(-2px);
-}
-
-.btn--ghost {
-  background: transparent;
-  color: var(--color-ink);
-}
-
-.btn--ghost:hover,
-.btn--ghost:focus-visible {
-  background: var(--color-ink);
-  color: var(--color-paper-soft);
-}
-
-/* Bouton sur fond sombre */
-.btn--light {
-  background: var(--color-paper-soft);
-  border-color: var(--color-paper-soft);
-  color: var(--color-ink);
-}
-
-.btn--light:hover,
-.btn--light:focus-visible {
-  background: transparent;
-  color: var(--color-paper-soft);
-}
-
-/* ------------------------------------------------------------------
-   Bande CTA sombre réutilisable (fin de page)
-   ------------------------------------------------------------------ */
-.cta-band {
-  background: var(--color-dark);
-  color: var(--color-on-dark);
+.exp-label--center {
   text-align: center;
-  padding-block: clamp(3.5rem, 9vw, 6rem);
-  margin-top: clamp(3.5rem, 9vw, 6rem);
 }
 
-.cta-band h2 {
-  color: var(--color-on-dark);
-  max-width: 36rem;
+/* Filet doré discret sous les titres de page */
+.exp-rule {
+  width: 3.5rem;
+  height: 1px;
+  background: var(--exp-accent);
+  border: none;
+  margin: 2rem 0;
+}
+
+.exp-rule--center {
   margin-inline: auto;
 }
 
-.cta-band p {
-  color: var(--color-on-dark-muted);
-  max-width: 34rem;
-  margin: 0 auto 2rem;
+/* ------------------------------------------------------------------
+   Boutons
+   ------------------------------------------------------------------ */
+.xbtn {
+  display: inline-block;
+  padding: 0.9rem 2.4rem;
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 0.8rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  text-decoration: none;
+  cursor: pointer;
+  color: var(--exp-bg);
+  background: var(--exp-accent);
+  border: 1px solid var(--exp-accent);
+  transition:
+    background 0.25s ease,
+    color 0.25s ease,
+    transform 0.25s ease;
+}
+
+.xbtn:hover,
+.xbtn:focus-visible {
+  background: transparent;
+  color: var(--exp-accent);
+  transform: translateY(-2px);
+}
+
+.xbtn--ghost {
+  background: transparent;
+  color: var(--exp-text);
+  border-color: var(--exp-muted);
+}
+
+.xbtn--ghost:hover,
+.xbtn--ghost:focus-visible {
+  border-color: var(--exp-accent);
+  color: var(--exp-accent);
+  background: transparent;
+}
+
+/* Lien fléché discret */
+.exp-arrow-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  text-decoration: none;
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--exp-muted);
+  transition: color 0.2s ease, gap 0.2s ease;
+}
+
+.exp-arrow-link:hover {
+  color: var(--exp-accent);
+  gap: 1rem;
 }
 
 /* ------------------------------------------------------------------
@@ -222,10 +195,10 @@ a {
    ------------------------------------------------------------------ */
 html.js [data-reveal] {
   opacity: 0;
-  transform: translateY(20px);
+  transform: translateY(24px);
   transition:
-    opacity 0.7s ease,
-    transform 0.7s ease;
+    opacity 0.9s ease,
+    transform 0.9s ease;
   transition-delay: var(--reveal-delay, 0s);
 }
 
@@ -246,38 +219,41 @@ html.js [data-reveal].is-revealed {
   }
 }
 
-/* Formulaires */
+/* ------------------------------------------------------------------
+   Formulaires (mêmes classes que le site principal, en sombre)
+   ------------------------------------------------------------------ */
 .field {
   display: flex;
   flex-direction: column;
-  gap: 0.35rem;
-  margin-bottom: 1.25rem;
+  gap: 0.4rem;
+  margin-bottom: 1.3rem;
 }
 
 .field label {
-  font-size: 0.78rem;
+  font-size: 0.75rem;
   font-weight: 600;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: var(--color-ink);
+  color: var(--exp-muted);
 }
 
 .field input,
 .field select,
 .field textarea {
   font: inherit;
-  color: var(--color-ink);
-  padding: 0.7rem 0.9rem;
-  border: 1px solid var(--color-line);
+  color: var(--exp-text);
+  padding: 0.75rem 0.95rem;
+  border: 1px solid var(--exp-line);
   border-radius: 0;
-  background: var(--color-paper);
+  background: var(--exp-surface);
 }
 
 .field input:focus,
 .field select:focus,
 .field textarea:focus {
-  outline: 2px solid var(--color-ink);
+  outline: 1px solid var(--exp-accent);
   outline-offset: -1px;
+  border-color: var(--exp-accent);
 }
 
 .form-status {
@@ -289,16 +265,16 @@ html.js [data-reveal].is-revealed {
 
 .form-status[data-state='success'] {
   display: block;
-  background: #f0f5f0;
-  color: #2c5530;
-  border: 1px solid #cfe0cf;
+  background: rgba(76, 122, 80, 0.14);
+  color: #a7d3aa;
+  border: 1px solid rgba(76, 122, 80, 0.45);
 }
 
 .form-status[data-state='error'] {
   display: block;
-  background: #faf0f0;
-  color: #7a2e2e;
-  border: 1px solid #e8cfcf;
+  background: rgba(150, 60, 60, 0.14);
+  color: #dfa3a3;
+  border: 1px solid rgba(150, 60, 60, 0.45);
 }
 
 /* Accessibilité */
@@ -315,6 +291,11 @@ html.js [data-reveal].is-revealed {
 }
 
 :focus-visible {
-  outline: 2px solid var(--color-ink);
+  outline: 2px solid var(--exp-accent);
   outline-offset: 2px;
+}
+
+::selection {
+  background: var(--exp-accent);
+  color: var(--exp-bg);
 }

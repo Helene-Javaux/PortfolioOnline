@@ -1,9 +1,9 @@
 ---
 import { Image } from 'astro:assets';
 import { getCollection } from 'astro:content';
-import ExpLayout from '../../../layouts/ExpLayout.astro';
-import { galleryCover } from '../../../lib/photos';
-import { url } from '../../../lib/url';
+import Layout from '../../layouts/Layout.astro';
+import { galleryCover } from '../../lib/photos';
+import { url } from '../../lib/url';
 
 const services = (await getCollection('services')).sort(
   (a, b) => a.data.order - b.data.order,
@@ -18,7 +18,7 @@ const coverFor = (title: string) =>
   services.find((s) => s.data.title.toLowerCase() === title.toLowerCase());
 ---
 
-<ExpLayout
+<Layout
   title="Prestations & tarifs"
   description="Prestations photo de Hélène Javaux : portrait, sport, packshot, événementiel. Tarifs transparents à la journée et demi-journée, devis sous 24 h."
 >
@@ -41,7 +41,7 @@ const coverFor = (title: string) =>
         return (
           <article class="xprestation" data-reveal style={`--reveal-delay: ${(i % 2) * 0.1}s`}>
             {service && (
-              <a href={url(`/experimental/prestations/${service.id}/`)} class="xprestation__media">
+              <a href={url(`/prestations/${service.id}/`)} class="xprestation__media">
                 <Image
                   src={galleryCover('services', service.id, service.data.cover)}
                   alt={`Exemple — ${service.data.title}`}
@@ -78,11 +78,11 @@ const coverFor = (title: string) =>
 
               <div class="xprestation__links">
                 {service && (
-                  <a href={url(`/experimental/prestations/${service.id}/`)} class="exp-arrow-link">
+                  <a href={url(`/prestations/${service.id}/`)} class="exp-arrow-link">
                     Voir des exemples <span aria-hidden="true">→</span>
                   </a>
                 )}
-                <a href={url('/experimental/contact/')} class="exp-arrow-link">
+                <a href={url('/contact/')} class="exp-arrow-link">
                   Demander un devis <span aria-hidden="true">→</span>
                 </a>
               </div>
@@ -100,9 +100,9 @@ const coverFor = (title: string) =>
       définition via une galerie privée, et un acompte de 30 % réserve votre
       date. <!-- [PLACEHOLDER — valeurs indicatives à confirmer] -->
     </p>
-    <a href={url('/experimental/contact/')} class="xbtn">Un devis en 24 h</a>
+    <a href={url('/contact/')} class="xbtn">Un devis en 24 h</a>
   </section>
-</ExpLayout>
+</Layout>
 
 <style>
   .xpage-head {

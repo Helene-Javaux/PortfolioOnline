@@ -4,17 +4,18 @@
  * ⚠️ [PLACEHOLDER] Contenu type à faire relire et valider par un
  * professionnel du droit avant mise en ligne définitive.
  */
-import BaseLayout from '../layouts/BaseLayout.astro';
+import Layout from '../layouts/Layout.astro';
 import { SITE } from '../config';
 ---
 
-<BaseLayout
+<Layout
   title="Conditions générales de vente"
   description="Conditions générales de vente des prestations photographiques et tirages d'art de Hélène Javaux."
 >
-  <header class="container page-header">
-    <p class="kicker">Informations légales</p>
+  <header class="container xpage-head">
+    <p class="exp-label">Informations légales</p>
     <h1>Conditions générales de vente</h1>
+    <hr class="exp-rule" />
     <p>
       Dernière mise à jour : juillet 2026 —
       <em>[PLACEHOLDER : document type, à faire valider juridiquement avant publication]</em>
@@ -108,9 +109,13 @@ import { SITE } from '../config';
       tribunaux de l'arrondissement de Bruxelles.
     </p>
   </section>
-</BaseLayout>
+</Layout>
 
 <style>
+  .xpage-head {
+    padding-block: clamp(7rem, 16vw, 10rem) 0;
+  }
+
   .cgv {
     max-width: 46rem;
   }

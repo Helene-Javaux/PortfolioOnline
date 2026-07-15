@@ -1,16 +1,16 @@
 ---
 import { Image } from 'astro:assets';
 import { getCollection } from 'astro:content';
-import ExpLayout from '../../../layouts/ExpLayout.astro';
-import { photo } from '../../../lib/photos';
-import { url } from '../../../lib/url';
+import Layout from '../../layouts/Layout.astro';
+import { photo } from '../../lib/photos';
+import { url } from '../../lib/url';
 
 const prints = (await getCollection('prints'))
   .filter((print) => print.data.available)
   .sort((a, b) => a.data.order - b.data.order);
 ---
 
-<ExpLayout
+<Layout
   title="Boutique — Tirages d'art"
   description="Tirages d'art signés de Hélène Javaux, imprimés à la demande. Commande simple, sans paiement en ligne : chaque demande reçoit une réponse personnelle."
 >
@@ -30,7 +30,7 @@ const prints = (await getCollection('prints'))
     {
       prints.map((print, i) => (
         <a
-          href={url(`/experimental/boutique/${print.id}/`)}
+          href={url(`/boutique/${print.id}/`)}
           class="xcatalog__card"
           data-reveal
           style={`--reveal-delay: ${(i % 3) * 0.1}s`}
@@ -59,10 +59,10 @@ const prints = (await getCollection('prints'))
     <p>
       <em>Un format particulier ? Une image vue dans une série mais absente
       d'ici ?</em> Toutes mes photographies peuvent être tirées.
-      <a href={url('/experimental/contact/')}>Écrivez-moi</a>, on en parle.
+      <a href={url('/contact/')}>Écrivez-moi</a>, on en parle.
     </p>
   </section>
-</ExpLayout>
+</Layout>
 
 <style>
   .xpage-head {

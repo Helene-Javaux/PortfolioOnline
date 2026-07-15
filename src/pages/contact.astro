@@ -1,93 +1,174 @@
 ---
-import BaseLayout from '../layouts/BaseLayout.astro';
-import ContactForm from '../components/ContactForm.astro';
-import Testimonials from '../components/Testimonials.astro';
-import { SITE } from '../config';
+import Layout from '../layouts/Layout.astro';
+import { SITE, WEB3FORMS_CONTACT_KEY } from '../config';
 ---
 
-<BaseLayout
+<Layout
   title="Contact"
-  description="Contactez Hélène Javaux, photographe à Bruxelles : portrait, sport, packshot, événementiel, projets artistiques et tirages."
+  description="Contactez Hélène Javaux, photographe à Bruxelles — séance, événement, tirage ou simple question. Réponse personnelle sous 24 h."
 >
-  <header class="container page-header">
-    <p class="kicker">Contact</p>
-    <h1>Parlons de ton projet</h1>
-    <p>
-      Une envie, une question, une idée encore floue ? Écris-moi — je réponds
-      personnellement à chaque message, en général sous 24 h.
+  <header class="container xpage-head">
+    <p class="exp-label">Contact</p>
+    <h1>Racontez-moi <em>votre idée</em></h1>
+    <p class="xpage-head__intro">
+      Même floue, même pas encore décidée. J'aime les projets qui commencent
+      par « je ne sais pas trop, mais… ». Réponse personnelle, en général sous
+      24 heures.
     </p>
+    <hr class="exp-rule" />
   </header>
 
-  <section class="container contact-layout">
-    <div class="contact-info" data-reveal>
-      <h2>Coordonnées</h2>
-      <ul>
-        <li>
-          <span class="contact-info__label">E-mail</span>
-          <a href={`mailto:${SITE.email}`}>{SITE.email}</a>
-        </li>
-        <li>
-          <span class="contact-info__label">Téléphone</span>
-          <a href={SITE.phoneHref}>{SITE.phone}</a>
-        </li>
-        <li>
-          <span class="contact-info__label">Instagram</span>
-          <a href={SITE.instagram} target="_blank" rel="noopener">{SITE.instagramHandle}</a>
-        </li>
-        <li>
-          <span class="contact-info__label">Basée à</span>
-          {SITE.location}
-        </li>
-      </ul>
-    </div>
+  <section class="container xcontact">
+    <aside class="xcontact__aside" data-reveal>
+      <dl>
+        <div>
+          <dt>E-mail</dt>
+          <dd><a href={`mailto:${SITE.email}`}>{SITE.email}</a></dd>
+        </div>
+        <div>
+          <dt>Téléphone</dt>
+          <dd><a href={SITE.phoneHref}>{SITE.phone}</a></dd>
+        </div>
+        <div>
+          <dt>Instagram</dt>
+          <dd><a href={SITE.instagram} target="_blank" rel="noopener">{SITE.instagramHandle}</a></dd>
+        </div>
+        <div>
+          <dt>Basée à</dt>
+          <dd>{SITE.location}</dd>
+        </div>
+      </dl>
+      <!-- Commentaires clients masqués temporairement -->
+    </aside>
 
-    <div class="contact-form-wrap" data-reveal style="--reveal-delay: 0.12s">
-      <ContactForm />
-    </div>
+    <form id="exp-contact" class="xcontact__form" novalidate data-reveal style="--reveal-delay: 0.12s">
+      <!-- Clé Web3Forms du formulaire de contact (voir src/config.ts) -->
+      <input type="hidden" name="access_key" value={WEB3FORMS_CONTACT_KEY} />
+      <input type="hidden" name="subject" value="Nouveau message via la galerie (expérimental)" />
+      <input type="hidden" name="from_name" value="Site helenejavaux.be (expérimental)" />
+      <input type="checkbox" name="botcheck" class="visually-hidden" tabindex="-1" autocomplete="off" />
+
+      <div class="xcontact__row">
+        <div class="field">
+          <label for="xc-name">Nom</label>
+          <input id="xc-name" type="text" name="name" required autocomplete="name" />
+        </div>
+        <div class="field">
+          <label for="xc-email">E-mail</label>
+          <input id="xc-email" type="email" name="email" required autocomplete="email" />
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="xc-type">Votre envie</label>
+        <select id="xc-type" name="type_de_demande" required>
+          <option value="" disabled selected>Choisir…</option>
+          <option>Séance portrait</option>
+          <option>Reportage sportif</option>
+          <option>Packshot / produits</option>
+          <option>Événement</option>
+          <option>Tirage d'art</option>
+          <option>Projet artistique / collaboration</option>
+          <option>Je ne sais pas encore</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="xc-message">Votre message</label>
+        <textarea id="xc-message" name="message" rows="7" required placeholder="Deux lignes suffisent pour commencer…"></textarea>
+      </div>
+
+      <button class="xbtn" type="submit">Envoyer à Hélène</button>
+      <p class="form-status" role="status" aria-live="polite"></p>
+    </form>
   </section>
+</Layout>
 
-  <Testimonials />
-</BaseLayout>
+<script>
+  import { bindWeb3Form } from '../lib/web3form';
+
+  bindWeb3Form(document.getElementById('exp-contact') as HTMLFormElement);
+</script>
 
 <style>
-  .contact-layout {
+  .xpage-head {
+    padding-block: clamp(7rem, 16vw, 10rem) 0;
+  }
+
+  .xpage-head__intro {
+    color: var(--exp-muted);
+    max-width: 40rem;
+  }
+
+  .xpage-head h1 em {
+    color: var(--exp-accent);
+  }
+
+  .xcontact {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1.6fr);
-    gap: clamp(2rem, 6vw, 5rem);
+    grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
+    gap: clamp(2.5rem, 6vw, 5rem);
     align-items: start;
   }
 
-  .contact-info h2 {
-    font-size: 1.4rem;
-  }
-
-  .contact-info ul {
-    list-style: none;
+  .xcontact__aside dl {
     margin: 0;
-    padding: 0;
   }
 
-  .contact-info li {
-    margin-bottom: 1.25rem;
-  }
-
-  .contact-info__label {
-    display: block;
-    font-size: 0.75rem;
+  .xcontact__aside dt {
+    font-size: 0.72rem;
     font-weight: 600;
-    letter-spacing: 0.14em;
+    letter-spacing: 0.2em;
     text-transform: uppercase;
-    color: var(--color-muted);
-    margin-bottom: 0.15rem;
+    color: var(--exp-muted);
   }
 
-  .contact-info a {
-    color: var(--color-ink);
+  .xcontact__aside dd {
+    margin: 0.2rem 0 1.35rem;
   }
 
-  @media (max-width: 48rem) {
-    .contact-layout {
+  .xcontact__aside dd a {
+    color: var(--exp-text);
+    text-decoration-color: var(--exp-accent);
+  }
+
+  .xcontact__aside dd a:hover {
+    color: var(--exp-accent);
+  }
+
+  .xcontact__quote {
+    margin: 2rem 0 0;
+    padding: 1.5rem;
+    border: 1px solid var(--exp-line);
+    background: var(--exp-surface);
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: 1.02rem;
+    line-height: 1.55;
+  }
+
+  .xcontact__quote footer {
+    margin-top: 0.9rem;
+    font-family: var(--font-body);
+    font-style: normal;
+    font-size: 0.8rem;
+    color: var(--exp-muted);
+  }
+
+  .xcontact__row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.25rem;
+  }
+
+  @media (max-width: 52rem) {
+    .xcontact {
       grid-template-columns: 1fr;
+    }
+
+    .xcontact__row {
+      grid-template-columns: 1fr;
+      gap: 0;
     }
   }
 </style>
