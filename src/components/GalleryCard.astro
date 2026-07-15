@@ -7,9 +7,10 @@ interface Props {
   title: string;
   subtitle?: string;
   cover: ImageMetadata;
+  coverPosition?: string;
 }
 
-const { href, title, subtitle, cover } = Astro.props;
+const { href, title, subtitle, cover, coverPosition } = Astro.props;
 ---
 
 <a href={href} class="gallery-card">
@@ -21,6 +22,7 @@ const { href, title, subtitle, cover } = Astro.props;
       widths={[400, 800]}
       sizes="(max-width: 40rem) 100vw, (max-width: 64rem) 50vw, 33vw"
       loading="lazy"
+      style={coverPosition ? `object-position: ${coverPosition};` : undefined}
     />
   </div>
   <div class="gallery-card__caption">

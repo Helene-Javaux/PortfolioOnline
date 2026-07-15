@@ -468,17 +468,7 @@ const ogImage = await getImage({ src: slides[0]!.src, width: 1200, format: 'jpeg
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr));
     gap: clamp(1.5rem, 3.5vw, 2.5rem);
-  }
-
-  /* Rythme : une vignette sur deux descend légèrement */
-  @media (min-width: 48rem) {
-    .xseries__grid > :nth-child(2n) {
-      transform: translateY(2.25rem);
-    }
-
-    .xseries__grid {
-      padding-bottom: 2.25rem;
-    }
+    align-items: start;
   }
 
   .xseries__card {

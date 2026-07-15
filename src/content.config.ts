@@ -13,6 +13,8 @@ const gallerySchema = z.object({
   description: z.string().optional(),
   // Nom du fichier (dans le dossier de photos) utilisé comme vignette
   cover: z.string(),
+  // Position CSS du cadrage de la vignette (ex: '50% 38%')
+  coverPosition: z.string().optional(),
   // Ordre d'affichage dans l'index (plus petit = premier)
   order: z.number().default(99),
 });

@@ -49,6 +49,7 @@ const coverFor = (title: string) =>
                   widths={[400, 800]}
                   sizes="(max-width: 48rem) 100vw, 45vw"
                   loading="lazy"
+                  style={service.data.coverPosition ? `object-position: ${service.data.coverPosition};` : undefined}
                 />
               </a>
             )}
@@ -127,7 +128,7 @@ const coverFor = (title: string) =>
 
   .xprestation {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    grid-template-columns: minmax(0, 0.92fr) minmax(0, 1fr);
     gap: clamp(1.75rem, 4vw, 3.5rem);
     align-items: center;
   }
@@ -139,10 +140,13 @@ const coverFor = (title: string) =>
   .xprestation__media {
     display: block;
     overflow: hidden;
+    max-width: min(100%, 34rem);
   }
 
   .xprestation__media img {
     width: 100%;
+    max-height: min(62vh, 32rem);
+    object-fit: contain;
     transition: transform 0.6s ease, opacity 0.4s ease;
   }
 
@@ -242,6 +246,14 @@ const coverFor = (title: string) =>
 
     .xprestation:nth-child(2n) .xprestation__media {
       order: 0;
+    }
+
+    .xprestation__media {
+      max-width: 100%;
+    }
+
+    .xprestation__media img {
+      max-height: min(48vh, 22rem);
     }
   }
 </style>

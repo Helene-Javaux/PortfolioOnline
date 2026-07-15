@@ -42,6 +42,7 @@ const projects = (await getCollection('projects')).sort(
               href={url(`/portfolio/services/${service.id}/`)}
               title={service.data.title}
               cover={galleryCover('services', service.id, service.data.cover)}
+              coverPosition={service.data.coverPosition}
             />
           </div>
         ))
