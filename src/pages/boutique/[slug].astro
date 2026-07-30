@@ -48,7 +48,7 @@ const others = (await getCollection('prints'))
       {
         series && (
           <p class="xprint__series">
-            Issu de la série
+            Issu de la s&eacute;rie{' '}
             <a href={url(`/series/${series.id}/`)}>
               {series.data.title}
               {series.data.year && ` (${series.data.year})`}
@@ -64,6 +64,7 @@ const others = (await getCollection('prints'))
       {print.data.description && <p class="xprint__desc">{print.data.description}</p>}
 
       <ul class="xprint__assurances">
+        <li>Format actuellement disponible : 60 x 40 cm</li>
         <li>Impression fine art à la demande, signée au dos</li>
         <li>Remise en main propre à Bruxelles ou envoi soigné</li>
         <li>Paiement simple par virement — aucune plateforme</li>
@@ -82,13 +83,14 @@ const others = (await getCollection('prints'))
           <legend>Choisir un format</legend>
           {
             print.data.formats.map((format, i) => (
-              <label class="xprint__format">
+              <label class:list={["xprint__format", !format.available && "xprint__format--unavailable"]}>
                 <input
                   type="radio"
                   name="format_souhaite"
-                  value={`${format.label} — ${format.price}`}
-                  required
-                  checked={i === 0}
+                  value={format.available ? `${format.label} — ${format.price}` : `${format.label} — Pas disponible`}
+                  required={format.available}
+                  checked={i === 0 && format.available}
+                  disabled={!format.available}
                 />
                 <span class="xprint__format-label">{format.label}</span>
                 <span class="xprint__format-price">{format.price}</span>
@@ -262,6 +264,15 @@ const others = (await getCollection('prints'))
 
   .xprint__format:hover {
     border-color: var(--exp-muted);
+  }
+
+  .xprint__format--unavailable {
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
+
+  .xprint__format--unavailable:hover {
+    border-color: var(--exp-line);
   }
 
   .xprint__format:has(input:checked) {

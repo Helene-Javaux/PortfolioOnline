@@ -20,15 +20,15 @@ const coverFor = (title: string) =>
 
 <Layout
   title="Prestations & tarifs"
-  description="Prestations photo de Hélène Javaux : portrait, sport, packshot, événementiel. Tarifs transparents à la journée et demi-journée, devis sous 24 h."
+  description="Prestations photo de Hélène Javaux : portrait, sport, packshot, événementiel. Tarifs transparents, devis sous 24 h."
 >
   <header class="container xpage-head">
     <p class="exp-label">Prestations</p>
     <h1>Ce que je peux <em>créer pour vous</em></h1>
     <p class="xpage-head__intro">
-      Portraits, sport, produits, événements : chaque prestation commence par
+      Portrait animalier, sport, produits, événements : chaque prestation commence par
       une conversation et se termine par des images qui vous ressemblent. Les
-      tarifs sont indicatifs — le devis précis est toujours gratuit et sans
+      tarifs sont indicatifs : le devis précis est toujours gratuit et sans
       engagement.
     </p>
     <hr class="exp-rule" />
@@ -38,6 +38,8 @@ const coverFor = (title: string) =>
     {
       tarifs.map((tarif, i) => {
         const service = coverFor(tarif.data.title);
+        const hasPackages = Boolean(tarif.data.packages?.length);
+
         return (
           <article class="xprestation" data-reveal style={`--reveal-delay: ${(i % 2) * 0.1}s`}>
             {service && (
@@ -57,22 +59,52 @@ const coverFor = (title: string) =>
               <h2>{tarif.data.title}</h2>
               {tarif.data.subtitle && <p class="xprestation__subtitle">{tarif.data.subtitle}</p>}
 
-              <dl class="xprestation__prices">
-                <div>
-                  <dt>Demi-journée</dt>
-                  <dd>{tarif.data.halfDay}</dd>
-                </div>
-                <div>
-                  <dt>Journée</dt>
-                  <dd>{tarif.data.fullDay}</dd>
-                </div>
-              </dl>
+              {
+                hasPackages ? (
+                  <div class="xprestation__packages">
+                    {tarif.data.packages!.map((pack) => (
+                      <section class="xprestation__package">
+                        <header class="xprestation__package-head">
+                          <h3>{pack.title}</h3>
+                          <p>{pack.price}</p>
+                        </header>
+                        <ul class="xprestation__includes xprestation__includes--compact">
+                          {pack.details.map((item) => (
+                            <li>{item}</li>
+                          ))}
+                        </ul>
+                      </section>
+                    ))}
+                  </div>
+                ) : (
+                  <>
+                    <dl class="xprestation__prices">
+                      <div>
+                        <dt>Demi-journée</dt>
+                        <dd>{tarif.data.halfDay}</dd>
+                      </div>
+                      <div>
+                        <dt>Journée</dt>
+                        <dd>{tarif.data.fullDay}</dd>
+                      </div>
+                    </dl>
 
-              <ul class="xprestation__includes">
-                {tarif.data.includes.map((item) => (
-                  <li>{item}</li>
-                ))}
-              </ul>
+                    <ul class="xprestation__includes">
+                      {tarif.data.includes.map((item) => (
+                        <li>{item}</li>
+                      ))}
+                    </ul>
+                  </>
+                )
+              }
+
+              {tarif.data.notes && (
+                <ul class="xprestation__notes">
+                  {tarif.data.notes.map((item) => (
+                    <li>{item}</li>
+                  ))}
+                </ul>
+              )}
 
               {tarif.data.note && <p class="xprestation__note">{tarif.data.note}</p>}
 
@@ -98,7 +130,7 @@ const coverFor = (title: string) =>
       Déplacements offerts dans un rayon de 30 km autour de Bruxelles
       (0,45 €/km au-delà). Toutes les photos sont retouchées, livrées en haute
       définition via une galerie privée, et un acompte de 30 % réserve votre
-      date. <!-- [PLACEHOLDER — valeurs indicatives à confirmer] -->
+      date.
     </p>
     <a href={url('/contact/')} class="xbtn">Un devis en 24 h</a>
   </section>
@@ -108,8 +140,6 @@ const coverFor = (title: string) =>
   .xpage-head {
     padding-block: clamp(7rem, 16vw, 10rem) 0;
   }
-
-
 
   .xpage-head__intro {
     color: var(--exp-muted);
@@ -196,13 +226,54 @@ const coverFor = (title: string) =>
     color: var(--exp-accent);
   }
 
+  .xprestation__packages {
+    display: grid;
+    gap: 1rem;
+    margin: 0 0 1.25rem;
+  }
+
+  .xprestation__package {
+    padding: 1rem 0;
+    border-block: 1px solid var(--exp-line);
+  }
+
+  .xprestation__package + .xprestation__package {
+    margin-top: -1px;
+  }
+
+  .xprestation__package-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 1rem;
+    margin-bottom: 0.85rem;
+  }
+
+  .xprestation__package-head h3 {
+    margin: 0;
+    font-size: 1.1rem;
+  }
+
+  .xprestation__package-head p {
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    color: var(--exp-accent);
+    white-space: nowrap;
+  }
+
   .xprestation__includes {
     list-style: none;
     margin: 0 0 1.25rem;
     padding: 0;
   }
 
-  .xprestation__includes li {
+  .xprestation__includes--compact {
+    margin-bottom: 0;
+  }
+
+  .xprestation__includes li,
+  .xprestation__notes li {
     position: relative;
     padding-left: 1.5rem;
     margin-bottom: 0.45rem;
@@ -210,11 +281,18 @@ const coverFor = (title: string) =>
     color: var(--exp-text);
   }
 
-  .xprestation__includes li::before {
+  .xprestation__includes li::before,
+  .xprestation__notes li::before {
     content: '—';
     position: absolute;
     left: 0;
     color: var(--exp-accent);
+  }
+
+  .xprestation__notes {
+    list-style: none;
+    margin: 0 0 1.25rem;
+    padding: 0;
   }
 
   .xprestation__note {
@@ -254,6 +332,11 @@ const coverFor = (title: string) =>
 
     .xprestation__media img {
       max-height: min(48vh, 22rem);
+    }
+
+    .xprestation__package-head {
+      flex-direction: column;
+      align-items: flex-start;
     }
   }
 </style>

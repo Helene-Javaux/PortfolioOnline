@@ -1,11 +1,32 @@
-title: Portrait
-subtitle: Individuel, couple, famille, professionnel
+title: Portrait animalier & duo avec votre compagnon
+subtitle: Parce que la complicité avec son animal, ça se photographie aussi.
 order: 1
-halfDay: 250 € # [PLACEHOLDER — tarif indicatif à confirmer]
-fullDay: 450 €
-includes:
-  - Séance de prise de vue (repérage compris)
-  - 20 photos retouchées (demi-journée) / 40 (journée)
-  - Galerie en ligne privée
-  - Livraison sous 2 à 3 semaines
-note: Photos supplémentaires possibles sur devis.
+packages:
+  - title: Séance découverte (45 min à 1h)
+    price: 140 €
+    details:
+      - Un animal ou un duo humain-animal
+      - Séance en extérieur ou à domicile
+      - 10 photos retouchées
+      - Galerie en ligne privée
+      - Livraison sous 2 semaines
+  - title: Séance complète (1h30)
+    price: 200 €
+    details:
+      - Jusqu'à 2 lieux ou mises en scène différentes
+      - Animal seul et/ou en duo avec vous
+      - 15 photos retouchées
+      - Galerie en ligne privée
+      - Livraison sous 2-3 semaines
+  - title: Famille élargie (2h)
+    price: 280 €
+    details:
+      - Plusieurs animaux et/ou plusieurs membres de la famille
+      - Plusieurs lieux ou tenues possibles
+      - 22 photos retouchées
+      - Galerie en ligne privée
+      - Livraison sous 3 semaines
+notes:
+  - Photo supplémentaire possible sur devis
+  - Un temps d'échange avant la séance pour comprendre les habitudes et le confort de l'animal
+  - Séance annulable/reportable en cas de stress ou d'imprévu du côté de l'animal

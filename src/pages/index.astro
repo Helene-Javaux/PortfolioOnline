@@ -56,7 +56,7 @@ const ogImage = await getImage({ src: slides[0]!.src, width: 1200, format: 'jpeg
       <p class="exp-label">Photographe — Bruxelles</p>
       <h1>Hélène <em>Javaux</em></h1>
       <p class="xhero__tagline">
-        Portraits, sport, produits, événements — des images vraies,
+        Portrait animalier, sport, produits, événements : des images vraies,
         qui vous ressemblent.
       </p>
       <div class="xhero__actions">
@@ -69,8 +69,7 @@ const ogImage = await getImage({ src: slides[0]!.src, width: 1200, format: 'jpeg
 
   <section id="manifesto" class="container xmanifesto" data-reveal>
     <p>
-      « Je photographie ce qui ne se rejoue pas : <em>la lumière d'un matin</em>,
-      un regard qui s'échappe, le silence d'un lieu qu'on croyait connaître. »
+      « J'aime photographier les choses simples: une bonne lumière, un geste naturel, <em>un instant qui ne reviendra pas</em>. »
     </p>
   </section>
 
@@ -127,7 +126,7 @@ const ogImage = await getImage({ src: slides[0]!.src, width: 1200, format: 'jpeg
     <p class="exp-label" data-reveal>La galerie</p>
     <h2 data-reveal>Le regard derrière <em>les commandes</em></h2>
     <p class="xseries__intro" data-reveal>
-      Mes séries personnelles et documentaires — c'est là que se forge la
+      Mes séries personnelles et documentaires : c'est là que se forge la
       sensibilité que je mets ensuite au service de vos images.
     </p>
     <div class="xseries__grid">
@@ -165,8 +164,8 @@ const ogImage = await getImage({ src: slides[0]!.src, width: 1200, format: 'jpeg
       <p class="exp-label" data-reveal>La boutique</p>
       <h2 data-reveal>Repartez avec une image</h2>
       <p class="xshop-teaser__intro" data-reveal>
-        Chaque tirage est imprimé à la demande, signé, et vous est remis en main
-        propre à Bruxelles ou expédié avec soin.
+        Une sélection de tirages Wild Care est disponible en 60 x 40 cm, signée,
+        puis remise en main propre à Bruxelles ou expédiée avec soin.
       </p>
       <div class="xshop-teaser__grid">
         {
@@ -216,7 +215,7 @@ const ogImage = await getImage({ src: slides[0]!.src, width: 1200, format: 'jpeg
       <p>
         Diplômée de la HELB en 2024, amoureuse de la nature et des instants
         qu'on ne rejoue pas. Ce que je cherche dans chaque image :
-        l'authenticité — sans poses figées, sans artifices.
+        l'authenticité, sans poses figées, sans artifices.
       </p>
       <a href={url('/a-propos/')} class="exp-arrow-link">
         Faire connaissance <span aria-hidden="true">→</span>
@@ -229,7 +228,7 @@ const ogImage = await getImage({ src: slides[0]!.src, width: 1200, format: 'jpeg
       <p class="exp-label exp-label--center">Votre histoire, maintenant</p>
       <h2>Une séance, un événement, <em>un mur à habiller ?</em></h2>
       <p>
-        Écrivez-moi en deux lignes — je réponds personnellement, en général
+        Écrivez-moi en deux lignes : je réponds personnellement, en général
         sous 24 heures.
       </p>
       <div class="xfinal__actions">
@@ -460,15 +459,6 @@ const ogImage = await getImage({ src: slides[0]!.src, width: 1200, format: 'jpeg
     gap: clamp(1.5rem, 3.5vw, 2.5rem);
   }
 
-  @media (min-width: 48rem) {
-    .xseries__grid > :nth-child(2n) {
-      transform: translateY(2.25rem);
-    }
-
-    .xseries__grid {
-      padding-bottom: 2.25rem;
-    }
-  }
 
   .xseries__card {
     text-decoration: none;

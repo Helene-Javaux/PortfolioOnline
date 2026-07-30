@@ -49,11 +49,18 @@ const prints = defineCollection({
       z.object({
         label: z.string(), // ex: "A4 (21 × 29,7 cm)"
         price: z.string(), // ex: "45 €"
+        available: z.boolean().default(true),
       }),
     ),
     available: z.boolean().default(true),
     order: z.number().default(99),
   }),
+});
+
+const tarifPackageSchema = z.object({
+  title: z.string(),
+  price: z.string(),
+  details: z.array(z.string()),
 });
 
 /** Grille tarifaire (page Tarifs) — une carte par type de prestation. */
@@ -62,9 +69,11 @@ const tarifs = defineCollection({
   schema: z.object({
     title: z.string(),
     subtitle: z.string().optional(),
-    halfDay: z.string(), // prix demi-journée, ex: "250 €"
-    fullDay: z.string(), // prix journée, ex: "450 €"
-    includes: z.array(z.string()), // ce qui est compris dans la prestation
+    halfDay: z.string().optional(),
+    fullDay: z.string().optional(),
+    includes: z.array(z.string()).default([]),
+    packages: z.array(tarifPackageSchema).optional(),
+    notes: z.array(z.string()).optional(),
     note: z.string().optional(),
     order: z.number().default(99),
   }),

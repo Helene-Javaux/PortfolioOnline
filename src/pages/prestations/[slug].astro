@@ -29,12 +29,11 @@ const related = service.data.relatedProject
 const others = (await getCollection('services'))
   .filter((s) => s.id !== service.id)
   .sort((a, b) => a.data.order - b.data.order);
-
 ---
 
 <Layout
   title={`${service.data.title} — Prestation`}
-  description={`Prestation ${service.data.title.toLowerCase()} par Hélène Javaux, photographe à Bruxelles${tarif ? ` — à partir de ${tarif.data.halfDay}` : ''}. Exemples, tarifs et devis gratuit sous 24 h.`}
+  description={`Prestation ${service.data.title.toLowerCase()} par Hélène Javaux, photographe à Bruxelles${tarif?.data.packages?.[0] ? ` — à partir de ${tarif.data.packages[0].price}` : tarif ? ` — à partir de ${tarif.data.halfDay}` : ''}. Exemples, tarifs et devis gratuit sous 24 h.`}
 >
   <header class="container xpage-head">
     <p class="exp-label">Prestation</p>
@@ -46,19 +45,6 @@ const others = (await getCollection('services'))
   <div class="container xservice">
     <div class="xservice__gallery">
       <PhotoGrid photos={photos} altPrefix={service.data.title} />
-
-      {
-        related && (
-          <p class="xservice__related">
-            Pour sentir mon approche, voir aussi la série
-            <a href={url(`/series/${related.id}/`)}>
-              {related.data.title}
-              {related.data.year && ` (${related.data.year})`}
-            </a>
-            dans la galerie.
-          </p>
-        )
-      }
     </div>
 
     <aside class="xservice__panel">
@@ -68,22 +54,52 @@ const others = (await getCollection('services'))
             <p class="exp-label">Tarifs</p>
             {tarif.data.subtitle && <p class="xservice__sub">{tarif.data.subtitle}</p>}
 
-            <dl class="xservice__prices">
-              <div>
-                <dt>Demi-journée</dt>
-                <dd>{tarif.data.halfDay}</dd>
-              </div>
-              <div>
-                <dt>Journée</dt>
-                <dd>{tarif.data.fullDay}</dd>
-              </div>
-            </dl>
+            {
+              tarif.data.packages?.length ? (
+                <div class="xservice__packages">
+                  {tarif.data.packages.map((pack) => (
+                    <section class="xservice__package">
+                      <header class="xservice__package-head">
+                        <h3>{pack.title}</h3>
+                        <p>{pack.price}</p>
+                      </header>
+                      <ul class="xservice__includes xservice__includes--compact">
+                        {pack.details.map((item) => (
+                          <li>{item}</li>
+                        ))}
+                      </ul>
+                    </section>
+                  ))}
+                </div>
+              ) : (
+                <>
+                  <dl class="xservice__prices">
+                    <div>
+                      <dt>Demi-journée</dt>
+                      <dd>{tarif.data.halfDay}</dd>
+                    </div>
+                    <div>
+                      <dt>Journée</dt>
+                      <dd>{tarif.data.fullDay}</dd>
+                    </div>
+                  </dl>
 
-            <ul class="xservice__includes">
-              {tarif.data.includes.map((item) => (
-                <li>{item}</li>
-              ))}
-            </ul>
+                  <ul class="xservice__includes">
+                    {tarif.data.includes.map((item) => (
+                      <li>{item}</li>
+                    ))}
+                  </ul>
+                </>
+              )
+            }
+
+            {tarif.data.notes && (
+              <ul class="xservice__notes">
+                {tarif.data.notes.map((item) => (
+                  <li>{item}</li>
+                ))}
+              </ul>
+            )}
 
             {tarif.data.note && <p class="xservice__note">{tarif.data.note}</p>}
 
@@ -130,18 +146,6 @@ const others = (await getCollection('services'))
     align-items: start;
   }
 
-  .xservice__related {
-    margin-top: 2rem;
-    font-family: var(--font-display);
-    font-style: italic;
-    font-size: 1.05rem;
-    color: var(--exp-muted);
-  }
-
-  .xservice__related a {
-    color: var(--exp-accent);
-  }
-
   .xservice__panel {
     position: sticky;
     top: 6rem;
@@ -184,24 +188,72 @@ const others = (await getCollection('services'))
     color: var(--exp-accent);
   }
 
+  .xservice__packages {
+    display: grid;
+    gap: 1rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .xservice__package {
+    padding: 1rem 0;
+    border-block: 1px solid var(--exp-line);
+  }
+
+  .xservice__package + .xservice__package {
+    margin-top: -1px;
+  }
+
+  .xservice__package-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 1rem;
+    margin-bottom: 0.85rem;
+  }
+
+  .xservice__package-head h3 {
+    margin: 0;
+    font-size: 1.05rem;
+  }
+
+  .xservice__package-head p {
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: 1.45rem;
+    color: var(--exp-accent);
+    white-space: nowrap;
+  }
+
   .xservice__includes {
     list-style: none;
     margin: 0 0 1.25rem;
     padding: 0;
   }
 
-  .xservice__includes li {
+  .xservice__includes--compact {
+    margin-bottom: 0;
+  }
+
+  .xservice__includes li,
+  .xservice__notes li {
     position: relative;
     padding-left: 1.5rem;
     margin-bottom: 0.45rem;
     font-size: 0.9rem;
   }
 
-  .xservice__includes li::before {
+  .xservice__includes li::before,
+  .xservice__notes li::before {
     content: '—';
     position: absolute;
     left: 0;
     color: var(--exp-accent);
+  }
+
+  .xservice__notes {
+    list-style: none;
+    margin: 0 0 1.25rem;
+    padding: 0;
   }
 
   .xservice__note {
@@ -243,6 +295,11 @@ const others = (await getCollection('services'))
 
     .xservice__panel {
       position: static;
+    }
+
+    .xservice__package-head {
+      flex-direction: column;
+      align-items: flex-start;
     }
   }
 </style>
