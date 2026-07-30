@@ -8,25 +8,21 @@ packages:
       - Un animal ou un duo humain-animal
       - Séance en extérieur ou à domicile
       - 10 photos retouchées
-      - Galerie en ligne privée
-      - Livraison sous 2 semaines
   - title: Séance complète (1h30)
     price: 200 €
     details:
       - Jusqu'à 2 lieux ou mises en scène différentes
       - Animal seul et/ou en duo avec vous
       - 15 photos retouchées
-      - Galerie en ligne privée
-      - Livraison sous 2-3 semaines
   - title: Famille élargie (2h)
     price: 280 €
     details:
       - Plusieurs animaux et/ou plusieurs membres de la famille
       - Plusieurs lieux ou tenues possibles
       - 22 photos retouchées
-      - Galerie en ligne privée
-      - Livraison sous 3 semaines
 notes:
+  - Galerie en ligne privée
+  - Livraison sous 2-3 semaines
   - Photo supplémentaire possible sur devis
   - Un temps d'échange avant la séance pour comprendre les habitudes et le confort de l'animal
-  - Séance annulable/reportable en cas de stress ou d'imprévu du côté de l'animal
+  - Séance reportable en cas de stress ou d'imprévu du côté de l'animal

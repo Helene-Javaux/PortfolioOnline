@@ -8,10 +8,10 @@
  */
 
 // Clé du formulaire de CONTACT (page /contact)
-export const WEB3FORMS_CONTACT_KEY = 'YOUR_ACCESS_KEY_HERE';
+export const WEB3FORMS_CONTACT_KEY = 'cd8b2f2c-2ebe-4b2b-9668-cddbcaf1b08e';
 
 // Clé du formulaire de DEMANDE DE TIRAGE (page /shop) — clé séparée
-export const WEB3FORMS_PRINTS_KEY = 'YOUR_ACCESS_KEY_HERE';
+export const WEB3FORMS_PRINTS_KEY = '51059d65-1436-4527-aa51-92273e557f37';
 
 export const SITE = {
   name: 'Hélène Javaux',

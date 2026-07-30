@@ -75,7 +75,7 @@ const others = (await getCollection('prints'))
       <form id="print-order" class="xprint__form" novalidate>
         <input type="hidden" name="access_key" value={WEB3FORMS_PRINTS_KEY} />
         <input type="hidden" name="subject" value={`Demande de tirage « ${print.data.title} » (${print.data.reference})`} />
-        <input type="hidden" name="from_name" value="Boutique helenejavaux.be (expérimental)" />
+        <input type="hidden" name="from_name" value="helenejavaux.be" />
         <input type="hidden" name="reference_tirage" value={`${print.data.title} — ${print.data.reference}`} />
         <input type="checkbox" name="botcheck" class="visually-hidden" tabindex="-1" autocomplete="off" />
 

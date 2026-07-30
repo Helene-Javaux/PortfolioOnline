@@ -44,8 +44,8 @@ import { SITE, WEB3FORMS_CONTACT_KEY } from '../config';
     <form id="exp-contact" class="xcontact__form" novalidate data-reveal style="--reveal-delay: 0.12s">
       <!-- Clé Web3Forms du formulaire de contact (voir src/config.ts) -->
       <input type="hidden" name="access_key" value={WEB3FORMS_CONTACT_KEY} />
-      <input type="hidden" name="subject" value="Nouveau message via la galerie (expérimental)" />
-      <input type="hidden" name="from_name" value="Site helenejavaux.be (expérimental)" />
+      <input type="hidden" name="subject" value="Nouvelle demande de contact" />
+      <input type="hidden" name="from_name" value="helenejavaux.be" />
       <input type="checkbox" name="botcheck" class="visually-hidden" tabindex="-1" autocomplete="off" />
 
       <div class="xcontact__row">
@@ -64,6 +64,7 @@ import { SITE, WEB3FORMS_CONTACT_KEY } from '../config';
         <select id="xc-type" name="type_de_demande" required>
           <option value="" disabled selected>Choisir…</option>
           <option>Séance portrait</option>
+          <option>Séance portrait animalier</option>
           <option>Reportage sportif</option>
           <option>Packshot / produits</option>
           <option>Événement</option>
