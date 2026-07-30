@@ -1,0 +1,631 @@
+﻿---
+import { Image, getImage } from 'astro:assets';
+import { getCollection } from 'astro:content';
+import Layout from '../layouts/Layout.astro';
+import { photo, galleryCover } from '../lib/photos';
+import { url } from '../lib/url';
+
+// Diaporama du hero — quatre images signature, une par série
+const slides = [
+  { src: photo('projects/wild-care/wildcare-16.jpg'), alt: 'Close-up de plumes — série Wild Care' },
+  { src: photo('projects/thalassophobie/thalassophobie-05.jpg'), alt: 'Eau turquoise — série Thalassophobie' },
+  { src: photo('home/ardp_full_11.JPG'), alt: 'Partitions — série Au rythme des pas' },
+  { src: photo('projects/ferrarias/ferrarias-08.jpg'), alt: 'Vestige minier — série Ferrarias' },
+];
+
+const projects = (await getCollection('projects')).sort((a, b) => a.data.order - b.data.order);
+const prints = (await getCollection('prints'))
+  .filter((p) => p.data.available)
+  .sort((a, b) => a.data.order - b.data.order)
+  .slice(0, 3);
+
+// Prestations : cartes tarifaires + visuel de la galerie de service associée
+const services = (await getCollection('services')).sort((a, b) => a.data.order - b.data.order);
+const tarifs = (await getCollection('tarifs')).sort((a, b) => a.data.order - b.data.order);
+const serviceFor = (title: string) =>
+  services.find((s) => s.data.title.toLowerCase() === title.toLowerCase());
+
+const portrait = photo('about/portrait.jpg');
+const ogImage = await getImage({ src: slides[0]!.src, width: 1200, format: 'jpeg' });
+---
+
+<Layout
+  description="Hélène Javaux, photographe à Bruxelles. Séries documentaires, prestations sur mesure et tirages d'art en édition limitée."
+  ogImage={ogImage.src}
+>
+  <section class="xhero">
+    {
+      slides.map((slide, i) => (
+        <Image
+          class="xhero__slide"
+          style={`animation-delay: ${i * 6}s`}
+          src={slide.src}
+          alt={i === 0 ? slide.alt : ''}
+          aria-hidden={i === 0 ? undefined : 'true'}
+          widths={[800, 1400, 2000]}
+          sizes="100vw"
+          width={2000}
+          quality={90}
+          loading={i === 0 ? 'eager' : 'lazy'}
+          fetchpriority={i === 0 ? 'high' : undefined}
+        />
+      ))
+    }
+    <div class="xhero__veil"></div>
+    <div class="xhero__content container">
+      <p class="exp-label">Photographe — Bruxelles</p>
+      <h1>Hélène <em>Javaux</em></h1>
+      <p class="xhero__tagline">
+        Portrait animalier, sport, produits, événements : des images vraies,
+        qui vous ressemblent.
+      </p>
+      <div class="xhero__actions">
+        <a href={url('/prestations/')} class="xbtn">Réserver une séance</a>
+        <a href={url('/series/')} class="xbtn xbtn--ghost">Entrer dans la galerie</a>
+      </div>
+    </div>
+    <a href="#manifesto" class="xhero__scroll" aria-label="Faire défiler">↓</a>
+  </section>
+
+  <section id="manifesto" class="container xmanifesto" data-reveal>
+    <p>
+      « J'aime photographier les choses simples: une bonne lumière, un geste naturel, <em>un instant qui ne reviendra pas</em>. »
+    </p>
+  </section>
+
+  <section class="xoffers">
+    <div class="container">
+      <p class="exp-label" data-reveal>Prestations</p>
+      <h2 data-reveal>Ce que je peux <em>créer pour vous</em></h2>
+      <p class="xoffers__intro" data-reveal>
+        Chaque prestation commence par une conversation et se termine par des
+        images qui vous ressemblent. Devis gratuit, réponse sous 24 h.
+      </p>
+      <div class="xoffers__grid">
+        {
+          tarifs.map((tarif, i) => {
+            const service = serviceFor(tarif.data.title);
+            return (
+              <a
+                href={url(`/prestations/${service?.id ?? ''}/`)}
+                class="xoffers__card"
+                data-reveal
+                style={`--reveal-delay: ${(i % 4) * 0.1}s`}
+              >
+                {service && (
+                  <div class="xoffers__media">
+                    <Image
+                      src={galleryCover('services', service.id, service.data.cover)}
+                      alt={`Exemple — ${tarif.data.title}`}
+                      width={640}
+                      widths={[400, 640]}
+                      sizes="(max-width: 40rem) 90vw, (max-width: 64rem) 45vw, 22vw"
+                      loading="lazy"
+                      style={service.data.coverPosition ? `object-position: ${service.data.coverPosition};` : undefined}
+                    />
+                  </div>
+                )}
+                <div class="xoffers__caption">
+                  <h3>{tarif.data.title}</h3>
+                  {tarif.data.subtitle && <p class="xoffers__sub">{tarif.data.subtitle}</p>}
+                  <p class="xoffers__price">à partir de {tarif.data.halfDay}</p>
+                </div>
+              </a>
+            );
+          })
+        }
+      </div>
+      <div class="xoffers__actions" data-reveal>
+        <a href={url('/prestations/')} class="xbtn">Voir tarifs et détails</a>
+        <a href={url('/contact/')} class="xbtn xbtn--ghost">Demander un devis</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="container xseries">
+    <p class="exp-label" data-reveal>La galerie</p>
+    <h2 data-reveal>Le regard derrière <em>les commandes</em></h2>
+    <p class="xseries__intro" data-reveal>
+      Mes séries personnelles et documentaires : c'est là que se forge la
+      sensibilité que je mets ensuite au service de vos images.
+    </p>
+    <div class="xseries__grid">
+      {
+        projects.map((project, i) => (
+          <a
+            href={url(`/series/${project.id}/`)}
+            class="xseries__card"
+            data-reveal
+            style={`--reveal-delay: ${(i % 2) * 0.12}s`}
+          >
+            <div class="xseries__media">
+              <Image
+                src={galleryCover('projects', project.id, project.data.cover)}
+                alt={project.data.title}
+                width={800}
+                widths={[450, 800]}
+                sizes="(max-width: 48rem) 100vw, 45vw"
+                loading="lazy"
+              />
+            </div>
+            <div class="xseries__caption">
+              <span class="xseries__index">{String(i + 1).padStart(2, '0')}</span>
+              <h3>{project.data.title}</h3>
+              {project.data.year && <span class="xseries__year">{project.data.year}</span>}
+            </div>
+          </a>
+        ))
+      }
+    </div>
+  </section>
+
+  <section class="xshop-teaser">
+    <div class="container">
+      <p class="exp-label" data-reveal>La boutique</p>
+      <h2 data-reveal>Repartez avec une image</h2>
+      <p class="xshop-teaser__intro" data-reveal>
+        Une sélection de tirages Wild Care est disponible en 60 x 40 cm, signée,
+        puis remise en main propre à Bruxelles ou expédiée avec soin.
+      </p>
+      <div class="xshop-teaser__grid">
+        {
+          prints.map((print, i) => (
+            <a
+              href={url(`/boutique/${print.id}/`)}
+              class="xshop-teaser__card"
+              data-reveal
+              style={`--reveal-delay: ${i * 0.12}s`}
+            >
+              <Image
+                src={photo(print.data.photo)}
+                alt={`Tirage « ${print.data.title} »`}
+                width={720}
+                widths={[400, 720]}
+                sizes="(max-width: 40rem) 90vw, 30vw"
+                loading="lazy"
+              />
+              <div class="xshop-teaser__caption">
+                <span>{print.data.title}</span>
+                <span class="xshop-teaser__price">dès {print.data.formats[0]!.price}</span>
+              </div>
+            </a>
+          ))
+        }
+      </div>
+      <div class="xshop-teaser__more" data-reveal>
+        <a href={url('/boutique/')} class="xbtn">Visiter la boutique</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="container xabout" data-reveal>
+    <div class="xabout__media">
+      <Image
+        src={portrait}
+        alt="Portrait de Hélène Javaux"
+        width={560}
+        widths={[400, 560]}
+        sizes="(max-width: 48rem) 80vw, 480px"
+        loading="lazy"
+      />
+    </div>
+    <div class="xabout__text">
+      <p class="exp-label">La photographe</p>
+      <h2>Derrière l'objectif, <em class="xabout__highlight">Hélène</em></h2>
+      <p>
+        Diplômée de la HELB en 2024, amoureuse de la nature et des instants
+        qu'on ne rejoue pas. Ce que je cherche dans chaque image :
+        l'authenticité, sans poses figées, sans artifices.
+      </p>
+      <a href={url('/a-propos/')} class="exp-arrow-link">
+        Faire connaissance <span aria-hidden="true">→</span>
+      </a>
+    </div>
+  </section>
+
+  <section class="xfinal" data-reveal>
+    <div class="container">
+      <p class="exp-label exp-label--center">Votre histoire, maintenant</p>
+      <h2>Une séance, un événement, <em>un mur à habiller ?</em></h2>
+      <p>
+        Écrivez-moi en deux lignes : je réponds personnellement, en général
+        sous 24 heures.
+      </p>
+      <div class="xfinal__actions">
+        <a href={url('/contact/')} class="xbtn">Prendre contact</a>
+        <a href={url('/prestations/')} class="xbtn xbtn--ghost">Voir les prestations</a>
+      </div>
+    </div>
+  </section>
+</Layout>
+
+<style>
+  .xhero {
+    position: relative;
+    height: 100svh;
+    min-height: 34rem;
+    overflow: hidden;
+    background: var(--exp-bg);
+  }
+
+  .xhero :global(.xhero__slide) {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0;
+    animation: xhero-fade 24s infinite;
+  }
+
+  @keyframes xhero-fade {
+    0% { opacity: 0; }
+    4% { opacity: 1; }
+    27% { opacity: 1; }
+    32% { opacity: 0; }
+    100% { opacity: 0; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .xhero :global(.xhero__slide) {
+      animation: none;
+    }
+
+    .xhero :global(.xhero__slide:first-of-type) {
+      opacity: 1;
+    }
+  }
+
+  .xhero__veil {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      180deg,
+      rgba(14, 14, 13, 0.55) 0%,
+      rgba(14, 14, 13, 0.18) 40%,
+      rgba(14, 14, 13, 0.72) 100%
+    );
+  }
+
+  .xhero__content {
+    position: absolute;
+    inset-inline: 0;
+    bottom: clamp(4rem, 12vh, 8rem);
+  }
+
+  .xhero__content h1 {
+    margin-bottom: 0.2em;
+  }
+
+  .xhero__content h1 em {
+    color: var(--exp-accent);
+  }
+
+  .xhero__tagline {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: clamp(1.1rem, 2.4vw, 1.5rem);
+    color: var(--exp-text);
+    max-width: 34rem;
+    margin-bottom: 2rem;
+  }
+
+  .xhero__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .xhero__scroll {
+    position: absolute;
+    bottom: 1.25rem;
+    left: 50%;
+    transform: translateX(-50%);
+    text-decoration: none;
+    color: var(--exp-muted);
+    font-size: 1.2rem;
+    animation: xscroll-bob 2.2s ease-in-out infinite;
+  }
+
+  @keyframes xscroll-bob {
+    0%, 100% { transform: translate(-50%, 0); }
+    50% { transform: translate(-50%, 8px); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .xhero__scroll {
+      animation: none;
+    }
+  }
+
+  .xmanifesto {
+    padding-block: clamp(4.5rem, 12vw, 8rem);
+    text-align: center;
+  }
+
+  .xmanifesto p {
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: clamp(1.5rem, 3.6vw, 2.4rem);
+    line-height: 1.4;
+    max-width: 52rem;
+    margin-inline: auto;
+  }
+
+  .xmanifesto em {
+    color: var(--exp-accent);
+  }
+
+  .xoffers {
+    padding-block: clamp(4rem, 10vw, 7rem);
+    background: var(--exp-surface);
+    border-block: 1px solid var(--exp-line);
+  }
+
+  .xoffers h2 em {
+    color: var(--exp-accent);
+  }
+
+  .xoffers__intro {
+    color: var(--exp-muted);
+    max-width: 38rem;
+    margin-bottom: 2.5rem;
+  }
+
+  .xoffers__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+    gap: 1.75rem;
+  }
+
+  .xoffers__card {
+    text-decoration: none;
+    border: 1px solid var(--exp-line);
+    background: var(--exp-bg);
+    transition: border-color 0.3s ease, transform 0.3s ease;
+  }
+
+  .xoffers__card:hover {
+    border-color: var(--exp-accent);
+    transform: translateY(-4px);
+  }
+
+  .xoffers__media {
+    overflow: hidden;
+    aspect-ratio: 4 / 3;
+  }
+
+  .xoffers__media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.6s ease, opacity 0.4s ease;
+  }
+
+  .xoffers__card:hover .xoffers__media img {
+    transform: scale(1.03);
+    opacity: 0.9;
+  }
+
+  .xoffers__caption {
+    padding: 1.25rem 1.35rem 1.4rem;
+  }
+
+  .xoffers__caption h3 {
+    font-size: 1.3rem;
+    margin-bottom: 0.15em;
+  }
+
+  .xoffers__sub {
+    font-size: 0.82rem;
+    color: var(--exp-muted);
+    margin-bottom: 0.7rem;
+  }
+
+  .xoffers__price {
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--exp-accent);
+    margin: 0;
+  }
+
+  .xoffers__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    justify-content: center;
+    margin-top: 2.75rem;
+  }
+
+  .xseries {
+    padding-top: clamp(4rem, 10vw, 7rem);
+  }
+
+  .xseries h2 em {
+    color: var(--exp-accent);
+  }
+
+  .xseries__intro {
+    color: var(--exp-muted);
+    max-width: 38rem;
+    margin-bottom: 2.5rem;
+  }
+
+  .xseries__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr));
+    gap: clamp(1.5rem, 3.5vw, 2.5rem);
+  }
+
+
+  .xseries__card {
+    text-decoration: none;
+  }
+
+  .xseries__media {
+    overflow: hidden;
+  }
+
+  .xseries__media img {
+    width: 100%;
+    height: auto;
+    transition: transform 0.7s ease, opacity 0.4s ease;
+  }
+
+  .xseries__card:hover .xseries__media img {
+    transform: scale(1.03);
+    opacity: 0.9;
+  }
+
+  .xseries__caption {
+    display: flex;
+    align-items: baseline;
+    gap: 0.75rem;
+    padding-block: 0.9rem;
+  }
+
+  .xseries__index {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: 0.9rem;
+    color: var(--exp-accent);
+  }
+
+  .xseries__caption h3 {
+    font-size: 1.35rem;
+    margin: 0;
+  }
+
+  .xseries__year {
+    margin-left: auto;
+    font-size: 0.72rem;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: var(--exp-muted);
+  }
+
+  .xshop-teaser {
+    margin-top: clamp(4.5rem, 11vw, 8rem);
+    padding-block: clamp(4rem, 10vw, 7rem);
+    background: var(--exp-surface);
+    border-block: 1px solid var(--exp-line);
+  }
+
+  .xshop-teaser__intro {
+    color: var(--exp-muted);
+    max-width: 36rem;
+    margin-bottom: 2.5rem;
+  }
+
+  .xshop-teaser__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+    gap: 1.75rem;
+    align-items: start;
+  }
+
+  .xshop-teaser__card {
+    text-decoration: none;
+  }
+
+  .xshop-teaser__card img {
+    width: 100%;
+    height: auto;
+    transition: opacity 0.3s ease;
+  }
+
+  .xshop-teaser__card:hover img {
+    opacity: 0.88;
+  }
+
+  .xshop-teaser__caption {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 1rem;
+    padding-block: 0.85rem;
+    font-family: var(--font-display);
+    font-size: 1.1rem;
+  }
+
+  .xshop-teaser__price {
+    font-family: var(--font-body);
+    font-size: 0.8rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--exp-accent);
+    white-space: nowrap;
+  }
+
+  .xshop-teaser__more {
+    margin-top: 2.75rem;
+    text-align: center;
+  }
+
+  .xabout {
+    display: grid;
+    grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
+    gap: clamp(2rem, 6vw, 5rem);
+    align-items: center;
+    padding-block: clamp(4rem, 10vw, 7rem) 0;
+  }
+
+  .xabout__media img {
+    width: 100%;
+    filter: grayscale(18%);
+  }
+
+  .xabout__text p:not(.exp-label) {
+    color: var(--exp-muted);
+    max-width: 32rem;
+    margin-bottom: 1.75rem;
+  }
+
+  .xabout__highlight {
+    color: var(--exp-accent);
+  }
+
+  .xfinal {
+    margin-top: clamp(4.5rem, 11vw, 8rem);
+    padding-block: clamp(4rem, 10vw, 7rem);
+    text-align: center;
+    background:
+      radial-gradient(60% 120% at 50% 0%, var(--exp-accent-soft) 0%, transparent 65%),
+      var(--exp-surface);
+    border-top: 1px solid var(--exp-line);
+  }
+
+  .xfinal h2 {
+    max-width: 40rem;
+    margin-inline: auto;
+  }
+
+  .xfinal h2 em {
+    color: var(--exp-accent);
+  }
+
+  .xfinal p:not(.exp-label) {
+    color: var(--exp-muted);
+    max-width: 32rem;
+    margin: 0 auto 2.25rem;
+  }
+
+  .xfinal__actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1rem;
+  }
+
+  @media (max-width: 56rem) {
+    .xabout {
+      grid-template-columns: 1fr;
+    }
+
+    .xabout__media {
+      max-width: 22rem;
+    }
+  }
+</style>

@@ -1,0 +1,146 @@
+---
+import { Image } from 'astro:assets';
+import { getCollection } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+import { photo } from '../../lib/photos';
+import { url } from '../../lib/url';
+
+const prints = (await getCollection('prints'))
+  .filter((print) => print.data.available)
+  .sort((a, b) => a.data.order - b.data.order);
+---
+
+<Layout
+  title="Boutique — Tirages d'art"
+  description="Tirages d'art signés de Hélène Javaux, imprimés à la demande. Commande simple, sans paiement en ligne : chaque demande reçoit une réponse personnelle."
+>
+  <header class="container xpage-head">
+    <p class="exp-label">La boutique</p>
+    <h1>Des images qui <em>restent</em></h1>
+    <p class="xpage-head__intro">
+      Une sélection de tirages est actuellement disponible en format 60 x 40 cm,
+      impression fine art avec finition lamination mate, montée sur plexi,
+      livrée avec un certificat d'authenticité, remise en main propre à
+      Bruxelles ou expédiée soigneusement emballée. Pas de panier ni de
+      paiement en ligne : vous demandez, je réponds personnellement sous 24 h.
+    </p>
+    <hr class="exp-rule" />
+  </header>
+
+  <section class="container xcatalog">
+    {
+      prints.map((print, i) => (
+        <a
+          href={url(`/boutique/${print.id}/`)}
+          class="xcatalog__card"
+          data-reveal
+          style={`--reveal-delay: ${(i % 3) * 0.1}s`}
+        >
+          <div class="xcatalog__frame">
+            <Image
+              src={photo(print.data.photo)}
+              alt={`Tirage « ${print.data.title} »`}
+              width={800}
+              widths={[400, 800]}
+              sizes="(max-width: 40rem) 90vw, (max-width: 64rem) 45vw, 30vw"
+              loading="lazy"
+            />
+          </div>
+          <div class="xcatalog__caption">
+            <h2>{print.data.title}</h2>
+            <p class="xcatalog__ref">Réf. {print.data.reference}</p>
+            <p class="xcatalog__price">dès {print.data.formats[0]!.price}</p>
+          </div>
+        </a>
+      ))
+    }
+  </section>
+
+  <section class="container xcatalog-note" data-reveal>
+    <p>
+      Une image de la galerie vous plaît mais n'apparaît pas ici ?
+      Toutes les autres photographies peuvent être retirées à la demande, dans le
+      format et sur le support de votre choix. <a href={url('/contact/')}>Écrivez-moi</a>, on en parle.
+    </p>
+  </section>
+</Layout>
+
+<style>
+  .xpage-head {
+    padding-block: clamp(7rem, 16vw, 10rem) 0;
+  }
+
+
+
+  .xpage-head__intro {
+    color: var(--exp-muted);
+    max-width: 42rem;
+  }
+
+  .xpage-head h1 em {
+    color: var(--exp-accent);
+  }
+
+  .xcatalog {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(17rem, 1fr));
+    gap: clamp(1.75rem, 4vw, 2.75rem);
+  }
+
+  .xcatalog__card {
+    text-decoration: none;
+  }
+  .xcatalog__frame {
+    transition: transform 0.3s ease;
+  }
+
+  .xcatalog__card:hover .xcatalog__frame {
+    transform: translateY(-4px);
+  }
+
+  .xcatalog__frame img {
+    width: 100%;
+  }
+
+  .xcatalog__caption {
+    padding-block: 1rem;
+  }
+
+  .xcatalog__caption h2 {
+    font-size: 1.35rem;
+    margin-bottom: 0.1em;
+  }
+
+  .xcatalog__ref {
+    font-size: 0.72rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--exp-muted);
+    margin-bottom: 0.4rem;
+  }
+
+  .xcatalog__price {
+    font-size: 0.82rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--exp-accent);
+    margin: 0;
+  }
+
+  .xcatalog-note {
+    margin-top: clamp(3rem, 7vw, 5rem);
+    text-align: center;
+  }
+
+  .xcatalog-note p {
+    font-family: var(--font-display);
+    font-size: clamp(1.15rem, 2.4vw, 1.5rem);
+    line-height: 1.5;
+    max-width: 40rem;
+    margin-inline: auto;
+  }
+
+  .xcatalog-note a {
+    color: var(--exp-accent);
+  }
+</style>

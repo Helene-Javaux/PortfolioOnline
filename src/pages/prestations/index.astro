@@ -1,0 +1,342 @@
+---
+import { Image } from 'astro:assets';
+import { getCollection } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+import { galleryCover } from '../../lib/photos';
+import { url } from '../../lib/url';
+
+const services = (await getCollection('services')).sort(
+  (a, b) => a.data.order - b.data.order,
+);
+const tarifs = (await getCollection('tarifs')).sort(
+  (a, b) => a.data.order - b.data.order,
+);
+
+// Associe chaque carte tarif à sa galerie de service (même slug attendu,
+// à défaut correspondance par titre)
+const coverFor = (title: string) =>
+  services.find((s) => s.data.title.toLowerCase() === title.toLowerCase());
+---
+
+<Layout
+  title="Prestations & tarifs"
+  description="Prestations photo de Hélène Javaux : portrait, sport, packshot, événementiel. Tarifs transparents, devis sous 24 h."
+>
+  <header class="container xpage-head">
+    <p class="exp-label">Prestations</p>
+    <h1>Ce que je peux <em>créer pour vous</em></h1>
+    <p class="xpage-head__intro">
+      Portrait animalier, sport, produits, événements : chaque prestation commence par
+      une conversation et se termine par des images qui vous ressemblent. Les
+      tarifs sont indicatifs : le devis précis est toujours gratuit et sans
+      engagement.
+    </p>
+    <hr class="exp-rule" />
+  </header>
+
+  <section class="container xprestations">
+    {
+      tarifs.map((tarif, i) => {
+        const service = coverFor(tarif.data.title);
+        const hasPackages = Boolean(tarif.data.packages?.length);
+
+        return (
+          <article class="xprestation" data-reveal style={`--reveal-delay: ${(i % 2) * 0.1}s`}>
+            {service && (
+              <a href={url(`/prestations/${service.id}/`)} class="xprestation__media">
+                <Image
+                  src={galleryCover('services', service.id, service.data.cover)}
+                  alt={`Exemple — ${service.data.title}`}
+                  width={800}
+                  widths={[400, 800]}
+                  sizes="(max-width: 48rem) 100vw, 45vw"
+                  loading="lazy"
+                  style={service.data.coverPosition ? `object-position: ${service.data.coverPosition};` : undefined}
+                />
+              </a>
+            )}
+            <div class="xprestation__body">
+              <h2>{tarif.data.title}</h2>
+              {tarif.data.subtitle && <p class="xprestation__subtitle">{tarif.data.subtitle}</p>}
+
+              {
+                hasPackages ? (
+                  <div class="xprestation__packages">
+                    {tarif.data.packages!.map((pack) => (
+                      <section class="xprestation__package">
+                        <header class="xprestation__package-head">
+                          <h3>{pack.title}</h3>
+                          <p>{pack.price}</p>
+                        </header>
+                        <ul class="xprestation__includes xprestation__includes--compact">
+                          {pack.details.map((item) => (
+                            <li>{item}</li>
+                          ))}
+                        </ul>
+                      </section>
+                    ))}
+                  </div>
+                ) : (
+                  <>
+                    <dl class="xprestation__prices">
+                      <div>
+                        <dt>Demi-journée</dt>
+                        <dd>{tarif.data.halfDay}</dd>
+                      </div>
+                      <div>
+                        <dt>Journée</dt>
+                        <dd>{tarif.data.fullDay}</dd>
+                      </div>
+                    </dl>
+
+                    <ul class="xprestation__includes">
+                      {tarif.data.includes.map((item) => (
+                        <li>{item}</li>
+                      ))}
+                    </ul>
+                  </>
+                )
+              }
+
+              {tarif.data.notes && (
+                <ul class="xprestation__notes">
+                  {tarif.data.notes.map((item) => (
+                    <li>{item}</li>
+                  ))}
+                </ul>
+              )}
+
+              {tarif.data.note && <p class="xprestation__note">{tarif.data.note}</p>}
+
+              <div class="xprestation__links">
+                {service && (
+                  <a href={url(`/prestations/${service.id}/`)} class="exp-arrow-link">
+                    Voir des exemples <span aria-hidden="true">→</span>
+                  </a>
+                )}
+                <a href={url('/contact/')} class="exp-arrow-link">
+                  Demander un devis <span aria-hidden="true">→</span>
+                </a>
+              </div>
+            </div>
+          </article>
+        );
+      })
+    }
+  </section>
+
+  <section class="container xprestations-infos" data-reveal>
+    <p>
+      Déplacements offerts dans un rayon de 30 km autour de Bruxelles
+      (0,45 €/km au-delà). Toutes les photos sont retouchées, livrées en haute
+      définition via une galerie privée, et un acompte de 30 % réserve votre
+      date.
+    </p>
+    <a href={url('/contact/')} class="xbtn">Un devis en 24 h</a>
+  </section>
+</Layout>
+
+<style>
+  .xpage-head {
+    padding-block: clamp(7rem, 16vw, 10rem) 0;
+  }
+
+  .xpage-head__intro {
+    color: var(--exp-muted);
+    max-width: 42rem;
+  }
+
+  .xpage-head h1 em {
+    color: var(--exp-accent);
+  }
+
+  .xprestations {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(3rem, 7vw, 5rem);
+  }
+
+  .xprestation {
+    display: grid;
+    grid-template-columns: minmax(0, 0.92fr) minmax(0, 1fr);
+    gap: clamp(1.75rem, 4vw, 3.5rem);
+    align-items: center;
+  }
+
+  .xprestation:nth-child(2n) .xprestation__media {
+    order: 2;
+  }
+
+  .xprestation__media {
+    display: block;
+    overflow: hidden;
+    max-width: min(100%, 34rem);
+  }
+
+  .xprestation__media img {
+    width: 100%;
+    max-height: min(62vh, 32rem);
+    object-fit: contain;
+    transition: transform 0.6s ease, opacity 0.4s ease;
+  }
+
+  .xprestation__media:hover img {
+    transform: scale(1.02);
+    opacity: 0.9;
+  }
+
+  .xprestation__links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem 2rem;
+  }
+
+  .xprestation__body h2 {
+    font-size: clamp(1.7rem, 3.2vw, 2.3rem);
+    margin-bottom: 0.1em;
+  }
+
+  .xprestation__subtitle {
+    font-size: 0.8rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--exp-muted);
+    margin-bottom: 1.25rem;
+  }
+
+  .xprestation__prices {
+    display: flex;
+    gap: 2.5rem;
+    margin: 0 0 1.25rem;
+    padding-block: 1rem;
+    border-block: 1px solid var(--exp-line);
+  }
+
+  .xprestation__prices dt {
+    font-size: 0.72rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--exp-muted);
+  }
+
+  .xprestation__prices dd {
+    margin: 0.15rem 0 0;
+    font-family: var(--font-display);
+    font-size: 1.7rem;
+    color: var(--exp-accent);
+  }
+
+  .xprestation__packages {
+    display: grid;
+    gap: 1rem;
+    margin: 0 0 1.25rem;
+  }
+
+  .xprestation__package {
+    padding: 1rem 0;
+    border-block: 1px solid var(--exp-line);
+  }
+
+  .xprestation__package + .xprestation__package {
+    margin-top: -1px;
+  }
+
+  .xprestation__package-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 1rem;
+    margin-bottom: 0.85rem;
+  }
+
+  .xprestation__package-head h3 {
+    margin: 0;
+    font-size: 1.1rem;
+  }
+
+  .xprestation__package-head p {
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    color: var(--exp-accent);
+    white-space: nowrap;
+  }
+
+  .xprestation__includes {
+    list-style: none;
+    margin: 0 0 1.25rem;
+    padding: 0;
+  }
+
+  .xprestation__includes--compact {
+    margin-bottom: 0;
+  }
+
+  .xprestation__includes li,
+  .xprestation__notes li {
+    position: relative;
+    padding-left: 1.5rem;
+    margin-bottom: 0.45rem;
+    font-size: 0.93rem;
+    color: var(--exp-text);
+  }
+
+  .xprestation__includes li::before,
+  .xprestation__notes li::before {
+    content: '—';
+    position: absolute;
+    left: 0;
+    color: var(--exp-accent);
+  }
+
+  .xprestation__notes {
+    list-style: none;
+    margin: 0 0 1.25rem;
+    padding: 0;
+  }
+
+  .xprestation__note {
+    font-style: italic;
+    font-size: 0.85rem;
+    color: var(--exp-muted);
+    margin-bottom: 1.5rem;
+  }
+
+  .xprestations-infos {
+    margin-top: clamp(3.5rem, 8vw, 5.5rem);
+    padding: clamp(2rem, 5vw, 3.5rem);
+    border: 1px solid var(--exp-line);
+    background: var(--exp-surface);
+    text-align: center;
+  }
+
+  .xprestations-infos p {
+    color: var(--exp-muted);
+    max-width: 44rem;
+    margin: 0 auto 1.75rem;
+  }
+
+  @media (max-width: 48rem) {
+    .xprestation,
+    .xprestation:nth-child(2n) {
+      grid-template-columns: 1fr;
+    }
+
+    .xprestation:nth-child(2n) .xprestation__media {
+      order: 0;
+    }
+
+    .xprestation__media {
+      max-width: 100%;
+    }
+
+    .xprestation__media img {
+      max-height: min(48vh, 22rem);
+    }
+
+    .xprestation__package-head {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  }
+</style>

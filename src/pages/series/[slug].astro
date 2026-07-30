@@ -1,0 +1,179 @@
+﻿---
+import { Image } from 'astro:assets';
+import { getCollection } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+import PhotoGrid from '../../components/PhotoGrid.astro';
+import Lightbox from '../../components/Lightbox.astro';
+import { galleryPhotos, photo } from '../../lib/photos';
+import { url } from '../../lib/url';
+
+export async function getStaticPaths() {
+  const projects = await getCollection('projects');
+  return projects.map((project) => ({
+    params: { slug: project.id },
+    props: { project },
+  }));
+}
+
+const { project } = Astro.props;
+const photos = galleryPhotos('projects', project.id);
+
+// Tirages disponibles issus de cette série (cross-sell boutique)
+const seriesPrints = (await getCollection('prints'))
+  .filter((p) => p.data.available && p.data.photo.startsWith(`projects/${project.id}/`))
+  .sort((a, b) => a.data.order - b.data.order);
+---
+
+<Layout
+  title={project.data.title}
+  description={project.data.description ?? `${project.data.title} — série photographique de Hélène Javaux.`}
+>
+  <header class="container xpage-head">
+    <p class="exp-label">Série{project.data.year && ` — ${project.data.year}`}</p>
+    <h1>{project.data.title}</h1>
+    {project.data.description && <p class="xpage-head__intro">{project.data.description}</p>}
+    <hr class="exp-rule" />
+  </header>
+
+  <div class="container">
+    <PhotoGrid photos={photos} altPrefix={project.data.title} preserveOriginalRatio />
+  </div>
+
+  {
+    seriesPrints.length > 0 && (
+      <section class="container xseries-prints" data-reveal>
+        <p class="exp-label">De cette série, chez vous</p>
+        <h2>
+          Tirages <em>disponibles</em>
+        </h2>
+        <div class="xseries-prints__grid">
+          {seriesPrints.map((print) => (
+            <a href={url(`/boutique/${print.id}/`)} class="xseries-prints__card">
+              <Image
+                src={photo(print.data.photo)}
+                alt={`Tirage « ${print.data.title} »`}
+                width={640}
+                widths={[400, 640]}
+                sizes="(max-width: 40rem) 90vw, 30vw"
+                loading="lazy"
+              />
+              <div class="xseries-prints__caption">
+                <span>{print.data.title}</span>
+                <span class="xseries-prints__price">dès {print.data.formats[0]!.price}</span>
+              </div>
+            </a>
+          ))}
+        </div>
+      </section>
+    )
+  }
+
+  <section class="xgallery-cta" data-reveal>
+    <div class="container">
+      <p class="exp-label exp-label--center">La suite ?</p>
+      <h2>Cette série vous a <em>parlé</em> ?</h2>
+      <p>
+        Racontez-moi ce qu'elle a réveillé — ou imaginons ensemble le projet
+        qui vous ressemble.
+      </p>
+      <div class="xgallery-cta__actions">
+        <a href={url('/contact/')} class="xbtn">Écrire à Hélène</a>
+        <a href={url('/series/')} class="xbtn xbtn--ghost">Salle suivante</a>
+      </div>
+    </div>
+  </section>
+
+  <Lightbox />
+</Layout>
+
+<style>
+  .xpage-head {
+    padding-block: clamp(7rem, 16vw, 10rem) 0;
+  }
+
+  .xpage-head__intro {
+    color: var(--exp-muted);
+    max-width: 100%;
+  }
+
+  .xseries-prints {
+    margin-top: clamp(4rem, 9vw, 6rem);
+    padding-top: clamp(2.5rem, 6vw, 4rem);
+    border-top: 1px solid var(--exp-line);
+  }
+
+  .xseries-prints h2 em {
+    color: var(--exp-accent);
+  }
+
+  .xseries-prints__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(14rem, 22rem));
+    gap: 1.75rem;
+    margin-top: 2rem;
+  }
+
+  .xseries-prints__card {
+    text-decoration: none;
+  }
+
+  .xseries-prints__card img {
+    width: 100%;
+    transition: opacity 0.3s ease;
+  }
+
+  .xseries-prints__card:hover img {
+    opacity: 0.88;
+  }
+
+  .xseries-prints__caption {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 1rem;
+    padding-block: 0.8rem;
+    font-family: var(--font-display);
+    font-size: 1.05rem;
+  }
+
+  .xseries-prints__price {
+    font-family: var(--font-body);
+    font-size: 0.78rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--exp-accent);
+    white-space: nowrap;
+  }
+
+  .xgallery-cta {
+    margin-top: clamp(4rem, 10vw, 7rem);
+    padding-block: clamp(4rem, 9vw, 6rem);
+    text-align: center;
+    background:
+      radial-gradient(60% 120% at 50% 0%, var(--exp-accent-soft) 0%, transparent 65%),
+      var(--exp-surface);
+    border-top: 1px solid var(--exp-line);
+  }
+
+  .xgallery-cta h2 {
+    max-width: 36rem;
+    margin-inline: auto;
+  }
+
+  .xgallery-cta h2 em {
+    color: var(--exp-accent);
+  }
+
+  .xgallery-cta p:not(.exp-label) {
+    color: var(--exp-muted);
+    max-width: 32rem;
+    margin: 0 auto 2.25rem;
+  }
+
+  .xgallery-cta__actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1rem;
+  }
+</style>

@@ -1,0 +1,24 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { url } from '../lib/url';
+---
+
+<Layout title="Page introuvable">
+  <section class="container xpage-head">
+    <p class="exp-label">Erreur 404</p>
+    <h1>Cette page s'est perdue <em>en chemin</em></h1>
+    <hr class="exp-rule" />
+    <p>Elle n'existe pas (ou plus) — mais le reste du site t'attend.</p>
+    <p><a href={url('/')} class="xbtn">Retour à l'accueil</a></p>
+  </section>
+</Layout>
+
+<style>
+  .xpage-head {
+    padding-block: clamp(7rem, 16vw, 10rem) clamp(4rem, 10vw, 7rem);
+  }
+
+  .xpage-head h1 em {
+    color: var(--exp-accent);
+  }
+</style>

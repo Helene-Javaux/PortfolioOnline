@@ -1,0 +1,16 @@
+title: Wild Care 22
+reference: HJ-WC-22
+photo: projects/wild-care/wildcare-22.jpg
+description: Tirage issu de la série Wild Care (2024).
+order: 15
+formats:
+  - label: 60 x 40 cm
+    price: 170€
+    available: true
+  - label: 20 x 30 cm
+    price: Pas disponible
+    available: false
+  - label: 10 x 15 cm
+    price: Pas disponible
+    available: false
+

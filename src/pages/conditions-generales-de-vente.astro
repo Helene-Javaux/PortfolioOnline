@@ -1,0 +1,127 @@
+---
+/**
+ * Conditions générales de vente.
+ * ⚠️ [PLACEHOLDER] Contenu type à faire relire et valider par un
+ * professionnel du droit avant mise en ligne définitive.
+ */
+import Layout from '../layouts/Layout.astro';
+import { SITE } from '../config';
+---
+
+<Layout
+  title="Conditions générales de vente"
+  description="Conditions générales de vente des prestations photographiques et tirages d'art de Hélène Javaux."
+>
+  <header class="container xpage-head">
+    <p class="exp-label">Informations légales</p>
+    <h1>Conditions générales de vente</h1>
+    <hr class="exp-rule" />
+    <p>
+      Dernière mise à jour : juillet 2026 —
+      <em>[PLACEHOLDER : document type, à faire valider juridiquement avant publication]</em>
+    </p>
+  </header>
+
+  <section class="container cgv">
+    <h2>1. Objet</h2>
+    <p>
+      Les présentes conditions générales de vente régissent les relations entre
+      Hélène Javaux, photographe indépendante établie à {SITE.location}
+      (ci-après « la photographe »), et toute personne physique ou morale
+      commandant une prestation photographique ou un tirage (ci-après « le
+      client »).
+    </p>
+
+    <h2>2. Devis et commande</h2>
+    <p>
+      Toute prestation fait l'objet d'un devis gratuit, valable 30 jours. La
+      commande est confirmée à la signature du devis et au versement d'un
+      acompte de 30 %. Pour les tirages, la commande est confirmée après
+      échange par e-mail et paiement du montant convenu.
+    </p>
+
+    <h2>3. Prix et paiement</h2>
+    <p>
+      Les prix sont exprimés en euros, toutes taxes comprises. Le solde d'une
+      prestation est payable à la livraison des images, par virement bancaire.
+      Les tirages sont payables avant impression.
+    </p>
+
+    <h2>4. Prestations et livraison</h2>
+    <p>
+      Les photographies retouchées sont livrées via une galerie en ligne
+      privée, dans le délai indiqué au devis (généralement 2 à 3 semaines). La
+      sélection des images livrées relève du regard artistique de la
+      photographe.
+    </p>
+
+    <h2>5. Tirages d'art</h2>
+    <p>
+      Les tirages sont imprimés à la demande. Le délai indicatif de production
+      et d'expédition est de 2 à 4 semaines. La remise peut se faire en main
+      propre à Bruxelles ou par envoi postal (frais à charge du client).
+    </p>
+
+    <h2>6. Droit de rétractation</h2>
+    <p>
+      Conformément au Code de droit économique belge, le client consommateur
+      dispose d'un délai de rétractation de 14 jours pour les tirages, sauf
+      pour les biens confectionnés selon ses spécifications. Les prestations de
+      services entamées avec l'accord du client avant la fin du délai de
+      rétractation ne sont pas remboursables.
+    </p>
+
+    <h2>7. Annulation et report</h2>
+    <p>
+      En cas d'annulation par le client moins de 7 jours avant la date
+      convenue, l'acompte reste acquis. Un report de date est possible sans
+      frais une fois, selon les disponibilités.
+    </p>
+
+    <h2>8. Propriété intellectuelle et droit à l'image</h2>
+    <p>
+      Toutes les photographies restent la propriété intellectuelle de la
+      photographe (loi du 30 juin 1994 relative au droit d'auteur). Le client
+      reçoit une licence d'utilisation adaptée à l'usage convenu au devis.
+      Toute utilisation non prévue (revente, usage commercial étendu…) doit
+      faire l'objet d'un accord écrit. La photographe ne diffuse aucune image
+      reconnaissable du client sans son accord.
+    </p>
+
+    <h2>9. Responsabilité</h2>
+    <p>
+      En cas d'empêchement majeur (maladie, accident…), la photographe
+      s'engage à proposer un report ou le remboursement intégral des sommes
+      versées, à l'exclusion de toute autre indemnité.
+    </p>
+
+    <h2>10. Données personnelles</h2>
+    <p>
+      Les données transmises via les formulaires du site servent uniquement à
+      répondre aux demandes. Elles ne sont ni revendues ni utilisées à des
+      fins de prospection. Contact : <a href={`mailto:${SITE.email}`}>{SITE.email}</a>.
+    </p>
+
+    <h2>11. Droit applicable</h2>
+    <p>
+      Les présentes conditions sont soumises au droit belge. En cas de litige,
+      une solution amiable sera recherchée avant toute action devant les
+      tribunaux de l'arrondissement de Bruxelles.
+    </p>
+  </section>
+</Layout>
+
+<style>
+  .xpage-head {
+    padding-block: clamp(7rem, 16vw, 10rem) 0;
+  }
+
+  .cgv {
+    max-width: 46rem;
+  }
+
+  .cgv h2 {
+    font-size: 1.25rem;
+    margin-top: 2.25rem;
+  }
+</style>

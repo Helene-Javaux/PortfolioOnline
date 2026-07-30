@@ -1,1 +1,11 @@
+# Dépendances et build
+node_modules/
+dist/
+.astro/
+
+# Ancienne archive d'images du site précédent (conservée en local uniquement)
 images/
+
+# Divers
+.DS_Store
+npm-debug.log*

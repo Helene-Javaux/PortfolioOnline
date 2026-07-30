@@ -1,0 +1,144 @@
+---
+import { Image } from 'astro:assets';
+import Layout from '../layouts/Layout.astro';
+import { photo } from '../lib/photos';
+import { url } from '../lib/url';
+
+const portrait = photo('about/portrait.jpg');
+---
+
+<Layout
+  title="À propos"
+  description="Hélène Javaux, photographe diplômée de la HELB en 2024, basée à Bruxelles. Des images vraies, sans artifices."
+>
+  <header class="container xpage-head">
+    <p class="exp-label">À propos</p>
+    <h1>La main qui tient <em>l'appareil</em></h1>
+    <hr class="exp-rule" />
+  </header>
+
+  <section class="container xbio">
+    <div class="xbio__media" data-reveal>
+      <Image
+        src={portrait}
+        alt="Portrait de Hélène Javaux"
+        width={640}
+        widths={[420, 640]}
+        sizes="(max-width: 52rem) 90vw, 560px"
+        loading="eager"
+      />
+    </div>
+
+    <div class="xbio__text" data-reveal style="--reveal-delay: 0.15s">
+      <p class="xbio__lead">
+        Hello ! Moi, c'est Hélène. Passionnée de photo, j'ai décidé d'en faire
+        mon métier.
+      </p>
+      <p>
+        Après quelques années à explorer, tester, me tromper et apprendre, j'ai
+        obtenu mon diplôme à la HELB (anciennement Inraci) en 2024. Une étape
+        importante, mais pour moi, la vraie école, c'est le terrain, les
+        rencontres, les émotions à capter.
+      </p>
+      <p>
+        Ce que j'aime par-dessus tout ? <em>L'authenticité.</em> Les instants
+        vrais, les sourires spontanés, les regards qui en disent long. Pas
+        besoin d'en faire trop : la beauté est souvent dans les détails
+        simples, dans la lumière naturelle, dans un geste tendre.
+      </p>
+      <p>
+        Je suis aussi une grande amoureuse de la nature, c'est souvent là que
+        je me ressource et que je trouve l'inspiration. Si on peut shooter
+        dehors, je dis oui direct.
+      </p>
+      <p>
+        Mon but : que vous vous sentiez à l'aise, que vos envies soient
+        entendues, et que le résultat vous ressemble.
+      </p>
+    </div>
+  </section>
+
+  <section class="xbio-cta" data-reveal>
+    <div class="container">
+      <p class="exp-label exp-label--center">On se rencontre ?</p>
+      <h2>Si mes images résonnent en vous, <em>on va bien s'entendre.</em></h2>
+      <div class="xbio-cta__actions">
+        <a href={url('/contact/')} class="xbtn">Écrire à Hélène</a>
+        <a href={url('/series/')} class="xbtn xbtn--ghost">Voir les séries</a>
+      </div>
+    </div>
+  </section>
+</Layout>
+
+<style>
+  .xpage-head {
+    padding-block: clamp(7rem, 16vw, 10rem) 0;
+  }
+
+  .xpage-head h1 em {
+    color: var(--exp-accent);
+  }
+
+  .xbio {
+    display: grid;
+    grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
+    gap: clamp(2rem, 6vw, 5rem);
+    align-items: start;
+  }
+
+  .xbio__media img {
+    width: 100%;
+    filter: grayscale(18%);
+  }
+
+  .xbio__lead {
+    font-family: var(--font-display);
+    font-size: clamp(1.35rem, 2.6vw, 1.8rem);
+    line-height: 1.4;
+    margin-bottom: 1.5rem;
+  }
+
+  .xbio__text p:not(.xbio__lead) {
+    color: var(--exp-muted);
+  }
+
+  .xbio__text em {
+    color: var(--exp-accent);
+  }
+
+  .xbio-cta {
+    margin-top: clamp(4rem, 10vw, 7rem);
+    padding-block: clamp(4rem, 9vw, 6rem);
+    text-align: center;
+    background:
+      radial-gradient(60% 120% at 50% 0%, var(--exp-accent-soft) 0%, transparent 65%),
+      var(--exp-surface);
+    border-top: 1px solid var(--exp-line);
+  }
+
+  .xbio-cta h2 {
+    max-width: 40rem;
+    margin: 0 auto 2rem;
+  }
+
+  .xbio-cta h2 em {
+    color: var(--exp-accent);
+  }
+
+  .xbio-cta__actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1rem;
+  }
+
+  @media (max-width: 52rem) {
+    .xbio {
+      grid-template-columns: 1fr;
+    }
+
+    .xbio__media {
+      max-width: 24rem;
+    }
+  }
+</style>
