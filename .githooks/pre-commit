@@ -1,0 +1,47 @@
+#!/bin/sh
+#
+# Optimise automatiquement les photos ajoutées ou modifiées avant qu'elles
+# n'entrent dans l'historique git.
+#
+# Pourquoi : une photo sortie de Lightroom pèse jusqu'à 40 Mo. Oubliée une
+# fois, elle reste dans l'historique git pour toujours (un historique ne
+# s'allège jamais) et rallonge le checkout de la CI à chaque build. Mieux vaut
+# donc l'attraper avant le commit qu'après.
+#
+# Ce hook n'est actif que si core.hooksPath pointe sur .githooks/, ce que fait
+# le script `prepare` de package.json à l'installation des dépendances.
+
+set -e
+
+# Uniquement les photos ajoutées (A), copiées (C) ou modifiées (M) de ce commit.
+#
+# La liste passe par un fichier temporaire et non par une variable : `-z`
+# sépare les chemins par des octets NUL (indispensable pour les noms contenant
+# des espaces), et une substitution de commande shell ne peut pas transporter
+# de NUL — ils seraient supprimés et les chemins concaténés entre eux.
+tmp=$(mktemp)
+trap 'rm -f "$tmp"' EXIT
+
+git diff --cached --name-only --diff-filter=ACM -z -- 'src/assets/photos' > "$tmp"
+
+if [ ! -s "$tmp" ]; then
+  exit 0
+fi
+
+if ! command -v node >/dev/null 2>&1; then
+  echo "pre-commit : node introuvable, optimisation des photos ignorée." >&2
+  echo "             Lancer \`npm run photos:optimize\` manuellement." >&2
+  exit 0
+fi
+
+echo "pre-commit : optimisation des photos ajoutées…"
+
+# xargs -0 passe les chemins au script, qui ne traite que ceux-là (~1 s par
+# photo au lieu de 36 s pour le dossier entier).
+xargs -0 node scripts/optimize-photos.mjs < "$tmp"
+
+# Le script a pu réécrire les fichiers sur le disque : il faut remettre les
+# versions optimisées dans l'index, sinon le commit garderait les originaux.
+xargs -0 git add < "$tmp"
+
+exit 0
