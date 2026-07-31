@@ -1,4 +1,4 @@
-﻿---
+---
 import { Image, getImage } from 'astro:assets';
 import { getCollection } from 'astro:content';
 import Layout from '../layouts/Layout.astro';
@@ -24,6 +24,8 @@ const services = (await getCollection('services')).sort((a, b) => a.data.order -
 const tarifs = (await getCollection('tarifs')).sort((a, b) => a.data.order - b.data.order);
 const serviceFor = (title: string) =>
   services.find((s) => s.data.title.toLowerCase() === title.toLowerCase());
+const teaserPriceFor = (tarif: (typeof tarifs)[number]) =>
+  tarif.data.packages?.[0]?.price ?? tarif.data.halfDay ?? tarif.data.fullDay ?? '';
 
 const portrait = photo('about/portrait.jpg');
 const ogImage = await getImage({ src: slides[0]!.src, width: 1200, format: 'jpeg' });
@@ -108,7 +110,7 @@ const ogImage = await getImage({ src: slides[0]!.src, width: 1200, format: 'jpeg
                 <div class="xoffers__caption">
                   <h3>{tarif.data.title}</h3>
                   {tarif.data.subtitle && <p class="xoffers__sub">{tarif.data.subtitle}</p>}
-                  <p class="xoffers__price">à partir de {tarif.data.halfDay}</p>
+                  <p class="xoffers__price">à partir de {teaserPriceFor(tarif)}</p>
                 </div>
               </a>
             );
