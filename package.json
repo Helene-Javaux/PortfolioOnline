@@ -5,7 +5,10 @@
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
-    "preview": "astro preview"
+    "preview": "astro preview",
+    "prepare": "git config core.hooksPath .githooks || true",
+    "photos:check": "node scripts/optimize-photos.mjs --dry-run",
+    "photos:optimize": "node scripts/optimize-photos.mjs"
   },
   "repository": {
     "type": "git",

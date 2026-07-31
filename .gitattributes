@@ -1,0 +1,17 @@
+# Les JPEG sont déjà compressés : chercher des deltas entre deux photos ne
+# gagne rien et coûte du temps CPU au moment où GitHub fabrique le pack pour
+# un clone. Or c'est précisément cette étape qui domine la durée du checkout
+# en CI sur ce dépôt. `-delta` demande à git de ne pas essayer.
+*.jpg  -delta
+*.JPG  -delta
+*.jpeg -delta
+*.png  -delta
+*.webp -delta
+
+# Éviter toute conversion de fin de ligne sur les binaires.
+*.jpg  binary
+*.JPG  binary
+*.jpeg binary
+*.png  binary
+*.webp binary
+*.ico  binary

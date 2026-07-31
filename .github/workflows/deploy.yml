@@ -18,6 +18,27 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      # Astro regénère ~550 dérivés WebP avec Sharp à chaque build, ce qui
+      # représente l'essentiel de la durée du build. Son cache est content-
+      # addressed : une photo inchangée est réutilisée telle quelle.
+      #
+      # Le chemin est .astro-cache/ et non node_modules/.astro/ (le défaut)
+      # parce que withastro/action lance `npm ci`, qui efface node_modules/
+      # avant le build — le cache restauré y serait détruit. Voir cacheDir
+      # dans astro.config.mjs.
+      #
+      # La clé change dès qu'une photo est ajoutée ou modifiée ; restore-keys
+      # permet alors de repartir du dernier cache et de ne régénérer que les
+      # dérivés des photos nouvelles.
+      - name: Cache des images générées par Astro
+        uses: actions/cache@v4
+        with:
+          path: .astro-cache
+          key: astro-assets-${{ hashFiles('src/assets/photos/**', 'astro.config.mjs', 'src/components/PhotoGrid.astro') }}
+          restore-keys: |
+            astro-assets-
+
       - name: Build with Astro
         uses: withastro/action@v3
         with:
