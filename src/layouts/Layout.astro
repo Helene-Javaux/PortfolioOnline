@@ -3,7 +3,7 @@
  * Layout principal « La galerie ».
  * Thème sombre immersif, typographie Fraunces + Manrope, accent bronze.
  */
-import { SITE } from '../config';
+import { SITE, CLOUDFLARE_ANALYTICS_TOKEN } from '../config';
 import { url } from '../lib/url';
 import logo from '../assets/logo.svg';
 import faviconExp from '../assets/favicon-exp.svg';
@@ -32,6 +32,10 @@ const links = [
 ];
 
 const current = Astro.url.pathname;
+
+// Analytics seulement dans le site construit : en `astro dev`, on ne veut pas
+// polluer les statistiques avec les visites de développement.
+const analytics = import.meta.env.PROD && CLOUDFLARE_ANALYTICS_TOKEN !== '';
 ---
 
 <!doctype html>
@@ -63,6 +67,25 @@ const current = Astro.url.pathname;
     <script is:inline>
       document.documentElement.classList.add('js');
     </script>
+
+    {
+      /*
+       * Cloudflare Web Analytics — sans cookie, sans localStorage, sans
+       * identifiant persistant, donc pas de bandeau de consentement à prévoir.
+       *
+       * `is:inline` est nécessaire : Astro doit laisser cette balise telle
+       * quelle et surtout ne pas tenter de bundler un script hébergé chez
+       * Cloudflare.
+       */
+      analytics && (
+        <script
+          is:inline
+          type="module"
+          src="https://static.cloudflareinsights.com/beacon.min.js"
+          data-cf-beacon={JSON.stringify({ token: CLOUDFLARE_ANALYTICS_TOKEN })}
+        />
+      )
+    }
   </head>
   <body>
     <header class="exp-header">
