@@ -171,6 +171,13 @@ a {
   background: transparent;
 }
 
+/* Variante compacte */
+.xbtn--sm {
+  padding: 0.65rem 1.5rem;
+  font-size: 0.72rem;
+  letter-spacing: 0.18em;
+}
+
 /* Lien fléché discret */
 .exp-arrow-link {
   display: inline-flex;

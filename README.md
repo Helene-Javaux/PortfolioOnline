@@ -83,6 +83,14 @@ d'erreur explicite au lieu d'envoyer.
 
 C'est tout — la page `/series/mon-projet/` est générée au prochain build.
 
+Pour un **service**, le champ optionnel `featured` choisit les trois photos du
+« gallery wall » sur la page Prestations (la 1re en grand, les deux autres
+empilées à côté). Sans lui : la `cover`, puis les premières photos du dossier.
+
+```yaml
+featured: [sport-23.jpg, sport-03.jpg, sport-14.jpg]
+```
+
 ### Ajouter une photo à une galerie existante
 
 Déposer le fichier dans le dossier de la galerie avec le bon préfixe numérique.
