@@ -2,8 +2,8 @@
 import { Image } from 'astro:assets';
 import { getCollection } from 'astro:content';
 import Layout from '../../layouts/Layout.astro';
-import { galleryCover } from '../../lib/photos';
-import { url } from '../../lib/url';
+import { galleryFeatured } from '../../lib/photos';
+import { devisUrl, url } from '../../lib/url';
 
 const services = (await getCollection('services')).sort(
   (a, b) => a.data.order - b.data.order,
@@ -12,14 +12,17 @@ const tarifs = (await getCollection('tarifs')).sort(
   (a, b) => a.data.order - b.data.order,
 );
 
-// Associe chaque carte tarif à sa galerie de service (même slug attendu,
-// à défaut correspondance par titre)
-const coverFor = (title: string) =>
+// Associe chaque carte tarif à sa galerie de service (même slug, comme sur
+// la landing page /prestations/<slug>/ ; à défaut correspondance par titre)
+const serviceFor = (id: string, title: string) =>
+  services.find((s) => s.id === id) ??
   services.find((s) => s.data.title.toLowerCase() === title.toLowerCase());
 ---
 
 <Layout
   title="Prestations & tarifs"
+  ogPhoto={services[0] && galleryFeatured('services', services[0].id, services[0].data.cover, services[0].data.featured)[0]}
+  ogPosition={services[0]?.data.ogPosition}
   description="Prestations photo de Hélène Javaux : portrait, sport, packshot, événementiel. Tarifs transparents, devis sous 24 h."
 >
   <header class="container xpage-head">
@@ -37,23 +40,40 @@ const coverFor = (title: string) =>
   <section class="container xprestations">
     {
       tarifs.map((tarif, i) => {
-        const service = coverFor(tarif.data.title);
+        const service = serviceFor(tarif.id, tarif.data.title);
+        const wall = service
+          ? galleryFeatured('services', service.id, service.data.cover, service.data.featured)
+          : [];
         const hasPackages = Boolean(tarif.data.packages?.length);
 
         return (
           <article class="xprestation" data-reveal style={`--reveal-delay: ${(i % 2) * 0.1}s`}>
             {service && (
-              <a href={url(`/prestations/${service.id}/`)} class="xprestation__media">
-                <Image
-                  src={galleryCover('services', service.id, service.data.cover)}
-                  alt={`Exemple — ${service.data.title}`}
-                  width={800}
-                  widths={[400, 800]}
-                  sizes="(max-width: 48rem) 100vw, 45vw"
-                  loading="lazy"
-                  style={service.data.coverPosition ? `object-position: ${service.data.coverPosition};` : undefined}
-                />
-              </a>
+              <div class="xprestation__media">
+                <a
+                  href={url(`/prestations/${service.id}/`)}
+                  class="xprestation__wall"
+                  aria-label={`Voir les exemples — ${service.data.title}`}
+                >
+                  {wall.map((image, j) => (
+                    <Image
+                      src={image}
+                      alt={`Exemple ${j + 1} — ${service.data.title}`}
+                      width={j === 0 ? 900 : 500}
+                      widths={j === 0 ? [450, 900] : [300, 500]}
+                      sizes={j === 0 ? '(max-width: 48rem) 60vw, 28vw' : '(max-width: 48rem) 40vw, 18vw'}
+                      loading="lazy"
+                      style={j === 0 && service.data.coverPosition &&
+                        (service.data.featured?.[0] ?? service.data.cover) === service.data.cover
+                        ? `object-position: ${service.data.coverPosition};`
+                        : undefined}
+                    />
+                  ))}
+                </a>
+                <a href={url(`/prestations/${service.id}/`)} class="exp-arrow-link xprestation__more">
+                  Voir plus d'exemples <span aria-hidden="true">→</span>
+                </a>
+              </div>
             )}
             <div class="xprestation__body">
               <h2>{tarif.data.title}</h2>
@@ -61,21 +81,12 @@ const coverFor = (title: string) =>
 
               {
                 hasPackages ? (
-                  <div class="xprestation__packages">
-                    {tarif.data.packages!.map((pack) => (
-                      <section class="xprestation__package">
-                        <header class="xprestation__package-head">
-                          <h3>{pack.title}</h3>
-                          <p>{pack.price}</p>
-                        </header>
-                        <ul class="xprestation__includes xprestation__includes--compact">
-                          {pack.details.map((item) => (
-                            <li>{item}</li>
-                          ))}
-                        </ul>
-                      </section>
-                    ))}
-                  </div>
+                  <dl class="xprestation__prices">
+                    <div>
+                      <dt>À partir de</dt>
+                      <dd>{tarif.data.packages![0].price}</dd>
+                    </div>
+                  </dl>
                 ) : (
                   <>
                     <dl class="xprestation__prices">
@@ -108,15 +119,11 @@ const coverFor = (title: string) =>
 
               {tarif.data.note && <p class="xprestation__note">{tarif.data.note}</p>}
 
-              <div class="xprestation__links">
-                {service && (
-                  <a href={url(`/prestations/${service.id}/`)} class="exp-arrow-link">
-                    Voir des exemples <span aria-hidden="true">→</span>
-                  </a>
-                )}
-                <a href={url('/contact/')} class="exp-arrow-link">
-                  Demander un devis <span aria-hidden="true">→</span>
+              <div class="xprestation__cta">
+                <a href={devisUrl(service?.data.contactType)} class="xbtn xbtn--ghost xbtn--sm">
+                  Demander un devis
                 </a>
+                <p class="xprestation__reassure">Gratuit, sans engagement — réponse sous 24 h.</p>
               </div>
             </div>
           </article>
@@ -130,7 +137,8 @@ const coverFor = (title: string) =>
       Déplacements offerts dans un rayon de 30 km autour de Bruxelles
       (0,45 €/km au-delà). Toutes les photos sont retouchées, livrées en haute
       définition via une galerie privée, et un acompte de 30 % réserve votre
-      date.
+      date. Petite entreprise sous régime de franchise : aucune TVA n'est
+      facturée, les prix affichés sont les prix finaux.
     </p>
     <a href={url('/contact/')} class="xbtn">Un devis en 24 h</a>
   </section>
@@ -168,27 +176,72 @@ const coverFor = (title: string) =>
   }
 
   .xprestation__media {
-    display: block;
-    overflow: hidden;
-    max-width: min(100%, 34rem);
+    display: flex;
+    flex-direction: column;
+    gap: 1.1rem;
+    width: 100%;
+    max-width: 36rem;
   }
 
-  .xprestation__media img {
+  /* Gallery wall : une grande photo + deux plus petites empilées */
+  .xprestation__wall {
+    display: grid;
+    grid-template-columns: 1.45fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: clamp(0.5rem, 1.2vw, 0.85rem);
+    aspect-ratio: 5 / 4.6;
+    max-height: min(68vh, 34rem);
+  }
+
+  .xprestation__wall img {
     width: 100%;
-    max-height: min(62vh, 32rem);
-    object-fit: contain;
+    height: 100%;
+    min-height: 0;
+    object-fit: cover;
     transition: transform 0.6s ease, opacity 0.4s ease;
   }
 
-  .xprestation__media:hover img {
-    transform: scale(1.02);
+  .xprestation__wall img:first-child {
+    grid-row: 1 / span 2;
+  }
+
+  .xprestation__wall:hover img {
     opacity: 0.9;
   }
 
-  .xprestation__links {
+  .xprestation__more {
+    align-self: flex-start;
+    margin-top: 0.6rem;
+  }
+
+  /* Miroir : grande photo à droite quand le texte est à gauche */
+  .xprestation:nth-child(2n) .xprestation__wall {
+    grid-template-columns: 1fr 1.45fr;
+  }
+
+  .xprestation:nth-child(2n) .xprestation__wall img:first-child {
+    grid-column: 2;
+  }
+
+  .xprestation:nth-child(2n) .xprestation__more {
+    align-self: flex-end;
+  }
+
+  .xprestation__cta {
+    margin-top: 0.5rem;
+  }
+
+  .xprestation__cta {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.75rem 2rem;
+    align-items: center;
+    gap: 0.6rem 1.25rem;
+  }
+
+  .xprestation__reassure {
+    margin: 0;
+    font-size: 0.8rem;
+    color: var(--exp-muted);
   }
 
   .xprestation__body h2 {
@@ -226,51 +279,12 @@ const coverFor = (title: string) =>
     color: var(--exp-accent);
   }
 
-  .xprestation__packages {
-    display: grid;
-    gap: 1rem;
-    margin: 0 0 1.25rem;
-  }
-
-  .xprestation__package {
-    padding: 1rem 0;
-    border-block: 1px solid var(--exp-line);
-  }
-
-  .xprestation__package + .xprestation__package {
-    margin-top: -1px;
-  }
-
-  .xprestation__package-head {
-    display: flex;
-    justify-content: space-between;
-    align-items: baseline;
-    gap: 1rem;
-    margin-bottom: 0.85rem;
-  }
-
-  .xprestation__package-head h3 {
-    margin: 0;
-    font-size: 1.1rem;
-  }
-
-  .xprestation__package-head p {
-    margin: 0;
-    font-family: var(--font-display);
-    font-size: 1.5rem;
-    color: var(--exp-accent);
-    white-space: nowrap;
-  }
-
   .xprestation__includes {
     list-style: none;
     margin: 0 0 1.25rem;
     padding: 0;
   }
 
-  .xprestation__includes--compact {
-    margin-bottom: 0;
-  }
 
   .xprestation__includes li,
   .xprestation__notes li {
@@ -330,13 +344,20 @@ const coverFor = (title: string) =>
       max-width: 100%;
     }
 
-    .xprestation__media img {
-      max-height: min(48vh, 22rem);
+    .xprestation__wall {
+      max-height: none;
     }
 
-    .xprestation__package-head {
-      flex-direction: column;
-      align-items: flex-start;
+    .xprestation:nth-child(2n) .xprestation__wall {
+      grid-template-columns: 1.45fr 1fr;
+    }
+
+    .xprestation:nth-child(2n) .xprestation__wall img:first-child {
+      grid-column: 1;
+    }
+
+    .xprestation:nth-child(2n) .xprestation__more {
+      align-self: flex-start;
     }
   }
 </style>

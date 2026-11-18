@@ -30,6 +30,7 @@ const others = (await getCollection('prints'))
 
 <Layout
   title={`Tirage « ${print.data.title} »`}
+  ogPhoto={image}
   description={`Tirage d'art « ${print.data.title} » (réf. ${print.data.reference}) de Hélène Javaux — dès ${print.data.formats[0]!.price}, signé et imprimé à la demande.`}
 >
   <article class="container xprint">
@@ -118,6 +119,10 @@ const others = (await getCollection('prints'))
         <p class="form-status" role="status" aria-live="polite"></p>
         <p class="xprint__reassure">
           Aucune obligation : votre demande ouvre simplement la conversation.
+        </p>
+        <p class="form-privacy">
+          Vos données servent uniquement à vous répondre —{' '}
+          <a href={url('/confidentialite/')}>politique de confidentialité</a>.
         </p>
       </form>
     </div>

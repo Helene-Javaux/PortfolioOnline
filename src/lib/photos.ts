@@ -53,3 +53,24 @@ export function galleryCover(
 ): ImageMetadata {
   return photo(`${category}/${slug}/${cover}`);
 }
+
+/**
+ * Photos mises en avant d'un service (gallery wall de la page Prestations).
+ * Utilise `featured` si renseigné, complète avec la cover puis les
+ * premières photos du dossier pour toujours en renvoyer `count`.
+ */
+export function galleryFeatured(
+  category: 'projects' | 'services',
+  slug: string,
+  cover: string,
+  featured: string[] = [],
+  count = 3,
+): ImageMetadata[] {
+  const chosen = featured.map((file) => photo(`${category}/${slug}/${file}`));
+  const candidates = [galleryCover(category, slug, cover), ...galleryPhotos(category, slug)];
+  for (const image of candidates) {
+    if (chosen.length >= count) break;
+    if (!chosen.includes(image)) chosen.push(image);
+  }
+  return chosen;
+}

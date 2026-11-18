@@ -43,21 +43,19 @@ src/
 │   ├── prestations/        landing page par prestation (`/prestations/<slug>/`)
 │   └── boutique/           page dédiée par tirage (`/boutique/<slug>/`)
 ├── lib/                    helpers (découverte des photos, envoi Web3Forms)
-└── config.ts               ⚠️ coordonnées + CLÉS WEB3FORMS
+└── config.ts               coordonnées, clés Web3Forms, infos légales
 ```
 
-## ⚠️ Activer les formulaires (Web3Forms)
+## Formulaires (Web3Forms)
 
-Les deux formulaires (contact et demande de tirage) sont fonctionnels mais
-utilisent des clés placeholder. Pour les activer :
+Les deux formulaires (contact et demande de tirage) envoient leurs messages
+via [web3forms.com](https://web3forms.com), avec une clé d'accès distincte
+chacun (cela permet de trier les e-mails reçus). Les clés sont dans
+[`src/config.ts`](src/config.ts) : pour en changer, y remplacer
+`WEB3FORMS_CONTACT_KEY` ou `WEB3FORMS_PRINTS_KEY`.
 
-1. Créer **deux** clés d'accès gratuites sur [web3forms.com](https://web3forms.com)
-   (une pour le contact, une pour le shop — cela permet de trier les e-mails reçus).
-2. Ouvrir [`src/config.ts`](src/config.ts) et remplacer les deux
-   `YOUR_ACCESS_KEY_HERE` par les vraies clés.
-
-Tant que les clés ne sont pas remplacées, le formulaire affiche un message
-d'erreur explicite au lieu d'envoyer.
+Si une clé est vide ou vaut `YOUR_ACCESS_KEY_HERE`, le formulaire affiche un
+message d'erreur explicite au lieu d'envoyer.
 
 ## Ajouter du contenu
 
@@ -82,6 +80,19 @@ d'erreur explicite au lieu d'envoyer.
    ```
 
 C'est tout — la page `/series/mon-projet/` est générée au prochain build.
+
+Pour un **service**, le champ optionnel `featured` choisit les trois photos du
+« gallery wall » sur la page Prestations (la 1re en grand, les deux autres
+empilées à côté). Sans lui : la `cover`, puis les premières photos du dossier.
+
+```yaml
+featured: [sport-23.jpg, sport-03.jpg, sport-14.jpg]
+```
+
+Le champ optionnel `ogPosition` (projets et services) règle le recadrage de
+l'image d'aperçu affichée quand on partage la page (WhatsApp, Facebook…),
+tirée de la `cover` : `center` par défaut, `attention` pour viser le sujet
+(utile pour un visage ou un animal en photo verticale).
 
 ### Ajouter une photo à une galerie existante
 
@@ -116,24 +127,23 @@ Les frais de déplacement se modifient dans
 
 Tout est centralisé dans [`src/config.ts`](src/config.ts).
 
-## Contenu placeholder à remplacer
+## Points à finaliser
 
-- Les galeries **Services** (portrait, sport, packshot, événementiel)
-  contiennent des copies de photos des projets en attendant les vraies images
-  (fichiers nommés `placeholder-*.jpg`, descriptions marquées `[PLACEHOLDER]`).
-- Les **prix** (tarifs et tirages) sont indicatifs, marqués `[PLACEHOLDER]`
-  dans les YAML.
+- Le **tarif packshot** à la demi-journée est encore indicatif (marqué
+  `[PLACEHOLDER]` dans [`src/content/tarifs/packshot.yaml`](src/content/tarifs/packshot.yaml)).
+- Les **informations légales** (adresse, numéro BCE, TVA) se règlent dans
+  `LEGAL` de [`src/config.ts`](src/config.ts). L'adresse n'affiche
+  volontairement que la localité (voir le commentaire dans ce fichier).
 - Les **conditions générales de vente**
   ([`src/pages/conditions-generales-de-vente.astro`](src/pages/conditions-generales-de-vente.astro))
-  sont un document type à faire valider juridiquement.
-- Les clés **Web3Forms** (voir plus haut).
+  restent un document type : une relecture juridique est recommandée.
 
 ## Identité visuelle
 
 - Thème sombre et immersif : encre `#0e0e0d`, texte `#ecebe7`, accent bronze
   `#c2a065` réservé aux appels à l'action — variables CSS dans
   [`src/styles/global.css`](src/styles/global.css).
-- Typographies : **Sora** (titres) + **Manrope** (texte courant), via Google Fonts.
+- Typographies : **Sora** (titres) + **Manrope** (texte courant), hébergées par le site (paquets `@fontsource-variable`).
 - Signature récurrente : le « label » (petit libellé bronze en capitales très
   espacées) qui introduit chaque section — classe CSS `.exp-label`.
 - Pages notables : accueil plein écran avec diaporama en fondu et manifeste ;

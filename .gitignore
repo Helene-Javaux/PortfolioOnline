@@ -10,3 +10,6 @@ images/
 # Divers
 .DS_Store
 npm-debug.log*
+
+# Configuration locale de l'aperçu (Claude Code)
+.claude/launch.json

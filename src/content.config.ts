@@ -15,6 +15,9 @@ const gallerySchema = z.object({
   cover: z.string(),
   // Position CSS du cadrage de la vignette (ex: '50% 38%')
   coverPosition: z.string().optional(),
+  // Recadrage de l'aperçu de partage (1200 × 630) tiré de la cover :
+  // 'center' par défaut, 'attention' vise le sujet le plus saillant
+  ogPosition: z.enum(['center', 'top', 'bottom', 'attention', 'entropy']).optional(),
   // Ordre d'affichage dans l'index (plus petit = premier)
   order: z.number().default(99),
 });
@@ -30,6 +33,13 @@ const services = defineCollection({
     // Slug d'un projet de la galerie dont le regard est proche de cette
     // prestation (lien « approche » sur la page prestation) — optionnel
     relatedProject: z.string().optional(),
+    // Trois photos (noms de fichiers du dossier) du « gallery wall » sur la
+    // page Prestations : la 1re en grand, les 2 suivantes empilées à côté.
+    // Optionnel — à défaut : la cover puis les premières photos du dossier.
+    featured: z.array(z.string()).max(3).optional(),
+    // Option du menu « Votre envie » du formulaire de contact présélectionnée
+    // par les boutons « Demander un devis » (texte exact de l'<option>)
+    contactType: z.string().optional(),
   }),
 });
 

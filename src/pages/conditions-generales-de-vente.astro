@@ -1,11 +1,13 @@
 ---
 /**
  * Conditions générales de vente.
- * ⚠️ [PLACEHOLDER] Contenu type à faire relire et valider par un
- * professionnel du droit avant mise en ligne définitive.
+ * Contenu type, aligné sur les tarifs du site (novembre 2026). Une relecture
+ * par un professionnel du droit reste recommandée.
  */
 import Layout from '../layouts/Layout.astro';
-import { SITE } from '../config';
+import LegalValue from '../components/LegalValue.astro';
+import { LEGAL, SITE } from '../config';
+import { url } from '../lib/url';
 ---
 
 <Layout
@@ -16,18 +18,16 @@ import { SITE } from '../config';
     <p class="exp-label">Informations légales</p>
     <h1>Conditions générales de vente</h1>
     <hr class="exp-rule" />
-    <p>
-      Dernière mise à jour : juillet 2026 —
-      <em>[PLACEHOLDER : document type, à faire valider juridiquement avant publication]</em>
-    </p>
+    <p>Dernière mise à jour : novembre 2026</p>
   </header>
 
   <section class="container cgv">
     <h2>1. Objet</h2>
     <p>
       Les présentes conditions générales de vente régissent les relations entre
-      Hélène Javaux, photographe indépendante établie à {SITE.location}
-      (ci-après « la photographe »), et toute personne physique ou morale
+      {LEGAL.name}, photographe indépendante, <LegalValue value={LEGAL.address} />,
+      numéro d'entreprise <LegalValue value={LEGAL.bce} /> (ci-après « la
+      photographe »), et toute personne physique ou morale
       commandant une prestation photographique ou un tirage (ci-après « le
       client »).
     </p>
@@ -42,7 +42,10 @@ import { SITE } from '../config';
 
     <h2>3. Prix et paiement</h2>
     <p>
-      Les prix sont exprimés en euros, toutes taxes comprises. Le solde d'une
+      Les prix sont exprimés en euros. La photographe relève du régime
+      particulier de franchise des petites entreprises : aucune TVA n'est
+      facturée, les prix indiqués sont des prix finaux. Le
+      solde d'une
       prestation est payable à la livraison des images, par virement bancaire.
       Les tirages sont payables avant impression.
     </p>
@@ -75,7 +78,9 @@ import { SITE } from '../config';
     <p>
       En cas d'annulation par le client moins de 7 jours avant la date
       convenue, l'acompte reste acquis. Un report de date est possible sans
-      frais une fois, selon les disponibilités.
+      frais une fois, selon les disponibilités. Pour les séances avec un
+      animal, la séance peut en outre être reportée sans frais si l'animal est
+      stressé, malade ou en cas d'imprévu le concernant.
     </p>
 
     <h2>8. Propriété intellectuelle et droit à l'image</h2>
@@ -98,8 +103,10 @@ import { SITE } from '../config';
     <h2>10. Données personnelles</h2>
     <p>
       Les données transmises via les formulaires du site servent uniquement à
-      répondre aux demandes. Elles ne sont ni revendues ni utilisées à des
-      fins de prospection. Contact : <a href={`mailto:${SITE.email}`}>{SITE.email}</a>.
+      répondre aux demandes et à exécuter les commandes. Elles ne sont ni
+      revendues ni utilisées à des fins de prospection. Le détail figure dans
+      la <a href={url('/confidentialite/')}>politique de confidentialité</a>.
+      Contact : <a href={`mailto:${SITE.email}`}>{SITE.email}</a>.
     </p>
 
     <h2>11. Droit applicable</h2>

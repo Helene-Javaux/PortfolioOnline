@@ -1,0 +1,111 @@
+---
+/**
+ * Mentions légales (Code de droit économique, art. XII.6).
+ * Les données d'identification viennent de LEGAL dans src/config.ts.
+ */
+import Layout from '../layouts/Layout.astro';
+import LegalValue from '../components/LegalValue.astro';
+import { LEGAL, SITE } from '../config';
+import { url } from '../lib/url';
+---
+
+<Layout
+  title="Mentions légales"
+  description="Mentions légales du site de Hélène Javaux, photographe à Bruxelles : éditrice, hébergement, propriété intellectuelle."
+>
+  <header class="container xpage-head">
+    <p class="exp-label">Informations légales</p>
+    <h1>Mentions légales</h1>
+    <hr class="exp-rule" />
+  </header>
+
+  <section class="container legal">
+    <h2>Éditrice du site</h2>
+    <dl class="legal__ids">
+      <div><dt>Nom</dt><dd>{LEGAL.name}</dd></div>
+      <div><dt>Statut</dt><dd>{LEGAL.status}</dd></div>
+      <div><dt>Adresse</dt><dd><LegalValue value={LEGAL.address} /></dd></div>
+      <div><dt>Numéro d'entreprise (BCE)</dt><dd><LegalValue value={LEGAL.bce} /></dd></div>
+      <div><dt>TVA</dt><dd>{LEGAL.vat}</dd></div>
+      <div><dt>E-mail</dt><dd><a href={`mailto:${SITE.email}`}>{SITE.email}</a></dd></div>
+      <div><dt>Téléphone</dt><dd><a href={SITE.phoneHref}>{SITE.phone}</a></dd></div>
+    </dl>
+
+    <h2>Hébergement</h2>
+    <p>
+      Le site est hébergé par GitHub Pages, service de GitHub, Inc.,
+      88 Colin P. Kelly Jr. Street, San Francisco, CA 94107, États-Unis
+      (<a href="https://pages.github.com" target="_blank" rel="noopener">pages.github.com</a>).
+    </p>
+
+    <h2>Propriété intellectuelle</h2>
+    <p>
+      Toutes les photographies, ainsi que les textes du site, sont la propriété
+      de {LEGAL.name} et sont protégés par le droit d'auteur (Code de droit
+      économique, livre XI). Toute reproduction, diffusion ou utilisation, même
+      partielle, sans autorisation écrite préalable est interdite. Pour toute
+      demande d'utilisation, écrivez à{' '}
+      <a href={`mailto:${SITE.email}`}>{SITE.email}</a>.
+    </p>
+
+    <h2>Données personnelles et cookies</h2>
+    <p>
+      Le site ne dépose aucun cookie. L'utilisation des données transmises via
+      les formulaires est décrite dans la{' '}
+      <a href={url('/confidentialite/')}>politique de confidentialité</a>.
+    </p>
+
+    <h2>Conditions de vente</h2>
+    <p>
+      Les prestations et tirages sont soumis aux{' '}
+      <a href={url('/conditions-generales-de-vente/')}>conditions générales de vente</a>.
+    </p>
+  </section>
+</Layout>
+
+<style>
+  .xpage-head {
+    padding-block: clamp(7rem, 16vw, 10rem) 0;
+  }
+
+  .legal {
+    max-width: 46rem;
+  }
+
+  .legal h2 {
+    font-size: 1.25rem;
+    margin-top: 2.25rem;
+  }
+
+  .legal__ids {
+    margin: 0;
+  }
+
+  .legal__ids div {
+    display: grid;
+    grid-template-columns: minmax(0, 14rem) minmax(0, 1fr);
+    gap: 1rem;
+    padding-block: 0.6rem;
+    border-bottom: 1px solid var(--exp-line);
+  }
+
+  .legal__ids dt {
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--exp-muted);
+    padding-top: 0.2rem;
+  }
+
+  .legal__ids dd {
+    margin: 0;
+  }
+
+  @media (max-width: 40rem) {
+    .legal__ids div {
+      grid-template-columns: 1fr;
+      gap: 0.2rem;
+    }
+  }
+</style>

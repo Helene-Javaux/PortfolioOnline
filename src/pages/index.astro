@@ -1,5 +1,5 @@
 ---
-import { Image, getImage } from 'astro:assets';
+import { Image } from 'astro:assets';
 import { getCollection } from 'astro:content';
 import Layout from '../layouts/Layout.astro';
 import { photo, galleryCover } from '../lib/photos';
@@ -28,12 +28,11 @@ const teaserPriceFor = (tarif: (typeof tarifs)[number]) =>
   tarif.data.packages?.[0]?.price ?? tarif.data.halfDay ?? tarif.data.fullDay ?? '';
 
 const portrait = photo('about/portrait.jpg');
-const ogImage = await getImage({ src: slides[0]!.src, width: 1200, format: 'jpeg' });
 ---
 
 <Layout
   description="Hélène Javaux, photographe à Bruxelles. Séries documentaires, prestations sur mesure et tirages d'art en édition limitée."
-  ogImage={ogImage.src}
+  ogPhoto={slides[0]!.src}
 >
   <section class="xhero">
     {

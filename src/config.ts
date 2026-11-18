@@ -42,3 +42,29 @@ export const SITE = {
   instagramHandle: '@helenejvx_photography',
   location: 'Bruxelles, Belgique',
 };
+
+/**
+ * Informations légales (mentions légales, CGV, politique de confidentialité).
+ *
+ * Le Code de droit économique (art. XII.6) demande l'adresse géographique
+ * de l'entreprise. Choix actuel (novembre 2026) : seule la localité est
+ * affichée, pour ne pas rendre public le domicile — pas strictement conforme,
+ * mais le numéro BCE permet d'identifier l'entreprise. Pour être pleinement
+ * conforme sans exposer le domicile : déclarer une adresse professionnelle
+ * (unité d'établissement) à la BCE et la renseigner ici.
+ *
+ * Un champ vide s'affiche « [à compléter] » sur les pages légales.
+ */
+export const LEGAL = {
+  // Nom tel qu'inscrit à la Banque-Carrefour des Entreprises
+  name: 'Hélène Javaux',
+  status: 'Photographe indépendante, personne physique',
+  // Localité seule (voir plus haut) ; adresse complète possible, ex :
+  // 'Rue de l\'Exemple 1, 1000 Bruxelles, Belgique'
+  address: 'Bruxelles, Belgique',
+  // ex: '0123.456.789'
+  bce: '1040.618.176',
+  // Régime de franchise des petites entreprises (art. 56bis du Code TVA) :
+  // pas de TVA facturée, ni récupérée. Mention à reprendre sur les factures.
+  vat: 'Régime particulier de franchise des petites entreprises — TVA non applicable',
+};

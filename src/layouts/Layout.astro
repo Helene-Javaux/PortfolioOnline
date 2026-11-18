@@ -1,27 +1,76 @@
 ---
 /**
  * Layout principal « La galerie ».
- * Thème sombre immersif, typographie Fraunces + Manrope, accent bronze.
+ * Thème sombre immersif, typographie Sora + Manrope, accent bronze.
  */
+import type { ImageMetadata } from 'astro';
+import { getImage } from 'astro:assets';
 import { SITE, CLOUDFLARE_ANALYTICS_TOKEN } from '../config';
+import { photo } from '../lib/photos';
 import { url } from '../lib/url';
 import logo from '../assets/logo.svg';
 import faviconExp from '../assets/favicon-exp.svg';
+// Typographies Sora (titres) + Manrope (texte), servies par le site
+// lui-même : aucune requête vers Google, donc pas d'adresse IP transmise.
+import '@fontsource-variable/sora';
+import '@fontsource-variable/manrope';
 import '../styles/global.css';
 
 interface Props {
   title?: string;
   description?: string;
-  ogImage?: string;
+  // Photo d'aperçu lors d'un partage (WhatsApp, Facebook, LinkedIn…).
+  // À défaut : la première image du diaporama d'accueil.
+  ogPhoto?: ImageMetadata;
+  // Recadrage de l'aperçu (voir `ogPosition` dans content.config.ts)
+  ogPosition?: 'center' | 'top' | 'bottom' | 'attention' | 'entropy';
 }
 
-const { title, description = SITE.description, ogImage } = Astro.props;
+const { title, description = SITE.description, ogPhoto, ogPosition = 'center' } = Astro.props;
 
-const fullTitle = title
-  ? `${title} — ${SITE.name} · La galerie`
-  : `${SITE.name} — Photographe · La galerie`;
+const fullTitle = title ? `${title} — ${SITE.name}` : `${SITE.name} — Photographe à Bruxelles`;
 const canonical = new URL(Astro.url.pathname, Astro.site);
-const ogImageUrl = ogImage ? new URL(ogImage, Astro.site) : undefined;
+
+// Aperçu 1200 × 630 recadré (format attendu par les réseaux sociaux)
+const og = await getImage({
+  src: ogPhoto ?? photo('projects/wild-care/wildcare-16.jpg'),
+  width: 1200,
+  height: 630,
+  fit: 'cover',
+  position: ogPosition,
+  format: 'jpeg',
+});
+const ogImageUrl = new URL(og.src, Astro.site);
+
+// Données structurées : fiche « photographe à Bruxelles » pour Google
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'ProfessionalService',
+  '@id': new URL('/#business', Astro.site).href,
+  name: `${SITE.name} — Photographe`,
+  description: SITE.description,
+  url: new URL('/', Astro.site).href,
+  image: ogImageUrl.href,
+  email: SITE.email,
+  telephone: SITE.phone,
+  address: {
+    '@type': 'PostalAddress',
+    addressLocality: 'Bruxelles',
+    addressCountry: 'BE',
+  },
+  areaServed: [
+    { '@type': 'City', name: 'Bruxelles' },
+    { '@type': 'Country', name: 'Belgique' },
+  ],
+  sameAs: [SITE.instagram],
+  knowsAbout: [
+    'Photographie animalière',
+    'Photographie de sport',
+    'Packshot',
+    'Photographie événementielle',
+    "Tirages d'art",
+  ],
+};
 
 const links = [
   { href: url('/prestations/'), label: 'Prestations' },
@@ -49,20 +98,23 @@ const analytics = import.meta.env.PROD && CLOUDFLARE_ANALYTICS_TOKEN !== '';
     <link rel="icon" type="image/svg+xml" href={faviconExp.src} />
     <meta name="generator" content={Astro.generator} />
 
+    <link rel="sitemap" href={url('/sitemap-index.xml')} />
+
     <meta property="og:type" content="website" />
-    <meta property="og:site_name" content={fullTitle} />
+    <meta property="og:locale" content="fr_BE" />
+    <meta property="og:site_name" content={SITE.name} />
     <meta property="og:title" content={fullTitle} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
-    {ogImageUrl && <meta property="og:image" content={ogImageUrl} />}
+    <meta property="og:image" content={ogImageUrl} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
 
-    <!-- Typographies : Fraunces (titres, italiques) + Manrope (texte) -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=Manrope:wght@400;500;600&display=swap"
-      rel="stylesheet"
-    />
+    {Astro.url.pathname === url('/') && (
+      <script is:inline type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+    )}
+
 
     <script is:inline>
       document.documentElement.classList.add('js');
@@ -139,6 +191,8 @@ const analytics = import.meta.env.PROD && CLOUDFLARE_ANALYTICS_TOKEN !== '';
       <div class="container exp-footer__legal">
         <p>© {new Date().getFullYear()} Hélène Javaux — toutes les photographies sont protégées par le droit d'auteur.</p>
         <div>
+          <a href={url('/mentions-legales/')}>Mentions légales</a>
+          <a href={url('/confidentialite/')}>Confidentialité</a>
           <a href={url('/conditions-generales-de-vente/')}>CGV</a>
         </div>
       </div>
@@ -371,7 +425,8 @@ const analytics = import.meta.env.PROD && CLOUDFLARE_ANALYTICS_TOKEN !== '';
 
       .exp-footer__legal div {
         display: flex;
-        gap: 1.5rem;
+        flex-wrap: wrap;
+        gap: 0.5rem 1.5rem;
       }
 
       .exp-footer__legal a {

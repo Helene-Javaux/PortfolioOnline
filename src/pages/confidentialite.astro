@@ -1,0 +1,159 @@
+---
+/**
+ * Politique de confidentialité (RGPD).
+ * À relire si un nouveau formulaire, outil d'analyse ou service tiers est
+ * ajouté au site.
+ */
+import Layout from '../layouts/Layout.astro';
+import LegalValue from '../components/LegalValue.astro';
+import { LEGAL, SITE } from '../config';
+import { url } from '../lib/url';
+---
+
+<Layout
+  title="Politique de confidentialité"
+  description="Comment Hélène Javaux, photographe à Bruxelles, utilise et protège les données transmises via les formulaires du site."
+>
+  <header class="container xpage-head">
+    <p class="exp-label">Informations légales</p>
+    <h1>Politique de confidentialité</h1>
+    <hr class="exp-rule" />
+    <p>Dernière mise à jour : novembre 2026</p>
+  </header>
+
+  <section class="container legal">
+    <p>
+      En bref : vos données servent uniquement à répondre à votre demande.
+      Elles ne sont ni revendues, ni utilisées pour de la publicité, et le site
+      ne dépose aucun cookie.
+    </p>
+
+    <h2>1. Responsable du traitement</h2>
+    <p>
+      {LEGAL.name}, <LegalValue value={LEGAL.address} />, numéro d'entreprise{' '}
+      <LegalValue value={LEGAL.bce} />. Contact :{' '}
+      <a href={`mailto:${SITE.email}`}>{SITE.email}</a>.
+    </p>
+
+    <h2>2. Données collectées</h2>
+    <p>Uniquement ce que vous saisissez dans les formulaires :</p>
+    <ul>
+      <li>
+        <strong>Formulaire de contact</strong> : nom, adresse e-mail, type de
+        demande et message.
+      </li>
+      <li>
+        <strong>Demande de tirage</strong> : nom, adresse e-mail, format
+        souhaité, tirage concerné et message éventuel.
+      </li>
+    </ul>
+    <p>
+      Si une prestation est réservée, les données nécessaires au devis, à la
+      facturation et à la livraison des photos (adresse, coordonnées de
+      facturation) sont échangées ensuite par e-mail.
+    </p>
+
+    <h2>3. Pourquoi et sur quelle base</h2>
+    <ul>
+      <li>
+        Répondre à votre demande et établir un devis : mesures
+        précontractuelles prises à votre demande (art. 6.1.b RGPD).
+      </li>
+      <li>
+        Réaliser la prestation ou livrer le tirage : exécution du contrat
+        (art. 6.1.b RGPD).
+      </li>
+      <li>
+        Conserver les factures : obligation légale comptable (art. 6.1.c RGPD).
+      </li>
+    </ul>
+
+    <h2>4. Durée de conservation</h2>
+    <ul>
+      <li>Demande sans suite : 3 ans après le dernier échange.</li>
+      <li>
+        Client : le temps de la relation, puis 7 ans pour les documents
+        comptables, comme l'exige la loi.
+      </li>
+      <li>
+        Galerie privée de livraison : en ligne pendant une durée limitée,
+        communiquée à la livraison, puis supprimée.
+      </li>
+    </ul>
+
+    <h2>5. Services tiers</h2>
+    <ul>
+      <li>
+        <strong>Web3Forms</strong> transmet le contenu des formulaires par
+        e-mail à {LEGAL.name}. Ce service peut traiter les données hors de
+        l'Union européenne.
+        (<a href="https://web3forms.com/privacy" target="_blank" rel="noopener">politique de Web3Forms</a>)
+      </li>
+      <li>
+        <strong>Cloudflare Web Analytics</strong> mesure la fréquentation du
+        site de façon agrégée, sans cookie ni identifiant permettant de vous
+        suivre.
+      </li>
+      <li>
+        <strong>GitHub Pages</strong> héberge le site et peut enregistrer
+        votre adresse IP dans ses journaux techniques, pour des raisons de
+        sécurité.
+      </li>
+    </ul>
+    <p>Vos données ne sont jamais vendues ni partagées à d'autres fins.</p>
+
+    <h2>6. Cookies</h2>
+    <p>
+      Le site ne dépose aucun cookie, ni de mesure d'audience ni publicitaire.
+      Aucun bandeau de consentement n'est donc nécessaire.
+    </p>
+
+    <h2>7. Vos droits</h2>
+    <p>
+      Vous pouvez à tout moment demander l'accès à vos données, leur
+      rectification, leur effacement, leur portabilité, ou vous opposer à leur
+      traitement, en écrivant à{' '}
+      <a href={`mailto:${SITE.email}`}>{SITE.email}</a>. Une réponse vous est
+      donnée dans un délai d'un mois.
+    </p>
+    <p>
+      Si vous estimez que vos droits ne sont pas respectés, vous pouvez
+      introduire une plainte auprès de l'Autorité de protection des données,
+      rue de la Presse 35, 1000 Bruxelles
+      (<a href="https://www.autoriteprotectiondonnees.be" target="_blank" rel="noopener">autoriteprotectiondonnees.be</a>).
+    </p>
+
+    <p class="legal__back">
+      Voir aussi les <a href={url('/mentions-legales/')}>mentions légales</a> et les{' '}
+      <a href={url('/conditions-generales-de-vente/')}>conditions générales de vente</a>.
+    </p>
+  </section>
+</Layout>
+
+<style>
+  .xpage-head {
+    padding-block: clamp(7rem, 16vw, 10rem) 0;
+  }
+
+  .legal {
+    max-width: 46rem;
+  }
+
+  .legal h2 {
+    font-size: 1.25rem;
+    margin-top: 2.25rem;
+  }
+
+  .legal ul {
+    padding-left: 1.2rem;
+  }
+
+  .legal li {
+    margin-bottom: 0.5rem;
+  }
+
+  .legal__back {
+    margin-top: 2.5rem;
+    color: var(--exp-muted);
+  }
+</style>
