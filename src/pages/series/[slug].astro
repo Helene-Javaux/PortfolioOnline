@@ -4,7 +4,7 @@ import { getCollection } from 'astro:content';
 import Layout from '../../layouts/Layout.astro';
 import PhotoGrid from '../../components/PhotoGrid.astro';
 import Lightbox from '../../components/Lightbox.astro';
-import { galleryPhotos, photo } from '../../lib/photos';
+import { galleryCover, galleryPhotos, photo } from '../../lib/photos';
 import { url } from '../../lib/url';
 
 export async function getStaticPaths() {
@@ -26,6 +26,8 @@ const seriesPrints = (await getCollection('prints'))
 
 <Layout
   title={project.data.title}
+  ogPhoto={galleryCover('projects', project.id, project.data.cover)}
+  ogPosition={project.data.ogPosition}
   description={project.data.description ?? `${project.data.title} — série photographique de Hélène Javaux.`}
 >
   <header class="container xpage-head">

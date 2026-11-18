@@ -1,0 +1,22 @@
+---
+/**
+ * Affiche une donnée légale de src/config.ts, ou « [à compléter] » si elle
+ * est encore vide — pour qu'un oubli saute aux yeux plutôt que de passer
+ * inaperçu.
+ */
+interface Props {
+  value?: string;
+}
+
+const { value } = Astro.props;
+---
+
+{value ? value : <mark class="legal-missing">[à compléter]</mark>}
+
+<style>
+  .legal-missing {
+    background: transparent;
+    color: var(--exp-accent);
+    font-style: italic;
+  }
+</style>

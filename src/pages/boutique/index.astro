@@ -12,6 +12,7 @@ const prints = (await getCollection('prints'))
 
 <Layout
   title="Boutique — Tirages d'art"
+  ogPhoto={prints[0] && photo(prints[0].data.photo)}
   description="Tirages d'art signés de Hélène Javaux, imprimés à la demande. Commande simple, sans paiement en ligne : chaque demande reçoit une réponse personnelle."
 >
   <header class="container xpage-head">

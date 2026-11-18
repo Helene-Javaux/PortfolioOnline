@@ -3,7 +3,7 @@ import { getCollection } from 'astro:content';
 import Layout from '../../layouts/Layout.astro';
 import PhotoGrid from '../../components/PhotoGrid.astro';
 import Lightbox from '../../components/Lightbox.astro';
-import { galleryPhotos } from '../../lib/photos';
+import { galleryCover, galleryPhotos } from '../../lib/photos';
 import { devisUrl, url } from '../../lib/url';
 
 export async function getStaticPaths() {
@@ -32,7 +32,9 @@ const others = (await getCollection('services'))
 ---
 
 <Layout
-  title={`${service.data.title} — Prestation`}
+  title={`${service.data.title} — Prestation photo`}
+  ogPhoto={galleryCover('services', service.id, service.data.cover)}
+  ogPosition={service.data.ogPosition}
   description={`Prestation ${service.data.title.toLowerCase()} par Hélène Javaux, photographe à Bruxelles${tarif?.data.packages?.[0] ? ` — à partir de ${tarif.data.packages[0].price}` : tarif ? ` — à partir de ${tarif.data.halfDay}` : ''}. Exemples, tarifs et devis gratuit sous 24 h.`}
 >
   <header class="container xpage-head">

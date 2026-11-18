@@ -15,6 +15,9 @@ const gallerySchema = z.object({
   cover: z.string(),
   // Position CSS du cadrage de la vignette (ex: '50% 38%')
   coverPosition: z.string().optional(),
+  // Recadrage de l'aperçu de partage (1200 × 630) tiré de la cover :
+  // 'center' par défaut, 'attention' vise le sujet le plus saillant
+  ogPosition: z.enum(['center', 'top', 'bottom', 'attention', 'entropy']).optional(),
   // Ordre d'affichage dans l'index (plus petit = premier)
   order: z.number().default(99),
 });

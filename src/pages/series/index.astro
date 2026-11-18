@@ -12,6 +12,7 @@ const projects = (await getCollection('projects')).sort(
 
 <Layout
   title="Les séries"
+  ogPhoto={projects[0] && galleryCover('projects', projects[0].id, projects[0].data.cover)}
   description="Les séries photographiques de Hélène Javaux : Wild Care, Ferrarias, Thalassophobie, Au rythme des pas."
 >
   <header class="container xpage-head">

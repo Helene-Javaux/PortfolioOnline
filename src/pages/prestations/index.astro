@@ -21,6 +21,8 @@ const serviceFor = (id: string, title: string) =>
 
 <Layout
   title="Prestations & tarifs"
+  ogPhoto={services[0] && galleryFeatured('services', services[0].id, services[0].data.cover, services[0].data.featured)[0]}
+  ogPosition={services[0]?.data.ogPosition}
   description="Prestations photo de Hélène Javaux : portrait, sport, packshot, événementiel. Tarifs transparents, devis sous 24 h."
 >
   <header class="container xpage-head">

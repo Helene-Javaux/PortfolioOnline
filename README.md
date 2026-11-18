@@ -91,6 +91,11 @@ empilées à côté). Sans lui : la `cover`, puis les premières photos du dossi
 featured: [sport-23.jpg, sport-03.jpg, sport-14.jpg]
 ```
 
+Le champ optionnel `ogPosition` (projets et services) règle le recadrage de
+l'image d'aperçu affichée quand on partage la page (WhatsApp, Facebook…),
+tirée de la `cover` : `center` par défaut, `attention` pour viser le sujet
+(utile pour un visage ou un animal en photo verticale).
+
 ### Ajouter une photo à une galerie existante
 
 Déposer le fichier dans le dossier de la galerie avec le bon préfixe numérique.
@@ -131,9 +136,12 @@ Tout est centralisé dans [`src/config.ts`](src/config.ts).
   (fichiers nommés `placeholder-*.jpg`, descriptions marquées `[PLACEHOLDER]`).
 - Les **prix** (tarifs et tirages) sont indicatifs, marqués `[PLACEHOLDER]`
   dans les YAML.
+- Les **informations légales** (adresse, numéro BCE, TVA) se règlent dans
+  `LEGAL` de [`src/config.ts`](src/config.ts). L'adresse n'affiche
+  volontairement que la localité (voir le commentaire dans ce fichier).
 - Les **conditions générales de vente**
   ([`src/pages/conditions-generales-de-vente.astro`](src/pages/conditions-generales-de-vente.astro))
-  sont un document type à faire valider juridiquement.
+  restent un document type : une relecture juridique est recommandée.
 - Les clés **Web3Forms** (voir plus haut).
 
 ## Identité visuelle
@@ -141,7 +149,7 @@ Tout est centralisé dans [`src/config.ts`](src/config.ts).
 - Thème sombre et immersif : encre `#0e0e0d`, texte `#ecebe7`, accent bronze
   `#c2a065` réservé aux appels à l'action — variables CSS dans
   [`src/styles/global.css`](src/styles/global.css).
-- Typographies : **Sora** (titres) + **Manrope** (texte courant), via Google Fonts.
+- Typographies : **Sora** (titres) + **Manrope** (texte courant), hébergées par le site (paquets `@fontsource-variable`).
 - Signature récurrente : le « label » (petit libellé bronze en capitales très
   espacées) qui introduit chaque section — classe CSS `.exp-label`.
 - Pages notables : accueil plein écran avec diaporama en fondu et manifeste ;

@@ -1,6 +1,7 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import { SITE, WEB3FORMS_CONTACT_KEY } from '../config';
+import { url } from '../lib/url';
 ---
 
 <Layout
@@ -79,6 +80,10 @@ import { SITE, WEB3FORMS_CONTACT_KEY } from '../config';
         <textarea id="xc-message" name="message" rows="7" required placeholder="Deux lignes suffisent pour commencer…"></textarea>
       </div>
 
+<p class="form-privacy">
+        Vos données servent uniquement à vous répondre —{' '}
+        <a href={url('/confidentialite/')}>politique de confidentialité</a>.
+      </p>
       <button class="xbtn" type="submit">Envoyer à Hélène</button>
       <p class="form-status" role="status" aria-live="polite"></p>
     </form>
