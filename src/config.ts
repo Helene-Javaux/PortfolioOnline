@@ -64,5 +64,7 @@ export const LEGAL = {
   address: 'Bruxelles, Belgique',
   // ex: '0123.456.789'
   bce: '1040.618.176',
-  vat: "Non assujettie à la TVA",
+  // Régime de franchise des petites entreprises (art. 56bis du Code TVA) :
+  // pas de TVA facturée, ni récupérée. Mention à reprendre sur les factures.
+  vat: 'Régime particulier de franchise des petites entreprises — TVA non applicable',
 };
