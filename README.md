@@ -43,21 +43,19 @@ src/
 │   ├── prestations/        landing page par prestation (`/prestations/<slug>/`)
 │   └── boutique/           page dédiée par tirage (`/boutique/<slug>/`)
 ├── lib/                    helpers (découverte des photos, envoi Web3Forms)
-└── config.ts               ⚠️ coordonnées + CLÉS WEB3FORMS
+└── config.ts               coordonnées, clés Web3Forms, infos légales
 ```
 
-## ⚠️ Activer les formulaires (Web3Forms)
+## Formulaires (Web3Forms)
 
-Les deux formulaires (contact et demande de tirage) sont fonctionnels mais
-utilisent des clés placeholder. Pour les activer :
+Les deux formulaires (contact et demande de tirage) envoient leurs messages
+via [web3forms.com](https://web3forms.com), avec une clé d'accès distincte
+chacun (cela permet de trier les e-mails reçus). Les clés sont dans
+[`src/config.ts`](src/config.ts) : pour en changer, y remplacer
+`WEB3FORMS_CONTACT_KEY` ou `WEB3FORMS_PRINTS_KEY`.
 
-1. Créer **deux** clés d'accès gratuites sur [web3forms.com](https://web3forms.com)
-   (une pour le contact, une pour le shop — cela permet de trier les e-mails reçus).
-2. Ouvrir [`src/config.ts`](src/config.ts) et remplacer les deux
-   `YOUR_ACCESS_KEY_HERE` par les vraies clés.
-
-Tant que les clés ne sont pas remplacées, le formulaire affiche un message
-d'erreur explicite au lieu d'envoyer.
+Si une clé est vide ou vaut `YOUR_ACCESS_KEY_HERE`, le formulaire affiche un
+message d'erreur explicite au lieu d'envoyer.
 
 ## Ajouter du contenu
 
@@ -129,20 +127,16 @@ Les frais de déplacement se modifient dans
 
 Tout est centralisé dans [`src/config.ts`](src/config.ts).
 
-## Contenu placeholder à remplacer
+## Points à finaliser
 
-- Les galeries **Services** (portrait, sport, packshot, événementiel)
-  contiennent des copies de photos des projets en attendant les vraies images
-  (fichiers nommés `placeholder-*.jpg`, descriptions marquées `[PLACEHOLDER]`).
-- Les **prix** (tarifs et tirages) sont indicatifs, marqués `[PLACEHOLDER]`
-  dans les YAML.
+- Le **tarif packshot** à la demi-journée est encore indicatif (marqué
+  `[PLACEHOLDER]` dans [`src/content/tarifs/packshot.yaml`](src/content/tarifs/packshot.yaml)).
 - Les **informations légales** (adresse, numéro BCE, TVA) se règlent dans
   `LEGAL` de [`src/config.ts`](src/config.ts). L'adresse n'affiche
   volontairement que la localité (voir le commentaire dans ce fichier).
 - Les **conditions générales de vente**
   ([`src/pages/conditions-generales-de-vente.astro`](src/pages/conditions-generales-de-vente.astro))
   restent un document type : une relecture juridique est recommandée.
-- Les clés **Web3Forms** (voir plus haut).
 
 ## Identité visuelle
 
