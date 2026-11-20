@@ -57,30 +57,24 @@ const portrait = photo('about/portrait.jpg');
       <p class="exp-label">Photographe — Bruxelles</p>
       <h1>Hélène <em>Javaux</em></h1>
       <p class="xhero__tagline">
-        Portrait animalier, sport, produits, événements : des images vraies,
-        qui vous ressemblent.
+        Portraits de famille et animaliers, sport, packshot et événementiel,
+        à Bruxelles ou ailleurs.
       </p>
       <div class="xhero__actions">
         <a href={url('/prestations/')} class="xbtn">Réserver une séance</a>
-        <a href={url('/series/')} class="xbtn xbtn--ghost">Entrer dans la galerie</a>
+        <a href={url('/series/')} class="xbtn xbtn--ghost">Voir mes séries</a>
       </div>
     </div>
-    <a href="#manifesto" class="xhero__scroll" aria-label="Faire défiler">↓</a>
+    <a href="#prestations" class="xhero__scroll" aria-label="Faire défiler">↓</a>
   </section>
 
-  <section id="manifesto" class="container xmanifesto" data-reveal>
-    <p>
-      « J'aime photographier les choses simples: une bonne lumière, un geste naturel, <em>un instant qui ne reviendra pas</em>. »
-    </p>
-  </section>
-
-  <section class="xoffers">
+  <section id="prestations" class="xoffers">
     <div class="container">
       <p class="exp-label" data-reveal>Prestations</p>
-      <h2 data-reveal>Ce que je peux <em>créer pour vous</em></h2>
+      <h2 data-reveal>Ce que <em>je propose</em></h2>
       <p class="xoffers__intro" data-reveal>
-        Chaque prestation commence par une conversation et se termine par des
-        images qui vous ressemblent. Devis gratuit, réponse sous 24 h.
+        On commence toujours par un échange, pour comprendre ce que vous
+        attendez. Devis gratuit, réponse sous 24 h.
       </p>
       <div class="xoffers__grid">
         {
@@ -125,10 +119,11 @@ const portrait = photo('about/portrait.jpg');
 
   <section class="container xseries">
     <p class="exp-label" data-reveal>La galerie</p>
-    <h2 data-reveal>Le regard derrière <em>les commandes</em></h2>
+    <h2 data-reveal>Mes projets <em>personnels</em></h2>
     <p class="xseries__intro" data-reveal>
-      Mes séries personnelles et documentaires : c'est là que se forge la
-      sensibilité que je mets ensuite au service de vos images.
+      À côté des commandes, j'ai mené des séries documentaires sur des sujets
+      qui me touchent : les centres de soins pour animaux sauvages, mon village
+      d'enfance, ma peur de la mer, une fanfare de village.
     </p>
     <div class="xseries__grid">
       {
@@ -163,10 +158,10 @@ const portrait = photo('about/portrait.jpg');
   <section class="xshop-teaser">
     <div class="container">
       <p class="exp-label" data-reveal>La boutique</p>
-      <h2 data-reveal>Repartez avec une image</h2>
+      <h2 data-reveal>Tirages <em>d'art</em></h2>
       <p class="xshop-teaser__intro" data-reveal>
-        Une sélection de tirages Wild Care est disponible en 60 x 40 cm, signée,
-        puis remise en main propre à Bruxelles ou expédiée avec soin.
+        Une sélection de photos de la série Wild Care existe en tirage signé de
+        60 × 40 cm. Remise en main propre à Bruxelles ou envoi postal.
       </p>
       <div class="xshop-teaser__grid">
         {
@@ -212,11 +207,11 @@ const portrait = photo('about/portrait.jpg');
     </div>
     <div class="xabout__text">
       <p class="exp-label">La photographe</p>
-      <h2>Derrière l'objectif, <em class="xabout__highlight">Hélène</em></h2>
+      <h2>Moi, c'est <em class="xabout__highlight">Hélène</em></h2>
       <p>
-        Diplômée de la HELB en 2024, amoureuse de la nature et des instants
-        qu'on ne rejoue pas. Ce que je cherche dans chaque image :
-        l'authenticité, sans poses figées, sans artifices.
+        Photographe diplômée de la HELB en 2024. Je préfère le moment où on
+        oublie l'appareil à la pose, et si on peut shooter dehors, je dis oui
+        direct.
       </p>
       <a href={url('/a-propos/')} class="exp-arrow-link">
         Faire connaissance <span aria-hidden="true">→</span>
@@ -226,8 +221,8 @@ const portrait = photo('about/portrait.jpg');
 
   <section class="xfinal" data-reveal>
     <div class="container">
-      <p class="exp-label exp-label--center">Votre histoire, maintenant</p>
-      <h2>Une séance, un événement, <em>un mur à habiller ?</em></h2>
+      <p class="exp-label exp-label--center">Contact</p>
+      <h2>Besoin d'une <em>photographe ?</em></h2>
       <p>
         Écrivez-moi en deux lignes : je réponds personnellement, en général
         sous 24 heures.
@@ -339,24 +334,6 @@ const portrait = photo('about/portrait.jpg');
     }
   }
 
-  .xmanifesto {
-    padding-block: clamp(4.5rem, 12vw, 8rem);
-    text-align: center;
-  }
-
-  .xmanifesto p {
-    font-family: var(--font-display);
-    font-weight: 400;
-    font-size: clamp(1.5rem, 3.6vw, 2.4rem);
-    line-height: 1.4;
-    max-width: 52rem;
-    margin-inline: auto;
-  }
-
-  .xmanifesto em {
-    color: var(--exp-accent);
-  }
-
   .xoffers {
     padding-block: clamp(4rem, 10vw, 7rem);
     background: var(--exp-surface);
@@ -459,7 +436,6 @@ const portrait = photo('about/portrait.jpg');
     grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr));
     gap: clamp(1.5rem, 3.5vw, 2.5rem);
   }
-
 
   .xseries__card {
     text-decoration: none;

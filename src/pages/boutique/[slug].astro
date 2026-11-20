@@ -65,9 +65,9 @@ const others = (await getCollection('prints'))
       {print.data.description && <p class="xprint__desc">{print.data.description}</p>}
 
       <ul class="xprint__assurances">
-        <li>Format actuellement disponible : 60 x 40 cm</li>
+        <li>Format disponible : 60 × 40 cm</li>
         <li>Impression fine art à la demande, signée au dos</li>
-        <li>Remise en main propre à Bruxelles ou envoi soigné</li>
+        <li>Remise en main propre à Bruxelles ou envoi postal</li>
         <li>Paiement simple par virement — aucune plateforme</li>
         <li>Réponse personnelle sous 24 h</li>
       </ul>
@@ -118,7 +118,8 @@ const others = (await getCollection('prints'))
         <button class="xbtn xprint__submit" type="submit">Demander ce tirage</button>
         <p class="form-status" role="status" aria-live="polite"></p>
         <p class="xprint__reassure">
-          Aucune obligation : votre demande ouvre simplement la conversation.
+          Sans engagement : on confirme les détails par e-mail avant tout
+          paiement.
         </p>
         <p class="form-privacy">
           Vos données servent uniquement à vous répondre —{' '}
